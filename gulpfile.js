@@ -3,6 +3,7 @@ const gulpProcess = require('gulp-process');
 const gutil = require('gulp-util');
 const babel = require('gulp-babel');
 const respawn = require('respawn');
+const del = require('del');
 
 const paths = {
   serverScripts: {
@@ -15,6 +16,10 @@ const serverProcess = respawn(['node', `${paths.serverScripts.dest}/index.js`]);
 serverProcess.on('stdout', data => gutil.log(data.toString('utf-8')));
 serverProcess.on('stderr', data => gutil.log(data.toString('utf-8')));
 serverProcess.on('warn', data => gutil.log(data.toString('utf-8')));
+
+function clean() {
+  return del(['client-build', 'server-build']);
+}
 
 function serverScripts() {
   return gulp.src(paths.serverScripts.src, { 
@@ -42,6 +47,7 @@ function watch() {
 }
 
 gulp.task('serve', gulp.series(
+  clean,
   gulp.parallel(serverScripts),
   gulp.parallel(server, watch)
 ));
