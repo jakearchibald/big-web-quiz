@@ -8,7 +8,7 @@ const del = require('del');
 const paths = {
   serverScripts: {
     src: 'server/**/*.js',
-    dest: 'server-build'
+    dest: 'build/server'
   }
 };
 
@@ -18,7 +18,7 @@ serverProcess.on('stderr', data => gutil.log(data.toString('utf-8')));
 serverProcess.on('warn', data => gutil.log(data.toString('utf-8')));
 
 function clean() {
-  return del(['client-build', 'server-build']);
+  return del(['build']);
 }
 
 function serverScripts() {
