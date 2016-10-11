@@ -1,0 +1,26 @@
+{
+  "name": "big-web-quiz",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server-build/index.js",
+  "scripts": {
+    "serve": "gulp serve"
+  },
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=6.7.0"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.16.0",
+    "babel-preset-stage-3": "^6.17.0",
+    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp-babel": "^6.1.2",
+    "gulp-process": "^0.1.2",
+    "gulp-util": "^3.0.7",
+    "respawn": "^2.4.1"
+  },
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}
