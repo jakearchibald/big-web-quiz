@@ -227,6 +227,15 @@ babel-helper-builder-binary-assignment-operator-visitor@^6.8.0:
     babel-runtime "^6.0.0"
     babel-types "^6.15.0"
 
+babel-helper-builder-react-jsx@^6.8.0:
+  version "6.9.0"
+  resolved "https://registry.yarnpkg.com/babel-helper-builder-react-jsx/-/babel-helper-builder-react-jsx-6.9.0.tgz#a633978d669c4c9dcad716cc577ee3e0bb8ae723"
+  dependencies:
+    babel-runtime "^6.9.0"
+    babel-types "^6.9.0"
+    esutils "^2.0.0"
+    lodash "^4.2.0"
+
 babel-helper-explode-assignable-expression@^6.8.0:
   version "6.8.0"
   resolved "https://registry.yarnpkg.com/babel-helper-explode-assignable-expression/-/babel-helper-explode-assignable-expression-6.8.0.tgz#9b3525e05b761c3b88919d730a28bad1967e6556"
@@ -287,6 +296,10 @@ babel-plugin-syntax-exponentiation-operator@^6.8.0:
   version "6.13.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-exponentiation-operator/-/babel-plugin-syntax-exponentiation-operator-6.13.0.tgz#9ee7e8337290da95288201a6a57f4170317830de"
 
+babel-plugin-syntax-jsx@^6.8.0:
+  version "6.13.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-syntax-jsx/-/babel-plugin-syntax-jsx-6.13.0.tgz#e741ff3992c578310be45c571bcd90a2f9c5586e"
+
 babel-plugin-syntax-object-rest-spread@^6.8.0:
   version "6.13.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-object-rest-spread/-/babel-plugin-syntax-object-rest-spread-6.13.0.tgz#fd6536f2bce13836ffa3a5458c4903a597bb3bf5"
@@ -333,6 +346,14 @@ babel-plugin-transform-object-rest-spread@^6.16.0:
   resolved "https://registry.yarnpkg.com/babel-plugin-transform-object-rest-spread/-/babel-plugin-transform-object-rest-spread-6.16.0.tgz#db441d56fffc1999052fdebe2e2f25ebd28e36a9"
   dependencies:
     babel-plugin-syntax-object-rest-spread "^6.8.0"
+    babel-runtime "^6.0.0"
+
+babel-plugin-transform-react-jsx:
+  version "6.8.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-transform-react-jsx/-/babel-plugin-transform-react-jsx-6.8.0.tgz#94759942f70af18c617189aa7f3593f1644a71ab"
+  dependencies:
+    babel-helper-builder-react-jsx "^6.8.0"
+    babel-plugin-syntax-jsx "^6.8.0"
     babel-runtime "^6.0.0"
 
 babel-plugin-transform-strict-mode@^6.8.0:
@@ -396,7 +417,7 @@ babel-traverse@^6.16.0, babel-traverse@^6.8.0:
     invariant "^2.2.0"
     lodash "^4.2.0"
 
-babel-types@^6.15.0, babel-types@^6.16.0, babel-types@^6.8.0:
+babel-types@^6.15.0, babel-types@^6.16.0, babel-types@^6.8.0, babel-types@^6.9.0:
   version "6.16.0"
   resolved "https://registry.yarnpkg.com/babel-types/-/babel-types-6.16.0.tgz#71cca1dbe5337766225c5c193071e8ebcbcffcfe"
   dependencies:
@@ -886,7 +907,7 @@ escape-string-regexp@^1.0.2:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
 
-esutils@^2.0.2:
+esutils@^2.0.0, esutils@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.2.tgz#0abf4f1caa5bcb1f7a9d8acc6dea4faaa04bac9b"
 
@@ -2651,9 +2672,23 @@ plur@^2.0.0:
   dependencies:
     irregular-plurals "^1.0.0"
 
+preact:
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/preact/-/preact-6.3.0.tgz#ccbee15c4eb106d52f2212b3d68bb1015745024d"
+
+preact-render-to-string:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/preact-render-to-string/-/preact-render-to-string-3.2.1.tgz#a20c47db777ce3f1d3af382740b9a91656efc392"
+  dependencies:
+    pretty-format "^3.5.1"
+
 preserve@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
+
+pretty-format@^3.5.1:
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-3.8.0.tgz#bfbed56d5e9a776645f4b1ff7aa1a3ac4fa3c385"
 
 pretty-hrtime@^1.0.0:
   version "1.0.2"

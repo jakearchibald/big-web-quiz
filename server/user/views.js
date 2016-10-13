@@ -29,10 +29,13 @@ function authenticateUser(code) {
   });
 }
 
-export function generateAuthUrl() {
+export function generateAuthUrl({
+  state = ''
+}={}) {
   const oauth2Client = getAuthClient();
   return oauth2Client.generateAuthUrl({
-    scope: ['profile', 'email']
+    scope: ['profile', 'email'],
+    state
   });
 }
 
@@ -51,9 +54,21 @@ export function userMiddleware(req, res, next) {
 export function handleLogin(req, res) {
   authenticateUser(req.query.code).then(user => {
     req.session.userId = user.googleId;
-    res.send('Authed ' + JSON.stringify(user));
+    res.redirect(req.query.state);
   }).catch(err => {
     res.send('Auth failed');
     console.log(err);
   });
+}
+
+export function logout(req, res) {
+  req.session.destroy(() => {
+    res.redirect('/');
+  });
+}
+
+export function login(req, res) {
+  res.redirect(generateAuthUrl({
+    state: req.get('referrer')
+  }));
 }
