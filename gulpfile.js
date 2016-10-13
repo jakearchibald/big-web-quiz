@@ -156,7 +156,7 @@ function watch() {
   // server
   gulp.watch(paths.serverScripts.src, gulp.series(serverScripts, serverRestart));
   gulp.watch(paths.serverTemplates.src, gulp.series(serverTemplates, serverRestart));
-  gulp.watch(paths.components.src, gulp.series(components, serverRestart));
+  gulp.watch(paths.components.src, gulp.series(components, script, serverRestart));
 
   // client
   gulp.watch(paths.scss.src, scss);
