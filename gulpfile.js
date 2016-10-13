@@ -3,6 +3,10 @@ const gulpProcess = require('gulp-process');
 const gutil = require('gulp-util');
 const babel = require('gulp-babel');
 const sourcemaps = require('gulp-sourcemaps');
+const handlebars = require('gulp-handlebars');
+const debug = require('gulp-debug');
+const defineModule = require('gulp-define-module');
+const sass = require('gulp-sass');
 const respawn = require('respawn');
 const del = require('del');
 
@@ -10,6 +14,14 @@ const paths = {
   serverScripts: {
     src: 'server/**/*.js',
     dest: 'build/server'
+  },
+  serverTemplates: {
+    src: 'server/templates/**/*.hbs',
+    dest: 'build/server/templates'
+  },
+  scss: {
+    src: 'client/css/**/*.scss',
+    dest: 'build/client/css'
   }
 };
 
@@ -54,6 +66,14 @@ function serverScripts() {
     .pipe(gulp.dest(paths.serverScripts.dest));
 }
 
+function serverTemplates() {
+  return gulp.src(paths.serverTemplates.src, {
+    since: gulp.lastRun(serverTemplates)
+  }).pipe(handlebars())
+    .pipe(defineModule('node'))
+    .pipe(gulp.dest(paths.serverTemplates.dest)); 
+}
+
 function server() {
   serverProcess.start();
 }
@@ -69,13 +89,29 @@ function serverRestart(cb) {
   });
 }
 
-function watch() {
-  gulp.watch(paths.serverScripts.src, gulp.series(serverScripts, serverRestart));
+function scss() {
+  return gulp.src(paths.scss.src, {
+    since: gulp.lastRun(scss)
+  }).pipe(sourcemaps.init())
+    .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest(paths.scss.dest));
 }
+
+function watch() {
+  // server
+  gulp.watch(paths.serverScripts.src, gulp.series(serverScripts, serverRestart));
+  gulp.watch(paths.serverTemplates.src, gulp.series(serverTemplates, serverRestart));
+
+  // client
+  gulp.watch(paths.scss.src, scss);
+}
+
+gulp.task('serverTemplates', serverTemplates);
 
 gulp.task('serve', gulp.series(
   clean,
-  gulp.parallel(serverScripts),
+  gulp.parallel(serverScripts, serverTemplates, scss),
   gulp.parallel(
     databaseServer,
     // Wait for database to start up
