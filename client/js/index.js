@@ -1,9 +1,10 @@
-import {h, render, Component} from 'preact';
+import {h, render} from 'preact';
 import regeneratorRuntime from 'regenerator-runtime/runtime';
 
 import {Login, Logout} from '../../components/user';
+import BoundComponent from '../../components/bound-component';
 
-class App extends Component {
+class App extends BoundComponent {
   constructor(props) {
     super(props);
 
@@ -11,9 +12,6 @@ class App extends Component {
       checkedLogin: false,
       user: null
     };
-
-    this.onLogout = this.onLogout.bind(this);
-    this.onLoginClick = this.onLoginClick.bind(this);
 
     // get login state
     (async () => {
@@ -31,10 +29,6 @@ class App extends Component {
     this.setState({
       user: null
     });
-  }
-  onLoginClick(event) {
-    event.preventDefault();
-    console.log('Login clicked');
   }
   render(props, state) {
     if (!state.checkedLogin) {

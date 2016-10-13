@@ -1,6 +1,7 @@
-import { h, Component } from 'preact';
+import { h } from 'preact';
+import BoundComponent from './bound-component';
 
-export class Login extends Component {
+export class Login extends BoundComponent {
   constructor() {
     super();
   }
@@ -9,7 +10,7 @@ export class Login extends Component {
   }
 }
 
-export class Logout extends Component {
+export class Logout extends BoundComponent {
   constructor() {
     super();
     this.logoutUrl = '/logout';
