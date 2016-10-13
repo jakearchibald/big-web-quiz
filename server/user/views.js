@@ -1,10 +1,8 @@
 import google from 'googleapis';
 
-import mongoose from '../mongoose-db';
+import User from './model';
 import promisify from '../promisify';
 import {clientId, clientSecret, redirectOrigin} from '../settings';
-
-const getToken = promisify();
 
 function getAuthClient() {
   return new google.auth.OAuth2(
@@ -14,23 +12,7 @@ function getAuthClient() {
   );
 }
 
-const userSchema = mongoose.Schema({
-  googleId: {type: String, unique: true},
-  name: String,
-  email: String,
-  avatarUrl: String
-});
-
-export const User = mongoose.model('User', userSchema);
-
-export function generateAuthUrl() {
-  const oauth2Client = getAuthClient();
-  return oauth2Client.generateAuthUrl({
-    scope: ['profile', 'email']
-  });
-}
-
-export function authenticateUser(code) {
+function authenticateUser(code) {
   const oauth2Client = getAuthClient();
 
   return promisify(oauth2Client, 'getToken')(code).then(tokens => {
@@ -44,5 +26,34 @@ export function authenticateUser(code) {
       email: response.emails[0].value,
       avatarUrl: response.image.url
     }, {upsert: true});
+  });
+}
+
+export function generateAuthUrl() {
+  const oauth2Client = getAuthClient();
+  return oauth2Client.generateAuthUrl({
+    scope: ['profile', 'email']
+  });
+}
+
+export function userMiddleware(req, res, next) {
+  if (!req.session.userId) {
+    next();
+    return;
+  }
+
+  User.findOne({googleId: req.session.userId}).then(user => {
+    req.user = user;
+    next();
+  });
+}
+
+export function handleLogin(req, res) {
+  authenticateUser(req.query.code).then(user => {
+    req.session.userId = user.googleId;
+    res.send('Authed ' + JSON.stringify(user));
+  }).catch(err => {
+    res.send('Auth failed');
+    console.log(err);
   });
 }
