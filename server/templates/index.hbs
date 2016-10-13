@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>{{title}}</title>
+  <title>The big web quiz!</title>
   <meta name="viewport" content="width=device-width, minimum-scale=1.0">
   <link rel="stylesheet" href="/static/css/index.css">
-  <script src="/static/js/index.js" async></script>
+  <script src="/static/js/index.js" defer></script>
 </head>
 <body>
   {{{content}}}
+
+  {{#if initialState}}
+    <script>
+      var initialState = {{{initialState}}};
+    </script>
+  {{/if}}
 </body>
 </html>

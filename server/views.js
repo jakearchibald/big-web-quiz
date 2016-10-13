@@ -2,17 +2,28 @@ import indexTemplate from './templates/index';
 import {h} from 'preact';
 import render from 'preact-render-to-string';
 
-import {Login, Logout} from './components/user';
+import App from './components/app';
+import {simpleUserObject} from './user/views';
 
 export function home(req, res) {
-  const content = render(
-    <div>
-      {req.user ? <Logout/> : <Login/>}
-      {req.user ? ` Logged in as ${req.user.name}` : ''}
-    </div>
-  );
+  const initialState = {
+    checkedLogin: true,
+    user: null
+  };
 
+  if (req.user) {
+    initialState.user = simpleUserObject(req.user);
+  }
+
+  // TODO: is this enough escaping?
+  const initialStateEncoded = JSON.stringify(initialState).replace(/\//g, '\\/');
+
+  const content = render(<App user={initialState.user}/>);
+  
   res.send(
-    indexTemplate({content})
+    indexTemplate({
+      content,
+      initialState: initialStateEncoded
+    })
   );
 }

@@ -2,10 +2,12 @@ import 'source-map-support/register';
 
 import express from 'express';
 import session from 'express-session';
+import bodyParser from 'body-parser';
 import {home} from './views';
 import {
   userMiddleware, generateAuthUrl, handleLogin, 
   login, logoutRedirect, logoutJson, userJson, 
+  updateUser
 } from './user/views';
 import mongoose from './mongoose-db';
 import connectMongo from 'connect-mongo';
@@ -32,14 +34,16 @@ app.use(session({
 }));
 
 app.use(userMiddleware);
+app.use(bodyParser.json());
 
 // Routes:
 app.get('/', home);
 app.get('/oauth2callback', handleLogin);
-app.get('/logout', logoutRedirect);
-app.get('/logout.json', logoutJson);
-app.get('/login', login);
+app.post('/logout', logoutRedirect);
+app.post('/logout.json', logoutJson);
+app.post('/login', login);
 app.get('/me.json', userJson);
+app.post('/update-me.json', updateUser);
 
 app.listen(3000, () => {
   console.log('Example app listening on port 3000!');

@@ -65,6 +65,14 @@ export function handleLogin(req, res) {
   });
 }
 
+export function simpleUserObject(user) {
+  return {
+    name: user.name,
+    avatarUrl: user.avatarUrl,
+    appearOnLeaderboard: !!user.appearOnLeaderboard 
+  }
+}
+
 export function userJson(req, res) {
   if (!req.user) {
     res.json({
@@ -74,10 +82,7 @@ export function userJson(req, res) {
   }
 
   res.json({
-    user: {
-      name: req.user.name,
-      avatarUrl: req.user.avatarUrl
-    }
+    user: simpleUserObject(req.user)
   });
 }
 
@@ -97,4 +102,18 @@ export function login(req, res) {
   res.redirect(generateAuthUrl({
     state: req.get('referrer')
   }));
+}
+
+export function updateUser(req, res) {
+  // only dealing with appearOnLeaderboard for now
+  if (!('appearOnLeaderboard' in req.body)) {
+    res.json(simpleUserObject(req.user));
+  }
+
+  // TODO: handle error
+  // TODO: create decorators for must be logged in
+  req.user.appearOnLeaderboard = !!req.body.appearOnLeaderboard;
+  req.user.save().then(newUser => {
+    res.json(simpleUserObject(newUser));
+  });
 }

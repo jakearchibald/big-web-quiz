@@ -5,8 +5,8 @@ export class Login extends BoundComponent {
   constructor() {
     super();
   }
-  render(props, state) {
-    return (<a href="/login">Log in</a>);
+  render() {
+    return (<form action="/login" method="POST"><button>Log in</button></form>);
   }
 }
 
@@ -14,19 +14,23 @@ export class Logout extends BoundComponent {
   constructor() {
     super();
     this.logoutUrl = '/logout';
-    this.onClick = this.onClick.bind(this);
   }
-  async onClick(event) {
+  onSubmit(event) {
     event.preventDefault();
 
-    const response = await fetch(this.logoutUrl + '.json', {
+    fetch(this.logoutUrl + '.json', {
+      method: 'POST',
       credentials: 'include'
+    }).then(() => {
+      this.props.onLogout();
     });
-    
-    this.props.onLogout();
   }
   render(props, state) {
-    return (<a href={this.logoutUrl}  onClick={this.onClick}>Log out</a>);
+    return ( 
+      <form action={this.logoutUrl} method="POST" onSubmit={this.onSubmit}>
+        <button>Log out</button>
+      </form>
+    );
   }
 }
 
