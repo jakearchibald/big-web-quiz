@@ -1,5 +1,5 @@
 import indexTemplate from './templates/index';
-import { h, Component } from 'preact';
+import {h} from 'preact';
 import render from 'preact-render-to-string';
 
 import {Login, Logout} from './components/user';

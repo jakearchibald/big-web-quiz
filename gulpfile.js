@@ -9,23 +9,29 @@ const defineModule = require('gulp-define-module');
 const sass = require('gulp-sass');
 const respawn = require('respawn');
 const del = require('del');
+const source = require('vinyl-source-stream');
+const buffer = require('vinyl-buffer');
+const rollup = require('rollup-stream');
+const rollupBabel = require('rollup-plugin-babel');
+const nodeResolve = require('rollup-plugin-node-resolve');
+const commonjs = require('rollup-plugin-commonjs');
 
 const paths = {
   serverScripts: {
     src: 'server/**/*.js',
-    dest: 'build/server'
+    dest: 'build/'
   },
   serverTemplates: {
     src: 'server/templates/**/*.hbs',
-    dest: 'build/server/templates'
+    dest: 'build/templates'
   },
   components: {
     src: 'components/**/*.js',
-    dest: 'build/server/components'
+    dest: 'build/components'
   },
   scss: {
     src: 'client/css/**/*.scss',
-    dest: 'build/client/css'
+    dest: 'build/static/css'
   }
 };
 
@@ -46,6 +52,11 @@ process.on('SIGINT', () => {
       process.exit();
     });
   });
+});
+
+process.on('uncaughtException', () => {
+  serverProcess.stop();
+  databaseProcess.stop();
 });
 
 // TASKS:
@@ -114,6 +125,33 @@ function scss() {
     .pipe(gulp.dest(paths.scss.dest));
 }
 
+let cache;
+function script() {
+  return rollup({
+    entry: './client/js/index.js',
+    sourceMap: true,
+    cache,
+    plugins: [
+      nodeResolve({
+        browser: true,
+        jsnext: true,
+        main: true
+      }),
+      commonjs(),
+      rollupBabel({
+        presets: ['stage-3', ['es2015', {modules: false}]],
+        plugins: [["transform-react-jsx", {pragma:"h"}], "external-helpers"]
+      })
+    ]
+  }).on('bundle', function(bundle) {
+    cache = bundle;
+  }).pipe(source('index.js', './client/js/'))
+    .pipe(buffer())
+    .pipe(sourcemaps.init({loadMaps: true}))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('./build/static/js'));
+}
+
 function watch() {
   // server
   gulp.watch(paths.serverScripts.src, gulp.series(serverScripts, serverRestart));
@@ -122,13 +160,14 @@ function watch() {
 
   // client
   gulp.watch(paths.scss.src, scss);
+  gulp.watch('./client/js/**/*.js', script);
 }
 
 gulp.task('serverTemplates', serverTemplates);
 
 gulp.task('serve', gulp.series(
   clean,
-  gulp.parallel(serverScripts, serverTemplates, components, scss),
+  gulp.parallel(serverScripts, serverTemplates, components, scss, script),
   gulp.parallel(
     databaseServer,
     // Wait for database to start up

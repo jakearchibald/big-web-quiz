@@ -29,6 +29,10 @@ function authenticateUser(code) {
   });
 }
 
+function logout(req) {
+  return new Promise(r => req.session.destroy(r));
+}
+
 export function generateAuthUrl({
   state = ''
 }={}) {
@@ -61,9 +65,31 @@ export function handleLogin(req, res) {
   });
 }
 
-export function logout(req, res) {
-  req.session.destroy(() => {
+export function userJson(req, res) {
+  if (!req.user) {
+    res.json({
+      user: null 
+    });
+    return;
+  }
+
+  res.json({
+    user: {
+      name: req.user.name,
+      avatarUrl: req.user.avatarUrl
+    }
+  });
+}
+
+export function logoutRedirect(req, res) {
+  logout(req).then(() => {
     res.redirect('/');
+  });
+}
+
+export function logoutJson(req, res) {
+  logout(req).then(() => {
+    res.json({done: true});
   });
 }
 
