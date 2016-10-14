@@ -26,6 +26,7 @@
     "gulp-gzip": "^1.4.0",
     "gulp-handlebars": "^4.0.0",
     "gulp-process": "^0.1.2",
+    "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.3.2",
     "gulp-sourcemaps": "^1.7.3",
     "gulp-util": "^3.0.7",

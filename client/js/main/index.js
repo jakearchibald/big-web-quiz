@@ -3,11 +3,11 @@ import regeneratorRuntime from 'regenerator-runtime/runtime';
 // so we don't have to keep importing it
 self.regeneratorRuntime = regeneratorRuntime;
 
-import {Login, Logout} from '../../components/user';
-import BoundComponent from '../../components/bound-component';
-import Intro from '../../components/intro';
-import QuestionWaiting from '../../components/question-waiting';
-import LoginStatus from '../../components/login-status';
+import {Login, Logout} from '../../../components/user';
+import BoundComponent from '../../../components/bound-component';
+import Intro from '../../../components/intro';
+import QuestionWaiting from '../../../components/question-waiting';
+import LoginStatus from '../../../components/login-status';
 
 async function getInitialState() {
   if (self.initialState) return self.initialState;

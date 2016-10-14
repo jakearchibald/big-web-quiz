@@ -1,9 +1,11 @@
+const path = require('path');
 const gulp = require('gulp');
 const gulpProcess = require('gulp-process');
 const gutil = require('gulp-util');
 const babel = require('gulp-babel');
 const sourcemaps = require('gulp-sourcemaps');
 const handlebars = require('gulp-handlebars');
+const rename = require('gulp-rename');
 const debug = require('gulp-debug');
 const gzip = require('gulp-gzip');
 const defineModule = require('gulp-define-module');
@@ -128,51 +130,69 @@ function scss() {
     .pipe(gulp.dest(paths.scss.dest));
 }
 
-let cache;
-function script() {
-  return rollup({
-    entry: './client/js/index.js',
-    sourceMap: true,
-    cache,
-    plugins: [
-      nodeResolve({
-        browser: true,
-        jsnext: true,
-        main: true
-      }),
-      commonjs(),
-      rollupBabel({
-        presets: ['stage-3', ['es2015', {modules: false}]],
-        plugins: [["transform-react-jsx", {pragma:"h"}], "external-helpers"]
-      })
-    ]
-  }).on('bundle', function(bundle) {
-    cache = bundle;
-  }).pipe(source('index.js', './client/js/'))
-    .pipe(buffer())
-    .pipe(sourcemaps.init({loadMaps: true}))
-    .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('./build/static/js'))
-    .pipe(gzip({skipGrowingFiles: true}))
-    .pipe(gulp.dest('./build/static/js'));
+function createScriptTask(src, dest) {
+  const parsedPath = path.parse(src);
+  let cache;
+  return function script() {
+    return rollup({
+      entry: src,
+      sourceMap: true,
+      cache,
+      plugins: [
+        nodeResolve({
+          browser: true,
+          jsnext: true,
+          main: true
+        }),
+        commonjs(),
+        rollupBabel({
+          presets: ['stage-3', ['es2015', {modules: false}]],
+          plugins: [["transform-react-jsx", {pragma:"h"}], "external-helpers"]
+        })
+      ]
+    }).on('bundle', function(bundle) {
+      cache = bundle;
+    }).pipe(source('index.js', parsedPath.dir))
+      .pipe(buffer())
+      .pipe(sourcemaps.init({loadMaps: true}))
+      .pipe(rename({basename: /\/([^\/]+)$/.exec(parsedPath.dir)[1]}))
+      .pipe(sourcemaps.write('.'))
+      .pipe(gulp.dest(dest))
+      .pipe(gzip({skipGrowingFiles: true}))
+      .pipe(gulp.dest(dest));
+  }
+}
+
+const browserScripts = [
+  {src: './client/js/main/index.js', dest: './build/static/js'},
+  {src: './client/js/admin/index.js', dest: './build/static/js'}
+];
+
+for (const item of browserScripts) {
+  item.task = createScriptTask(item.src, item.dest);
 }
 
 function watch() {
+  const browserScriptTasks = browserScripts.map(i => i.task);
+
   // server
   gulp.watch(paths.serverScripts.src, gulp.series(serverScripts, serverRestart));
   gulp.watch(paths.serverTemplates.src, gulp.series(serverTemplates, serverRestart));
-  gulp.watch(paths.components.src, gulp.series(components, script, serverRestart));
+  gulp.watch(paths.components.src, gulp.series(components, gulp.parallel(...browserScriptTasks), serverRestart));
 
   // client
   gulp.watch(paths.scss.src, scss);
-  gulp.watch('./client/js/**/*.js', script);
+
+  for (const item of browserScripts) {
+    gulp.watch(path.parse(item.src).dir + '/**/*.js', item.task);
+  }
 }
 
 gulp.task('serverTemplates', serverTemplates);
 
 gulp.task('serve', gulp.series(
   clean,
-  gulp.parallel(serverScripts, serverTemplates, components, scss, script),
+  gulp.parallel(serverScripts, serverTemplates, components, scss, ...browserScripts.map(i => i.task)),
   gulp.parallel(
     databaseServer,
     // Wait for database to start up

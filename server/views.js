@@ -21,7 +21,18 @@ export function home(req, res) {
   res.send(
     indexTemplate({
       content,
+      scripts: ['/static/js/main.js'],
+      css: ['/static/css/index.css'],
       initialState: escapeJSONString(JSON.stringify(initialState))
+    })
+  );
+}
+
+export function admin(req, res) {
+  res.send(
+    indexTemplate({
+      scripts: ['/static/js/admin.js'],
+      css: ['/static/css/admin.css']
     })
   );
 }

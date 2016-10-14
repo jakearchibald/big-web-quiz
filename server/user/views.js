@@ -1,6 +1,6 @@
 import google from 'googleapis';
 
-import User from './model';
+import {User} from './models';
 import promisify from '../promisify';
 import {clientId, clientSecret, redirectOrigin} from '../settings';
 
@@ -31,6 +31,23 @@ function authenticateUser(code) {
 
 function logout(req) {
   return new Promise(r => req.session.destroy(r));
+}
+
+const ADMIN_IDS = [
+  '116237864387312784020' // Jake
+];
+
+function requiresAdmin(req) {
+  if (!req.user) {
+    return "Login required";
+  }
+
+  if (!ADMIN_IDS.includes(req.user.googleId)) {
+    res.status(403).send("Admin only, soz");
+    return "Admin only, soz";
+  }
+
+  return "";
 }
 
 export function generateAuthUrl({
@@ -120,11 +137,37 @@ export function updateUser(req, res) {
   });
 }
 
-export function requiresLoginJson(req, res, next) {
-  if (req.user) {
-    next();
+const adminIds = [
+  '116237864387312784020' // Jake
+];
+
+export function requiresAdminHtml(req, res, next) {
+  const err = requiresAdmin(req);
+
+  if (err) {
+    res.status(403).send(err);
     return;
   }
 
-  res.status(403).json({err: "Not logged in"});
+  next();
+}
+
+export function requiresAdminJson(req, res, next) {
+  const err = requiresAdmin(req);
+
+  if (err) {
+    res.status(403).json({err});
+    return;
+  }
+
+  next();
+}
+
+export function requiresLoginJson(req, res, next) {
+  if (!req.user) {
+    res.status(403).json({err: "Not logged in"});
+    return;
+  }
+
+  next();
 }

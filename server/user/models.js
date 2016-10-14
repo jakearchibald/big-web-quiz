@@ -8,4 +8,4 @@ const userSchema = mongoose.Schema({
   appearOnLeaderboard: {type: Boolean, index: true}
 });
 
-export default mongoose.model('User', userSchema);
+export const User = mongoose.model('User', userSchema);

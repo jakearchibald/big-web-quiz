@@ -3,8 +3,12 @@
 <head>
   <title>The big web quiz!</title>
   <meta name="viewport" content="width=device-width, minimum-scale=1.0">
-  <link rel="stylesheet" href="/static/css/index.css">
-  <script src="/static/js/index.js" defer></script>
+  {{#each css}}
+    <link rel="stylesheet" href="{{.}}">
+  {{/each}}
+  {{#each scripts}}
+    <script src="{{.}}" defer></script>
+  {{/each}}
 </head>
 <body>
   {{{content}}}
