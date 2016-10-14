@@ -7,7 +7,7 @@ import {home} from './views';
 import {
   userMiddleware, generateAuthUrl, handleLogin, 
   login, logoutRedirect, logoutJson, userJson, 
-  updateUser
+  updateUser, requiresLoginJson
 } from './user/views';
 import mongoose from './mongoose-db';
 import connectMongo from 'connect-mongo';
@@ -43,7 +43,7 @@ app.post('/logout', logoutRedirect);
 app.post('/logout.json', logoutJson);
 app.post('/login', login);
 app.get('/me.json', userJson);
-app.post('/update-me.json', updateUser);
+app.post('/update-me.json', requiresLoginJson, updateUser);
 
 app.listen(3000, () => {
   console.log('Example app listening on port 3000!');

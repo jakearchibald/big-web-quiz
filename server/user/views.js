@@ -108,12 +108,23 @@ export function updateUser(req, res) {
   // only dealing with appearOnLeaderboard for now
   if (!('appearOnLeaderboard' in req.body)) {
     res.json(simpleUserObject(req.user));
+    return;
   }
 
-  // TODO: handle error
-  // TODO: create decorators for must be logged in
   req.user.appearOnLeaderboard = !!req.body.appearOnLeaderboard;
   req.user.save().then(newUser => {
     res.json(simpleUserObject(newUser));
+  }).catch(err => {
+    res.status(500).json({err: 'Update failed'})
+    throw err;
   });
+}
+
+export function requiresLoginJson(req, res, next) {
+  if (req.user) {
+    next();
+    return;
+  }
+
+  res.status(403).json({err: "Not logged in"});
 }
