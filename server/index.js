@@ -2,6 +2,7 @@ import 'source-map-support/register';
 
 import express from 'express';
 import session from 'express-session';
+import gzipStatic from 'connect-gzip-static';
 import bodyParser from 'body-parser';
 import {home} from './views';
 import {
@@ -18,7 +19,7 @@ import {cookieSecret} from './settings';
 const app = express();
 
 // Middleware:
-app.use('/static', express.static(__dirname + '/static'));
+app.use('/static', gzipStatic(__dirname + '/static'));
 
 app.use(session({
   secret: cookieSecret,

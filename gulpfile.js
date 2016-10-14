@@ -5,6 +5,7 @@ const babel = require('gulp-babel');
 const sourcemaps = require('gulp-sourcemaps');
 const handlebars = require('gulp-handlebars');
 const debug = require('gulp-debug');
+const gzip = require('gulp-gzip');
 const defineModule = require('gulp-define-module');
 const sass = require('gulp-sass');
 const respawn = require('respawn');
@@ -122,6 +123,8 @@ function scss() {
   }).pipe(sourcemaps.init())
     .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
     .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest(paths.scss.dest))
+    .pipe(gzip({skipGrowingFiles: true}))
     .pipe(gulp.dest(paths.scss.dest));
 }
 
@@ -149,6 +152,8 @@ function script() {
     .pipe(buffer())
     .pipe(sourcemaps.init({loadMaps: true}))
     .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('./build/static/js'))
+    .pipe(gzip({skipGrowingFiles: true}))
     .pipe(gulp.dest('./build/static/js'));
 }
 
