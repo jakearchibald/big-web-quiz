@@ -8,6 +8,7 @@ import BoundComponent from '../../../components/bound-component';
 import Intro from '../../../components/intro';
 import QuestionWaiting from '../../../components/question-waiting';
 import LoginStatus from '../../../components/login-status';
+import LongPoll from './long-poll';
 
 async function getInitialState() {
   if (self.initialState) return self.initialState;
@@ -29,6 +30,9 @@ class App extends BoundComponent {
   constructor(props) {
     super(props);
     this.state = props.initialState;
+    const longPoll = new LongPoll(props.initialState.lastMessage);
+
+    longPoll.on('message', msg => console.log(msg));
   }
   onUserUpdate(user) {
     this.setState({user});

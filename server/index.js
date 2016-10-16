@@ -12,8 +12,10 @@ import {
   requiresAdminJson
 } from './user/views';
 import {
-  allQuestionsJson, updateQuestionJson, deleteQuestionJson
+  allQuestionsJson, updateQuestionJson, deleteQuestionJson,
+  setQuestionJson
 } from './quiz/views';
+import {longPoll} from './long-pollers/views';
 import mongoose from './mongoose-db';
 import connectMongo from 'connect-mongo';
 const MongoStore = connectMongo(session);
@@ -49,6 +51,7 @@ router.use(bodyParser.json());
 router.get('/', home);
 router.get('/oauth2callback', handleLogin);
 router.get('/me.json', userJson);
+router.get('/long-poll.json', requiresLoginJson, longPoll);
 router.get('/admin/', requiresAdminHtml, admin);
 router.get('/admin/questions.json', requiresAdminHtml, allQuestionsJson);
 
@@ -58,6 +61,7 @@ router.post('/login', login);
 router.post('/update-me.json', requiresLoginJson, updateUser);
 router.post('/admin/question-update.json', requiresAdminJson, updateQuestionJson);
 router.post('/admin/question-delete.json', requiresAdminJson, deleteQuestionJson);
+router.post('/admin/question-activate.json', requiresAdminJson, setQuestionJson);
 
 app.use(router);
 

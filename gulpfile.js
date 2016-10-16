@@ -138,8 +138,10 @@ function createScriptTask(src, dest) {
       entry: src,
       sourceMap: true,
       cache,
+      format: 'iife',
       plugins: [
         nodeResolve({
+          preferBuiltins: false,
           browser: true,
           jsnext: true,
           main: true

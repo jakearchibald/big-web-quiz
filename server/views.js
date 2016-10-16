@@ -5,6 +5,7 @@ import render from 'preact-render-to-string';
 import App from './components/app';
 import {simpleUserObject} from './user/views';
 import {escapeJSONString} from './utils';
+import {longPollers} from './long-pollers/views';
 
 export function home(req, res) {
   const initialState = {
@@ -16,6 +17,10 @@ export function home(req, res) {
     initialState.user = simpleUserObject(req.user);
   }
 
+  if (longPollers.lastMessage) {
+    initialState.lastMessage = longPollers.lastMessage;
+  }
+
   const content = render(<App user={initialState.user}/>);
   
   res.send(
@@ -23,7 +28,7 @@ export function home(req, res) {
       content,
       scripts: ['/static/js/main.js'],
       css: ['/static/css/index.css'],
-      initialState: escapeJSONString(JSON.stringify(initialState))
+      initialState: escapeJSONString(JSON.stringify(initialState)) 
     })
   );
 }

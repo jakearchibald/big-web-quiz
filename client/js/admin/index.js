@@ -46,6 +46,20 @@ class App extends BoundComponent {
       questions: this.state.questions
     });
   }
+  async onActivateQuestionClick(event, question) {
+    try {
+      await fetch('/admin/question-activate.json', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({id: question._id})
+      });
+    }
+    catch (err) {
+      // TODO
+      throw err;
+    }
+  }
   render(props, {questions, addingQuestion}) {
     return <div>
       <ol>
@@ -64,7 +78,10 @@ class App extends BoundComponent {
             </li>
           }
           return <li key={question._id}>
-            <p><button onClick={event => this.onEditQuestionClick(event, question)}>Edit</button></p>
+            <p>
+              <button onClick={event => this.onEditQuestionClick(event, question)}>Edit</button>
+              <button onClick={event => this.onActivateQuestionClick(event, question)}>Activate</button>
+            </p>
             <p>Text: {question.text}</p>
             <p>Code: {question.code}</p>
             <p>Multiple: {String(question.multiple)}</p>
