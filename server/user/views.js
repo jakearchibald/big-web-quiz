@@ -2,6 +2,7 @@ import google from 'googleapis';
 
 import {User} from './models';
 import {Question} from '../quiz/models';
+import {quiz} from '../quiz/views';
 import promisify from '../promisify';
 import {clientId, clientSecret, redirectOrigin} from '../settings';
 
@@ -174,5 +175,61 @@ export function requiresLoginJson(req, res, next) {
 }
 
 export function questionAnswerJson(req, res) {
-  // TODO you are here
+  if (!quiz.activeQuestion) {
+    res.json({err: "No question being asked"});
+    return;
+  }
+
+  Question.findById(req.body.id).then(question => {
+    if (!question) {
+      res.json({err: "Question not found"});
+      return;
+    }
+
+    if (!question._id.equals(quiz.activeQuestion._id)) {
+      res.json({err: "This question isn't currently being asked"});
+      return;
+    }
+
+    if (!quiz.acceptingAnswers) {
+      res.json({err: "Too late!"});
+      return;
+    }
+
+    if (!Array.isArray(req.body.answers)) {
+      res.json({err: "Answers is wrong type"});
+      return;
+    }
+
+    // filter out bad answers and make unique
+    const answers = [...new Set(
+      req.body.answers.filter(answer => {
+        // remove non-numbers
+        if (typeof answer != 'number') return false;
+        // remove out-of-range numbers
+        if (answer < 0 || answer > quiz.activeQuestion.answers.length - 1) return false;
+        return true;
+      })
+    )];
+
+    if (!quiz.activeQuestion.multiple && answers.length != 1) {
+      res.json({err: "Must provide answer"});
+      return;
+    }
+
+    const answerIndex = req.user.answers.findIndex(a => a.questionId.equals(question._id));
+
+    if (answerIndex != -1) {
+      req.user.answers[answerIndex].answers = answers;
+    }
+    else {
+      req.user.answers.push({questionId: question._id, answers});
+    }
+    return req.user.save();
+  }).then(() => {
+    res.json({});
+  }).catch(err => {
+    res.status(500).json({err: "Unknown error"});
+    throw err;
+  });
 }

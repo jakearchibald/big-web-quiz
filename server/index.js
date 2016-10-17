@@ -9,7 +9,7 @@ import {
   userMiddleware, generateAuthUrl, handleLogin, 
   login, logoutRedirect, logoutJson, userJson, 
   updateUser, requiresLoginJson, requiresAdminHtml,
-  requiresAdminJson
+  requiresAdminJson, questionAnswerJson
 } from './user/views';
 import {
   allQuestionsJson, updateQuestionJson, deleteQuestionJson,
@@ -59,6 +59,7 @@ router.post('/logout', logoutRedirect);
 router.post('/logout.json', logoutJson);
 router.post('/login', login);
 router.post('/update-me.json', requiresLoginJson, updateUser);
+router.post('/question-answer.json', requiresLoginJson, questionAnswerJson);
 router.post('/admin/question-update.json', requiresAdminJson, updateQuestionJson);
 router.post('/admin/question-delete.json', requiresAdminJson, deleteQuestionJson);
 router.post('/admin/question-activate.json', requiresAdminJson, setQuestionJson);

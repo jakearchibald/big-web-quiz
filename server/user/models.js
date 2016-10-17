@@ -1,4 +1,5 @@
 import mongoose from '../mongoose-db';
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const userSchema = mongoose.Schema({
   googleId: {type: String, unique: true, required: true},
@@ -8,7 +9,7 @@ const userSchema = mongoose.Schema({
   appearOnLeaderboard: {type: Boolean, index: true},
   answers: [
     {
-      answerId: {type: String, required: true},
+      questionId: {type: ObjectId, required: true},
       answers: [Number]
     }
   ]

@@ -60,7 +60,7 @@ class App extends BoundComponent {
       user: null
     });
   }
-  render(props, {user, question}) {
+  render(props, {user, question, questionClosed, correctAnswers}) {
     return (
       <div>
         <LoginStatus user={user} onLogout={this.onLogout} onUserUpdate={this.onUserUpdate}/>
@@ -71,6 +71,8 @@ class App extends BoundComponent {
               text={question.text}
               multiple={question.multiple}
               answers={question.answers}
+              closed={questionClosed}
+              correctAnswers={correctAnswers}
             />
             : 
             <QuestionWaiting/>
