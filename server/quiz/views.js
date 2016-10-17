@@ -1,7 +1,8 @@
 import {Question, Quiz} from './models';
 import {longPollers} from '../long-pollers/views'
 
-const quiz = new Quiz();
+export const quiz = new Quiz();
+longPollers.broadcast(quiz.getState());
 
 export function allQuestionsJson(req, res) {
   Question.find().then(questions => {
@@ -63,15 +64,7 @@ export function setQuestionJson(req, res) {
     }
 
     quiz.setQuestion(question);
-
-    longPollers.broadcast({
-      question: {
-        text: question.text,
-        multiple: question.multiple,
-        // don't want to send which answers are correct :D
-        answers: question.answers.map(answer => ({text: answer.text}))
-      }
-    });
+    longPollers.broadcast(quiz.getState());
 
     res.json({});
   }).catch(err => {

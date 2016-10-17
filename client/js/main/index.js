@@ -8,6 +8,7 @@ import BoundComponent from '../../../components/bound-component';
 import Intro from '../../../components/intro';
 import QuestionWaiting from '../../../components/question-waiting';
 import LoginStatus from '../../../components/login-status';
+import Question from './Question';
 import LongPoll from './long-poll';
 
 async function getInitialState() {
@@ -29,10 +30,27 @@ async function getInitialState() {
 class App extends BoundComponent {
   constructor(props) {
     super(props);
+    // State looks like:
+    // {
+    //   checkedLogin: Boolean,
+    //   user: {name: String, avatarUrl: String, appearOnLeaderboard: Boolean},
+    //   lastMessageTime: Number, // the last message time sent to long-pollers
+    //   question: {
+    //     id: String,
+    //     text: String,
+    //     code: String, // optional code example
+    //     multiple: Boolean, // accept multiple choices
+    //     answers: [{text: String}]
+    //   },
+    //   questionClosed: Boolean,
+    //   correctAnswers: [Number]
+    // }
     this.state = props.initialState;
-    const longPoll = new LongPoll(props.initialState.lastMessage);
+    const longPoll = new LongPoll(props.initialState.lastMessageTime);
 
-    longPoll.on('message', msg => console.log(msg));
+    longPoll.on('message', msg => {
+      this.setState(msg);
+    });
   }
   onUserUpdate(user) {
     this.setState({user});
@@ -42,11 +60,23 @@ class App extends BoundComponent {
       user: null
     });
   }
-  render(props, {user}) {
+  render(props, {user, question}) {
     return (
       <div>
         <LoginStatus user={user} onLogout={this.onLogout} onUserUpdate={this.onUserUpdate}/>
-        {user ? <QuestionWaiting/> : <Intro/>}
+        {user ?
+          (question ?
+            <Question
+              id={question.id}
+              text={question.text}
+              multiple={question.multiple}
+              answers={question.answers}
+            />
+            : 
+            <QuestionWaiting/>
+          ) 
+          :
+          <Intro/>}
       </div>
     );
   }

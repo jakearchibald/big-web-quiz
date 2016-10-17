@@ -4,6 +4,7 @@ import render from 'preact-render-to-string';
 
 import App from './components/app';
 import {simpleUserObject} from './user/views';
+import {quiz} from './quiz/views';
 import {escapeJSONString} from './utils';
 import {longPollers} from './long-pollers/views';
 
@@ -17,8 +18,9 @@ export function home(req, res) {
     initialState.user = simpleUserObject(req.user);
   }
 
-  if (longPollers.lastMessage) {
-    initialState.lastMessage = longPollers.lastMessage;
+  if (longPollers.lastMessageTime) {
+    initialState.lastMessageTime = longPollers.lastMessageTime; 
+    Object.assign(initialState, quiz.getState());
   }
 
   const content = render(<App user={initialState.user}/>);

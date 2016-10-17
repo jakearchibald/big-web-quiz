@@ -6,6 +6,9 @@ export default class LongPollers {
   get lastMessage() {
     return this._lastMessage;
   }
+  get lastMessageTime() {
+    return this._lastMessage ? this._lastMessage.time : 0;
+  }
   broadcast(message) {
     this._lastMessage = {
       message,
@@ -18,9 +21,9 @@ export default class LongPollers {
   }
   add(req, res) {
     const queryMessageTime = Number(req.query.lastMessageTime) || 0;
-    const lastMessageTime = this._lastMessage ? this._lastMessage.time : 0;
+    const lastMessageTime = this.lastMessageTime;
 
-    if (queryMessageTime < lastMessageTime) {
+    if (queryMessageTime != lastMessageTime) {
       res.json(this._lastMessage);
       return;
     }

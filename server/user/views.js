@@ -1,6 +1,7 @@
 import google from 'googleapis';
 
 import {User} from './models';
+import {Question} from '../quiz/models';
 import promisify from '../promisify';
 import {clientId, clientSecret, redirectOrigin} from '../settings';
 
@@ -170,4 +171,8 @@ export function requiresLoginJson(req, res, next) {
   }
 
   next();
+}
+
+export function questionAnswerJson(req, res) {
+  // TODO you are here
 }

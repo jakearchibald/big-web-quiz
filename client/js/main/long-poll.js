@@ -2,11 +2,11 @@ import EventEmitter from 'events';
 import {wait} from '../utils';
 
 export default class LongPoll extends EventEmitter {
-  constructor(lastMessage) {
+  constructor(lastMessageTime = 0) {
     super();
     this._active = false;
     this._fetchInFlight = false;
-    this._lastMessage = lastMessage;
+    this._lastMessageTime = lastMessageTime;
     this.start();
   }
   start() {
@@ -14,19 +14,18 @@ export default class LongPoll extends EventEmitter {
     if (this._fetchInFlight) return;
 
     const poll = async () => {
-      const lastMessageTime = this._lastMessage ? this._lastMessage.time : 0;
       const connectionStart = Date.now();
 
       try {
-        const response = await fetch(`/long-poll.json?lastMessageTime=${lastMessageTime}`, {
+        const response = await fetch(`/long-poll.json?lastMessageTime=${this._lastMessageTime}`, {
           credentials: 'include'
         });
 
-        const message = await response.json();
+        const data = await response.json();
 
         if (this._active) {
-          this._lastMessage = message;
-          this.emit('message', message);
+          this._lastMessageTime = data.time;
+          this.emit('message', data.message);
         }
       }
       catch(err) {
