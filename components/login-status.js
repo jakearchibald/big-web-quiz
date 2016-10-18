@@ -72,6 +72,7 @@ export default class LoginStatus extends BoundComponent {
       <div>
         <img src={user.avatarUrl}/> Logged in as {user.name} <Logout onLogout={onLogout}/>
         {leaderboardToggle}
+        <div>Score: {user.score}</div>
       </div>
     );
   }

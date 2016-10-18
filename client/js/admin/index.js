@@ -96,6 +96,15 @@ class App extends BoundComponent {
     }
     return <button onClick={event => this.setQuestionState(question, 'activate')}>Activate</button>;
   }
+  onDeleteUserAnswersClick() {
+    const sure = confirm("Delete all user answers - are you sure?");
+    if (!sure) return;
+
+    fetch('/admin/delete-user-answers.json', {
+      credentials: 'include',
+      method: 'POST'
+    });
+  }
   render(props, {questions, addingQuestion, editingQuestions}) {
     return <div>
       <ol>
@@ -142,6 +151,7 @@ class App extends BoundComponent {
         :
         <div><button onClick={this.onAddQuestionClick}>+</button></div>
       }
+      <div><button onClick={this.onDeleteUserAnswersClick}>Delete all user answers</button></div>
     </div>;
   }
 }

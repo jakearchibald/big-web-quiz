@@ -32,7 +32,12 @@ export default class LongPollers {
     };
 
     for (const res of this._pollers) {
-      res.json(this._lastMessage);
+      try {
+        res.json(this._lastMessage);
+      }
+      catch (err) {
+        console.log(err);
+      }
     }
   }
   add(req, res) {

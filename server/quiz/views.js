@@ -15,6 +15,7 @@
 * limitations under the License.
 */
 import {Question, Quiz} from './models';
+import {User} from '../user/models';
 import {longPollers} from '../long-pollers/views'
 
 export const quiz = new Quiz();
@@ -132,8 +133,10 @@ export function revealQuestionJson(req, res) {
     }
 
     quiz.revealAnswers();
-    longPollers.broadcast(quiz.getState());
 
+    return Question.find();
+  }).then(qs => User.updateScores(qs)).then(() => {
+    longPollers.broadcast(quiz.getState());
     allQuestionsJson(req, res);
   }).catch(err => {
     res.status(500).json({err: err.message});

@@ -23,12 +23,46 @@ const userSchema = mongoose.Schema({
   email: {type: String, required: true},
   avatarUrl: String,
   appearOnLeaderboard: {type: Boolean, index: true},
+  // Optimisation. See `updateScore`.
+  score: {type: Number, default: 0},
   answers: [
     {
       questionId: {type: ObjectId, required: true},
-      answers: [Number]
+      choices: [Number]
     }
   ]
 });
+
+userSchema.statics.updateScores = function(questions) {
+  return this.find().then(users => {
+    for (const user of users) {
+      let score = 0;
+
+      for (const question of questions) {
+        const userAnswer = user.answers.find(answer => question._id.equals(answer.questionId));
+        if (!userAnswer) continue;
+        const choices = userAnswer.choices;
+
+        if (question.multiple) {
+          for (const [i, answer] of question.answers.entries()) {
+            if (answer.correct === choices.includes(i)) {
+              score++;
+            }
+          }
+        }
+        else {
+          const correctIndex = question.answers.findIndex(a => a.correct);
+          if (choices[0] == correctIndex) {
+            score += 5;
+          }
+        }
+      }
+
+      user.score = score;
+    }
+
+    return Promise.all(users.map(u => u.save()));
+  });
+};
 
 export const User = mongoose.model('User', userSchema);

@@ -104,7 +104,8 @@ export function simpleUserObject(user) {
   return {
     name: user.name,
     avatarUrl: user.avatarUrl,
-    appearOnLeaderboard: !!user.appearOnLeaderboard 
+    appearOnLeaderboard: !!user.appearOnLeaderboard,
+    score: user.score
   }
 }
 
@@ -190,6 +191,14 @@ export function requiresLoginJson(req, res, next) {
   next();
 }
 
+export function deleteUserAnswersJson(req, res) {
+  User.update({}, {answers: [], score: 0}).then(() => {
+    res.json({});
+  }).catch(err => {
+    res.status(500).json({err});
+  });
+}
+
 export function questionAnswerJson(req, res) {
   if (!quiz.activeQuestion) {
     res.json({err: "No question being asked"});
@@ -212,34 +221,34 @@ export function questionAnswerJson(req, res) {
       return;
     }
 
-    if (!Array.isArray(req.body.answers)) {
-      res.json({err: "Answers is wrong type"});
+    if (!Array.isArray(req.body.choices)) {
+      res.json({err: "Choices is wrong type"});
       return;
     }
 
     // filter out bad answers and make unique
-    const answers = [...new Set(
-      req.body.answers.filter(answer => {
+    const choices = [...new Set(
+      req.body.choices.filter(choice => {
         // remove non-numbers
-        if (typeof answer != 'number') return false;
+        if (typeof choice != 'number') return false;
         // remove out-of-range numbers
-        if (answer < 0 || answer > quiz.activeQuestion.answers.length - 1) return false;
+        if (choice < 0 || choice > quiz.activeQuestion.answers.length - 1) return false;
         return true;
       })
     )];
 
-    if (!quiz.activeQuestion.multiple && answers.length != 1) {
-      res.json({err: "Must provide answer"});
+    if (!quiz.activeQuestion.multiple && choices.length != 1) {
+      res.json({err: "Must provide one answer"});
       return;
     }
 
     const answerIndex = req.user.answers.findIndex(a => a.questionId.equals(question._id));
 
     if (answerIndex != -1) {
-      req.user.answers[answerIndex].answers = answers;
+      req.user.answers[answerIndex].choices = choices;
     }
     else {
-      req.user.answers.push({questionId: question._id, answers});
+      req.user.answers.push({questionId: question._id, choices});
     }
     return req.user.save();
   }).then(() => {

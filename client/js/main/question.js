@@ -40,8 +40,8 @@ export default class Question extends BoundComponent {
         body: JSON.stringify({
           id: this.props.id,
           // becomes an array of indexes checked
-          answers: this.state.answersChecked.reduce((arr, answerChecked, i) => {
-            if (answerChecked) {
+          choices: this.state.answersChecked.reduce((arr, choiceChecked, i) => {
+            if (choiceChecked) {
               arr.push(i);
             }
             return arr;

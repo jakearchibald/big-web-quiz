@@ -25,7 +25,7 @@ import {
   userMiddleware, generateAuthUrl, handleLogin, 
   login, logoutRedirect, logoutJson, userJson, 
   updateUser, requiresLoginJson, requiresAdminHtml,
-  requiresAdminJson, questionAnswerJson
+  requiresAdminJson, questionAnswerJson, deleteUserAnswersJson
 } from './user/views';
 import {
   allQuestionsJson, updateQuestionJson, deleteQuestionJson,
@@ -83,6 +83,7 @@ router.post('/admin/question-activate.json', requiresAdminJson, setQuestionJson)
 router.post('/admin/question-close.json', requiresAdminJson, closeQuestionJson);
 router.post('/admin/question-reveal.json', requiresAdminJson, revealQuestionJson);
 router.post('/admin/question-deactivate.json', requiresAdminJson, deactivateQuestionJson);
+router.post('/admin/delete-user-answers.json', requiresAdminJson, deleteUserAnswersJson);
 
 app.use(router);
 

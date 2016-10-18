@@ -65,6 +65,14 @@ class App extends BoundComponent {
     const longPoll = new LongPoll(props.initialState.lastMessageTime);
 
     longPoll.on('message', msg => {
+      if (msg.correctAnswers) { // update the score
+        // TODO: change view while this is updating?
+        fetch('/me.json', {
+          credentials: 'include'
+        }).then(r => r.json()).then(data => {
+          this.setState({user: data.user});
+        });
+      }
       this.setState(msg);
     });
   }
