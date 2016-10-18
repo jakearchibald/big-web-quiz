@@ -55,7 +55,7 @@ export default class QuestionUpdate extends BoundComponent {
 
       const data = await response.json();
       if (data.err) throw new Error(data.err);
-      this.props.onQuestionRemoved(this.props.id);
+      this.props.onQuestionRemoved(this.props.id, data.questions);
     }
     catch (err) {
       // TODO
@@ -81,7 +81,7 @@ export default class QuestionUpdate extends BoundComponent {
       const data = await response.json();
 
       if (data.err) throw new Error(data.err);
-      this.props.onQuestionSaved(data.question);
+      this.props.onQuestionSaved(id, data.questions);
     }
     catch (err) {
       // TODO

@@ -22,13 +22,22 @@ longPollers.broadcast(quiz.getState());
 
 export function allQuestionsJson(req, res) {
   Question.find().then(questions => {
-    res.json(questions);
+    questions = questions.map(q => q.toObject());
+    for (const question of questions) {
+      question.active = quiz.activeQuestion && quiz.activeQuestion._id.equals(question._id);
+      if (question.active) {
+        question.closed = !quiz.acceptingAnswers;
+        question.revealingAnswers = quiz.revealingAnswers;
+      }
+    }
+    res.json({questions});
   });
 }
 
 export function deleteQuestionJson(req, res) {
   Question.findByIdAndRemove(req.body.id).then(() => {
-    res.json({});
+    allQuestionsJson(req, res);
+    return;
   }).catch(err => {
     res.status(500).json({err: err.message});
   });
@@ -66,7 +75,8 @@ export function updateQuestionJson(req, res) {
 
   p.then(newQuestion => {
     if (!newQuestion) throw Error('No record found');
-    res.json({question: newQuestion});
+    allQuestionsJson(req, res);
+    return;
   }).catch(err => {
     res.status(500).json({err: err.message});
   });
@@ -82,8 +92,71 @@ export function setQuestionJson(req, res) {
     quiz.setQuestion(question);
     longPollers.broadcast(quiz.getState());
 
-    res.json({});
+    allQuestionsJson(req, res);
   }).catch(err => {
     res.status(500).json({err: err.message});
-  });;
+  });
+}
+
+export function closeQuestionJson(req, res) {
+  Question.findById(req.body.id).then(question => {
+    if (!question) {
+      res.status(404).json({err: "Question not found"});
+      return;
+    }
+
+    if (!quiz.activeQuestion || !question.equals(quiz.activeQuestion)) {
+      res.status(404).json({err: "This isn't the active question"});
+      return;
+    }
+
+    quiz.closeForAnswers();
+    longPollers.broadcast(quiz.getState());
+
+    allQuestionsJson(req, res);
+  }).catch(err => {
+    res.status(500).json({err: err.message});
+  });
+}
+
+export function revealQuestionJson(req, res) {
+  Question.findById(req.body.id).then(question => {
+    if (!question) {
+      res.status(404).json({err: "Question not found"});
+      return;
+    }
+
+    if (!quiz.activeQuestion || !question.equals(quiz.activeQuestion)) {
+      res.status(404).json({err: "This isn't the active question"});
+      return;
+    }
+
+    quiz.revealAnswers();
+    longPollers.broadcast(quiz.getState());
+
+    allQuestionsJson(req, res);
+  }).catch(err => {
+    res.status(500).json({err: err.message});
+  });
+}
+
+export function deactivateQuestionJson(req, res) {
+  Question.findById(req.body.id).then(question => {
+    if (!question) {
+      res.status(404).json({err: "Question not found"});
+      return;
+    }
+
+    if (!quiz.activeQuestion || !question.equals(quiz.activeQuestion)) {
+      res.status(404).json({err: "This isn't the active question"});
+      return;
+    }
+
+    quiz.unsetQuestion();
+    longPollers.broadcast(quiz.getState());
+
+    allQuestionsJson(req, res);
+  }).catch(err => {
+    res.status(500).json({err: err.message});
+  });
 }

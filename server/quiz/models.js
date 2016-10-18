@@ -44,12 +44,16 @@ export class Quiz {
   get acceptingAnswers() {
     return this._acceptingAnswers;
   }
+  get revealingAnswers() {
+    return this._revealingAnswers;
+  }
   setQuestion(question) {
     this._activeQuestion = question;
     this._acceptingAnswers = true;
     this._revealingAnswers = false;
   }
   closeForAnswers() {
+    if (!this._activeQuestion) throw Error("No active question");
     this._acceptingAnswers = false;
     this._revealingAnswers = false;
   }
@@ -69,10 +73,12 @@ export class Quiz {
         id: this._activeQuestion._id,
         text: this._activeQuestion.text,
         multiple: this._activeQuestion.multiple,
-        // don't want to send which answers are correct :D
+        // Don't want to send which answers are correct all the time,
+        // see `correctAnswers` below
         answers: this._activeQuestion.answers.map(answer => ({text: answer.text}))
       },
       questionClosed: !this._acceptingAnswers,
+      // array of indexes for the correct answers
       correctAnswers: this._revealingAnswers &&
         this._activeQuestion.answers.reduce((arr, answer, i) => {
           if (answer.correct) {

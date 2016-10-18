@@ -58,7 +58,7 @@ export default class Question extends BoundComponent {
       throw err;
     }
   }
-  render({text, multiple, answers}, {answersChecked}) {
+  render({text, multiple, answers, closed, correctAnswers}, {answersChecked}) {
     return (
       <form onSubmit={this.onSubmit} action={this.formAction} method="POST">
         <p>{text}</p>
@@ -71,9 +71,13 @@ export default class Question extends BoundComponent {
                 name="answer"
                 value={i}
                 checked={answersChecked[i]}
+                disabled={closed}
                 onChange={this.linkState(`answersChecked.${i}`)}
               />
               {answer.text}
+              {correctAnswers ?
+                (correctAnswers.includes(i) ? ' - This was a correct answer' : '') 
+                : ''}
             </label>
           </div>
         )}

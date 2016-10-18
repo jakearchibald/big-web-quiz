@@ -29,7 +29,8 @@ import {
 } from './user/views';
 import {
   allQuestionsJson, updateQuestionJson, deleteQuestionJson,
-  setQuestionJson
+  setQuestionJson, closeQuestionJson, revealQuestionJson,
+  deactivateQuestionJson
 } from './quiz/views';
 import {longPoll} from './long-pollers/views';
 import mongoose from './mongoose-db';
@@ -69,7 +70,7 @@ router.get('/oauth2callback', handleLogin);
 router.get('/me.json', userJson);
 router.get('/long-poll.json', requiresLoginJson, longPoll);
 router.get('/admin/', requiresAdminHtml, admin);
-router.get('/admin/questions.json', requiresAdminHtml, allQuestionsJson);
+router.get('/admin/questions.json', requiresAdminJson, allQuestionsJson);
 
 router.post('/logout', logoutRedirect);
 router.post('/logout.json', logoutJson);
@@ -79,6 +80,9 @@ router.post('/question-answer.json', requiresLoginJson, questionAnswerJson);
 router.post('/admin/question-update.json', requiresAdminJson, updateQuestionJson);
 router.post('/admin/question-delete.json', requiresAdminJson, deleteQuestionJson);
 router.post('/admin/question-activate.json', requiresAdminJson, setQuestionJson);
+router.post('/admin/question-close.json', requiresAdminJson, closeQuestionJson);
+router.post('/admin/question-reveal.json', requiresAdminJson, revealQuestionJson);
+router.post('/admin/question-deactivate.json', requiresAdminJson, deactivateQuestionJson);
 
 app.use(router);
 

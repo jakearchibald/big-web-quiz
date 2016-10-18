@@ -28,27 +28,29 @@ class App extends BoundComponent {
 
     this.state = {
       questions: props.questions,
-      addingQuestion: false
+      addingQuestion: false,
+      editingQuestions: [] // ids
+    };
+  }
+  onQuestionSaved(id, questions) {
+    if (id) { // updating
+      this.setState({
+        questions,
+        editingQuestions: this.state.editingQuestions.filter(editingId => editingId != id)
+      });
+    }
+    else { // adding
+      this.setState({
+        questions,
+        addingQuestion: false
+      });
     }
   }
-  onQuestionSaved(question) {
-    const questions = this.state.questions.slice();
-    const index = questions.findIndex(q => q._id == question._id);
-    const update = {questions};
-
-    if (index != -1) { // updating
-      questions[index] = question;
-    }
-    else {
-      questions.push(question);
-      update.addingQuestion = false;
-    }
-
-    this.setState(update);
-  }
-  onQuestionRemoved(id) {
-    const questions = this.state.questions.filter(q => q._id != id);
-    this.setState({questions});
+  onQuestionRemoved(id, questions) {
+    this.setState({
+      questions,
+      editingQuestions: this.state.editingQuestions.filter(editingId => editingId != id)
+    });
   }
   onAddQuestionClick() {
     this.setState({
@@ -56,19 +58,25 @@ class App extends BoundComponent {
     });
   }
   onEditQuestionClick(event, question) {
-    question.editing = true;
-
-    this.setState({
-      questions: this.state.questions
-    });
+    const editingQuestions = this.state.editingQuestions.slice();
+    editingQuestions.push(question._id);
+    this.setState({editingQuestions});
   }
-  async onActivateQuestionClick(event, question) {
+  async setQuestionState(question, state) {
     try {
-      await fetch('/admin/question-activate.json', {
+      const response = await fetch(`/admin/question-${state}.json`, {
         method: 'POST',
         credentials: 'include',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({id: question._id})
+      });
+
+      const data = await response.json();
+
+      if (data.err) throw Error(data.err);
+
+      this.setState({
+        questions: data.questions
       });
     }
     catch (err) {
@@ -76,41 +84,57 @@ class App extends BoundComponent {
       throw err;
     }
   }
-  render(props, {questions, addingQuestion}) {
+  questionActionButton(question) {
+    if (question.active) {
+      if (question.closed) {
+        if (question.revealingAnswers) {
+          return <button onClick={event => this.setQuestionState(question, 'deactivate')}>Deactivate</button>;
+        }
+        return <button onClick={event => this.setQuestionState(question, 'reveal')}>Reveal Answers</button>;
+      }
+      return <button onClick={event => this.setQuestionState(question, 'close')}>Close</button>;
+    }
+    return <button onClick={event => this.setQuestionState(question, 'activate')}>Activate</button>;
+  }
+  render(props, {questions, addingQuestion, editingQuestions}) {
     return <div>
       <ol>
         {questions.map((question, i) => {
-          if (question.editing) {
-            return <li key={question._id}>
-              <QuestionUpdate
-                id={question._id}
-                text={question.text}
-                code={question.code}
-                multiple={question.multiple}
-                answers={question.answers}
-                onQuestionSaved={this.onQuestionSaved}
-                onQuestionRemoved={this.onQuestionRemoved}
-              />
-            </li>
+          if (editingQuestions.includes(question._id)) {
+            return (
+              <li key={question._id}>
+                <QuestionUpdate
+                  id={question._id}
+                  text={question.text}
+                  code={question.code}
+                  multiple={question.multiple}
+                  answers={question.answers}
+                  onQuestionSaved={this.onQuestionSaved}
+                  onQuestionRemoved={this.onQuestionRemoved}
+                />
+              </li>
+            );
           }
-          return <li key={question._id}>
-            <p>
-              <button onClick={event => this.onEditQuestionClick(event, question)}>Edit</button>
-              <button onClick={event => this.onActivateQuestionClick(event, question)}>Activate</button>
-            </p>
-            <p>Text: {question.text}</p>
-            <p>Code: {question.code}</p>
-            <p>Multiple: {String(question.multiple)}</p>
-            <p>Answers:</p>
-            <ol>
-              {question.answers.map((answer, i) => 
-                <li key={`${question.id}-answer-${i}`}>
-                  {answer.text}
-                  {answer.correct ? ' - correct' : ''}
-                </li>
-              )}
-            </ol>
-          </li>
+          return (
+            <li key={question._id}>
+              <p>
+                <button onClick={event => this.onEditQuestionClick(event, question)}>Edit</button>
+                {this.questionActionButton(question)}
+              </p>
+              <p>Text: {question.text}</p>
+              <p>Code: {question.code}</p>
+              <p>Multiple: {String(question.multiple)}</p>
+              <p>Answers:</p>
+              <ol>
+                {question.answers.map((answer, i) => 
+                  <li key={`${question.id}-answer-${i}`}>
+                    {answer.text}
+                    {answer.correct ? ' - correct' : ''}
+                  </li>
+                )}
+              </ol>
+            </li>
+          );
         })}
       </ol>
       {addingQuestion ?
@@ -125,6 +149,6 @@ class App extends BoundComponent {
 
 fetch('/admin/questions.json', {
   credentials: 'include'
-}).then(response => response.json()).then(questions => {
-  render(<App questions={questions} />, document.body);
+}).then(response => response.json()).then(data => {
+  render(<App questions={data.questions} />, document.body);
 });
