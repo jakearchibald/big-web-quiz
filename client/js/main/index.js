@@ -17,6 +17,8 @@
 import {h, render} from 'preact';
 import regeneratorRuntime from 'regenerator-runtime/runtime';
 import App from '../../../shared/components/app';
+// for node compatibility
+self.global = self;
 // so we don't have to keep importing it
 self.regeneratorRuntime = regeneratorRuntime;
 
@@ -25,15 +27,11 @@ async function getInitialState() {
 
   // TODO get from IDB
 
-  const response = await fetch('/me.json', {
+  const response = await fetch('/initial-state.json', {
     credentials: 'include'
   });
-  const json = await response.json();
 
-  return {
-    checkedLogin: true,
-    user: json.user
-  };
+  return response.json();
 }
 
 getInitialState().then(state => {

@@ -22,7 +22,9 @@ export class Login extends BoundComponent {
     super(props);
   }
   render() {
-    return (<form action="/login" method="POST"><button>Log in</button></form>);
+    return (
+      <form action="/login" method="POST"><button>Log in</button></form>
+    );
   }
 }
 
@@ -58,32 +60,34 @@ export class Agree extends BoundComponent {
   constructor(props) {
     super(props);
     this.agreeUrl = '/agree';
-    this.checkboxClass = 'leaderboard-checkbox';
-
-    const serverRenderedCheckbox = self.document && self.document.querySelector(this.checkboxClass);
-
-    this.state = {
-      leaderboardChecked: serverRenderedCheckbox && serverRenderedCheckbox.checked
-    };
   }
-  onSubmit(event) {
+  async onSubmit(event) {
     event.preventDefault();
+
+    try {
+      const response = await fetch(this.agreeUrl + '.json', {
+        credentials: 'include',
+        method: 'POST'
+      });
+      const data = await response.json();
+
+      if (data.err) throw Error(err);
+      this.props.onAgree(data.user);
+    }
+    catch (err) {
+      throw err;
+    }
   }
   render() {
     return (
       <form action={this.agreeUrl} method="POST" onSubmit={this.onSubmit}>
         <p>For privacy reasons, you must be 13 or older to play.</p>
-        <div>
-          <label>
-            <input
-              class={this.checkboxClass}
-              type="checkbox"
-              checked={this.linkState('leaderboardChecked')}
-            /> Add me to the public leaderboard
-          </label>
-        </div>
         <div><button>I am 13 or older</button></div>
       </form>
     );
   }
 }
+
+Agree.defaultProps = {
+  onAgree: function(){}
+};

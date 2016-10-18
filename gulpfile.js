@@ -162,7 +162,9 @@ function createScriptTask(src, dest) {
           jsnext: true,
           main: true
         }),
-        commonjs(),
+        commonjs({
+          ignoreGlobal: true
+        }),
         rollupBabel({
           presets: ['stage-3', ['es2015', {modules: false}]],
           plugins: [["transform-react-jsx", {pragma:"h"}], "external-helpers"]
@@ -207,10 +209,11 @@ function watch() {
 }
 
 gulp.task('serverTemplates', serverTemplates);
+gulp.task('browserScripts', gulp.parallel(...browserScripts.map(i => i.task)));
 
 gulp.task('serve', gulp.series(
   clean,
-  gulp.parallel(serverScripts, serverTemplates, sharedScripts, scss, ...browserScripts.map(i => i.task)),
+  gulp.parallel(serverScripts, serverTemplates, sharedScripts, scss, 'browserScripts'),
   gulp.parallel(
     databaseServer,
     // Wait for database to start up

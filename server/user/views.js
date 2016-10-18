@@ -108,7 +108,7 @@ export function simpleUserObject(user) {
     avatarUrl: user.avatarUrl,
     appearOnLeaderboard: !!user.appearOnLeaderboard,
     score: user.score,
-    over12: user.over12
+    agreedToTerms: user.agreedToTerms
   }
 }
 
@@ -152,7 +152,21 @@ export function updateUser(req, res) {
 
   req.user.appearOnLeaderboard = !!req.body.appearOnLeaderboard;
   req.user.save().then(newUser => {
-    res.json(simpleUserObject(newUser));
+    res.json({
+      user: simpleUserObject(newUser)
+    });
+  }).catch(err => {
+    res.status(500).json({err: 'Update failed'})
+    throw err;
+  });
+}
+
+export function userAgreeTerms(req, res) {
+  req.user.agreedToTerms = true;
+  req.user.save().then(newUser => {
+    res.json({
+      user: simpleUserObject(newUser)
+    });
   }).catch(err => {
     res.status(500).json({err: 'Update failed'})
     throw err;
@@ -179,6 +193,19 @@ export function requiresAdminJson(req, res, next) {
 
   if (err) {
     res.status(403).json({err});
+    return;
+  }
+
+  next();
+}
+
+export function requiresLogin(req, res, next) {
+  if (req.params.json) {
+    return requiresLoginJson(req, res, next);
+  }
+
+  if (!req.user) {
+    res.status(403).send("Not logged in");
     return;
   }
 

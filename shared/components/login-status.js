@@ -37,12 +37,15 @@ export default class LoginStatus extends BoundComponent {
         body: JSON.stringify({appearOnLeaderboard: event.target.checked})
       });
       
-      const user = await response.json();
-      this.props.onUserUpdate(user);
+      const data = await response.json();
+
+      if (data.err) throw Error(data.err);
+
+      this.props.onUserUpdate(data.user);
     }
     catch (err) {
       // TODO: toast?
-      console.error(err);
+      throw err;
     }
     this.setState({leaderboardPending: false});
   }
