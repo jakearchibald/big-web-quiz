@@ -18,8 +18,8 @@ import { h } from 'preact';
 import BoundComponent from './bound-component';
 
 export class Login extends BoundComponent {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
   }
   render() {
     return (<form action="/login" method="POST"><button>Log in</button></form>);
@@ -27,8 +27,8 @@ export class Login extends BoundComponent {
 }
 
 export class Logout extends BoundComponent {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.logoutUrl = '/logout';
   }
   onSubmit(event) {
@@ -53,3 +53,36 @@ export class Logout extends BoundComponent {
 Logout.defaultProps = {
   onLogout: function(){}
 };
+
+export class Agree extends BoundComponent {
+  constructor(props) {
+    this.agreeUrl = '/agree';
+    this.checkboxClass = 'leaderboard-checkbox';
+
+    const serverRenderedCheckbox = self.document && self.document.querySelector(this.checkboxClass);
+
+    this.state = {
+      leaderboardChecked: serverRenderedCheckbox && serverRenderedCheckbox.checked
+    };
+  }
+  onSubmit(event) {
+    event.preventDefault();
+  }
+  render() {
+    return (
+      <form action={this.agreeUrl} method="POST" onSubmit={this.onSubmit}>
+        <p>For privacy reasons, you must be 13 or older to play.</p>
+        <div>
+          <label>
+            <input
+              class={this.checkboxClass}
+              type="checkbox"
+              checked={this.linkState('leaderboardChecked')}
+            /> Add me to the public leaderboard
+          </label>
+        </div>
+        <div><button>I am 13 or older</button></div>
+      </form>
+    );
+  }
+}

@@ -107,7 +107,8 @@ export function simpleUserObject(user) {
     name: user.name,
     avatarUrl: user.avatarUrl,
     appearOnLeaderboard: !!user.appearOnLeaderboard,
-    score: user.score
+    score: user.score,
+    over12: user.over12
   }
 }
 

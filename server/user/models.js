@@ -22,6 +22,7 @@ const userSchema = mongoose.Schema({
   name: {type: String, required: true},
   email: {type: String, required: true},
   avatarUrl: String,
+  over12: {type: Boolean, default: false},
   appearOnLeaderboard: {type: Boolean, index: true},
   // Optimisation. See `updateScore`.
   score: {type: Number, default: 0},
