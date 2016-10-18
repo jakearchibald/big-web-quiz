@@ -19,13 +19,13 @@ import {h} from 'preact';
 import render from 'preact-render-to-string';
 
 import mongoose from './mongoose-db';
-import App from './components/app';
+import App from './shared/components/app';
 import {simpleUserObject} from './user/views';
 import {quiz} from './quiz/views';
 import {escapeJSONString} from './utils';
 import {longPollers} from './long-pollers/views';
 
-export function home(req, res) {
+function getInitialState(req) {
   const initialState = {
     checkedLogin: true,
     user: null
@@ -40,7 +40,16 @@ export function home(req, res) {
     Object.assign(initialState, quiz.getState());
   }
 
-  const content = render(<App user={initialState.user}/>);
+  return initialState;
+}
+
+export function initialStateJson(req, res) {
+  res.json(getInitialState(req));
+}
+
+export function home(req, res) {
+  const initialState = getInitialState(req);
+  const content = render(<App initialState={initialState} server={true} />);
   
   res.send(
     indexTemplate({

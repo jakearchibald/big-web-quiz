@@ -56,6 +56,7 @@ Logout.defaultProps = {
 
 export class Agree extends BoundComponent {
   constructor(props) {
+    super(props);
     this.agreeUrl = '/agree';
     this.checkboxClass = 'leaderboard-checkbox';
 

@@ -44,9 +44,9 @@ const paths = {
     src: 'server/templates/**/*.hbs',
     dest: 'build/templates'
   },
-  components: {
-    src: 'components/**/*.js',
-    dest: 'build/components'
+  sharedScripts: {
+    src: 'shared/**/*.js',
+    dest: 'build/shared'
   },
   scss: {
     src: 'client/css/**/*.scss',
@@ -100,16 +100,16 @@ function serverScripts() {
     .pipe(gulp.dest(paths.serverScripts.dest));
 }
 
-function components() {
-  return gulp.src(paths.components.src, {
-    since: gulp.lastRun(components)
+function sharedScripts() {
+  return gulp.src(paths.sharedScripts.src, {
+    since: gulp.lastRun(sharedScripts)
   }).pipe(sourcemaps.init())
     .pipe(babel({
       presets: ['stage-3'],
       plugins: ["transform-es2015-modules-commonjs", ["transform-react-jsx", { "pragma":"h" }]]
     }))
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(paths.components.dest));
+    .pipe(gulp.dest(paths.sharedScripts.dest));
 }
 
 function serverTemplates() {
@@ -196,7 +196,7 @@ function watch() {
   // server
   gulp.watch(paths.serverScripts.src, gulp.series(serverScripts, serverRestart));
   gulp.watch(paths.serverTemplates.src, gulp.series(serverTemplates, serverRestart));
-  gulp.watch(paths.components.src, gulp.series(components, gulp.parallel(...browserScriptTasks), serverRestart));
+  gulp.watch(paths.sharedScripts.src, gulp.series(sharedScripts, gulp.parallel(...browserScriptTasks), serverRestart));
 
   // client
   gulp.watch(paths.scss.src, scss);
@@ -210,7 +210,7 @@ gulp.task('serverTemplates', serverTemplates);
 
 gulp.task('serve', gulp.series(
   clean,
-  gulp.parallel(serverScripts, serverTemplates, components, scss, ...browserScripts.map(i => i.task)),
+  gulp.parallel(serverScripts, serverTemplates, sharedScripts, scss, ...browserScripts.map(i => i.task)),
   gulp.parallel(
     databaseServer,
     // Wait for database to start up

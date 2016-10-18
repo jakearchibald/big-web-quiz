@@ -20,7 +20,9 @@ import express from 'express';
 import session from 'express-session';
 import gzipStatic from 'connect-gzip-static';
 import bodyParser from 'body-parser';
-import {home, admin, dbJson} from './views';
+import {
+  home, admin, dbJson, initialStateJson
+} from './views';
 import {
   userMiddleware, generateAuthUrl, handleLogin, 
   login, logoutRedirect, logoutJson, userJson, 
@@ -69,6 +71,7 @@ router.use(bodyParser.json());
 router.get('/', home);
 router.get('/oauth2callback', handleLogin);
 router.get('/me.json', userJson);
+router.get('/initial-state.json', initialStateJson);
 router.get('/long-poll.json', requiresLoginJson, longPoll);
 router.get('/admin/', requiresAdminHtml, admin);
 router.get('/admin/questions.json', requiresAdminJson, allQuestionsJson);

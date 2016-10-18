@@ -16,7 +16,7 @@
 */
 import {h} from 'preact';
 
-import BoundComponent from '../../../components/bound-component';
+import BoundComponent from './bound-component';
 
 export default class Question extends BoundComponent {
   constructor(props) {

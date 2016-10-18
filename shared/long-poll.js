@@ -15,7 +15,7 @@
 * limitations under the License.
 */
 import EventEmitter from 'events';
-import {wait} from '../utils';
+import {wait} from './utils';
 
 export default class LongPoll extends EventEmitter {
   constructor(lastMessageTime = 0) {

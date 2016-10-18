@@ -15,7 +15,7 @@
 * limitations under the License.
 */
 import {h} from 'preact';
-import BoundComponent from '../../../../components/bound-component';
+import BoundComponent from '../../../../shared/components/bound-component';
 
 const UPDATE_ACTION = '/admin/question-update.json';
 const DELETE_ACTION = '/admin/question-delete.json';

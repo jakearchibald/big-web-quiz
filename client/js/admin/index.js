@@ -19,7 +19,7 @@ import regeneratorRuntime from 'regenerator-runtime/runtime';
 // so we don't have to keep importing it
 self.regeneratorRuntime = regeneratorRuntime;
 
-import BoundComponent from '../../../components/bound-component';
+import BoundComponent from '../../../shared/components/bound-component';
 import QuestionUpdate from './components/question-update.js';
 
 class App extends BoundComponent {
