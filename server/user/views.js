@@ -19,6 +19,7 @@ import google from 'googleapis';
 import {User} from './models';
 import {Question} from '../quiz/models';
 import {quiz} from '../quiz/views';
+import {longPollers} from '../long-pollers/views';
 import promisify from '../promisify';
 import {clientId, clientSecret, redirectOrigin} from '../settings';
 
@@ -38,12 +39,13 @@ function authenticateUser(code) {
     const plus = google.plus('v1');
     return promisify(plus.people, 'get')({ userId: 'me', auth: oauth2Client });
   }).then(response => {
+    console.log('in final then');
     return User.findOneAndUpdate({googleId: response.id}, {
       googleId: response.id,
       name: response.displayName,
       email: response.emails[0].value,
       avatarUrl: response.image.url
-    }, {upsert: true});
+    }, {upsert: true, new: true});
   });
 }
 
@@ -193,6 +195,15 @@ export function requiresLoginJson(req, res, next) {
 
 export function deleteUserAnswersJson(req, res) {
   User.update({}, {answers: [], score: 0}).then(() => {
+    res.json({});
+  }).catch(err => {
+    res.status(500).json({err});
+  });
+}
+
+export function deleteUsersJson(req, res) {
+  User.remove({}).then(() => {
+    longPollers.broadcast({user: null});
     res.json({});
   }).catch(err => {
     res.status(500).json({err});

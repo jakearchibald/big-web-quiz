@@ -96,7 +96,7 @@ class App extends BoundComponent {
     }
     return <button onClick={event => this.setQuestionState(question, 'activate')}>Activate</button>;
   }
-  onDeleteUserAnswersClick() {
+  onDropUserAnswersClick() {
     const sure = confirm("Delete all user answers - are you sure?");
     if (!sure) return;
 
@@ -104,6 +104,26 @@ class App extends BoundComponent {
       credentials: 'include',
       method: 'POST'
     });
+  }
+  onDropUsersClick() {
+    const sure = confirm("Delete all users - are you sure?");
+    if (!sure) return;
+
+    fetch('/admin/delete-users.json', {
+      credentials: 'include',
+      method: 'POST'
+    });
+  }
+  async onLogDatabaseClick() {
+    try {
+      const response = await fetch('/admin/db.json', {
+        credentials: 'include'
+      });
+      console.log(await response.json());
+    }
+    catch (err) {
+      throw err;
+    }
   }
   render(props, {questions, addingQuestion, editingQuestions}) {
     return <div>
@@ -151,11 +171,12 @@ class App extends BoundComponent {
         :
         <div><button onClick={this.onAddQuestionClick}>+</button></div>
       }
-      <div><button onClick={this.onDeleteUserAnswersClick}>Delete all user answers</button></div>
+      <div><button onClick={this.onDropUserAnswersClick}>Drop user answers</button></div>
+      <div><button onClick={this.onDropUsersClick}>Drop users</button></div>
+      <div><button onClick={this.onLogDatabaseClick}>Log database</button></div>
     </div>;
   }
 }
-
 
 fetch('/admin/questions.json', {
   credentials: 'include'

@@ -20,12 +20,13 @@ import express from 'express';
 import session from 'express-session';
 import gzipStatic from 'connect-gzip-static';
 import bodyParser from 'body-parser';
-import {home, admin} from './views';
+import {home, admin, dbJson} from './views';
 import {
   userMiddleware, generateAuthUrl, handleLogin, 
   login, logoutRedirect, logoutJson, userJson, 
   updateUser, requiresLoginJson, requiresAdminHtml,
-  requiresAdminJson, questionAnswerJson, deleteUserAnswersJson
+  requiresAdminJson, questionAnswerJson, deleteUserAnswersJson,
+  deleteUsersJson
 } from './user/views';
 import {
   allQuestionsJson, updateQuestionJson, deleteQuestionJson,
@@ -71,6 +72,7 @@ router.get('/me.json', userJson);
 router.get('/long-poll.json', requiresLoginJson, longPoll);
 router.get('/admin/', requiresAdminHtml, admin);
 router.get('/admin/questions.json', requiresAdminJson, allQuestionsJson);
+router.get('/admin/db.json', requiresAdminJson, dbJson);
 
 router.post('/logout', logoutRedirect);
 router.post('/logout.json', logoutJson);
@@ -84,6 +86,7 @@ router.post('/admin/question-close.json', requiresAdminJson, closeQuestionJson);
 router.post('/admin/question-reveal.json', requiresAdminJson, revealQuestionJson);
 router.post('/admin/question-deactivate.json', requiresAdminJson, deactivateQuestionJson);
 router.post('/admin/delete-user-answers.json', requiresAdminJson, deleteUserAnswersJson);
+router.post('/admin/delete-users.json', requiresAdminJson, deleteUsersJson);
 
 app.use(router);
 

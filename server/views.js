@@ -18,6 +18,7 @@ import indexTemplate from './templates/index';
 import {h} from 'preact';
 import render from 'preact-render-to-string';
 
+import mongoose from './mongoose-db';
 import App from './components/app';
 import {simpleUserObject} from './user/views';
 import {quiz} from './quiz/views';
@@ -58,4 +59,25 @@ export function admin(req, res) {
       css: ['/static/css/admin.css']
     })
   );
+}
+
+export function dbJson(req, res) {
+  const output = {};
+  const promises = [];
+
+  for (const name of mongoose.connection.modelNames()) {
+    const modelOutput = {};
+    const model = mongoose.connection.model(name);
+    modelOutput.schema = model.schema;
+    promises.push(
+      model.find().then(docs => {
+        modelOutput.docs = docs;
+      })
+    );
+    output[name] = modelOutput;
+  }
+
+  Promise.all(promises).then(() => {
+    res.json(output);
+  });
 }
