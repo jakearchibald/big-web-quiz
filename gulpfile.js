@@ -185,7 +185,8 @@ function createScriptTask(src, dest) {
 
 const browserScripts = [
   {src: './client/js/main/index.js', dest: './build/static/js'},
-  {src: './client/js/admin/index.js', dest: './build/static/js'}
+  {src: './client/js/admin/index.js', dest: './build/static/js'},
+  {src: './client/js/presentation/index.js', dest: './build/static/js'}
 ];
 
 for (const item of browserScripts) {

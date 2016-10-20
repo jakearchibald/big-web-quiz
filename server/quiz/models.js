@@ -21,6 +21,8 @@ const questionSchema = mongoose.Schema({
   text: {type: String, required: true},
   // Answers can optionally have a code example
   code: String,
+  // So syntax highlighting can do the right thing
+  codeType: String,
   // User can select multiple answers (checkboxes rather than radios)
   multiple: Boolean,
   // Array of answers
@@ -37,6 +39,8 @@ export class Quiz {
     this._activeQuestion = null;
     this._acceptingAnswers = false;
     this._revealingAnswers = false;
+    this._showingLeaderboard = false;
+    this._cachedUserAnswers = {};
   }
   get activeQuestion() {
     return this._activeQuestion;
@@ -47,10 +51,31 @@ export class Quiz {
   get revealingAnswers() {
     return this._revealingAnswers;
   }
+  get showingLeaderboard() {
+    return this._showingLeaderboard;
+  }
   setQuestion(question) {
     this._activeQuestion = question;
     this._acceptingAnswers = true;
     this._revealingAnswers = false;
+    this._cachedUserAnswers = {};
+  }
+  cacheAnswers(userId, answers) {
+    this._cachedUserAnswers[userId] = answers;
+  }
+  getAverages() {
+    let total = 0;
+    const occurrences = Array(this._activeQuestion.answers.length).fill(0);
+
+    for (const userId of Object.keys(this._cachedUserAnswers)) {
+      total++;
+      const choices = this._cachedUserAnswers[userId];
+      for (const choice of choices) {
+        occurrences[choice]++;
+      }
+    }
+
+    return occurrences.map(n => n/total);
   }
   closeForAnswers() {
     if (!this._activeQuestion) throw Error("No active question");
@@ -67,11 +92,19 @@ export class Quiz {
     this._acceptingAnswers = false;
     this._revealingAnswers = true;
   }
+  showLeaderboard() {
+    this._showingLeaderboard = true;
+  }
+  hideLeaderboard() {
+    this._showingLeaderboard = false;
+  }
   getState() {
     return {
       question: this._activeQuestion && {
         id: this._activeQuestion._id,
         text: this._activeQuestion.text,
+        code: this._activeQuestion.code,
+        codeType: this._activeQuestion.codeType,
         multiple: this._activeQuestion.multiple,
         // Don't want to send which answers are correct all the time,
         // see `correctAnswers` below

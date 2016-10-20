@@ -16,12 +16,16 @@
 */
 import {Question, Quiz} from './models';
 import {User} from '../user/models';
-import {longPollers} from '../long-pollers/views'
+import {longPollers} from '../long-pollers/views';
+import EventStream from '../event-stream';
 
 export const quiz = new Quiz();
+export const presentationListeners = new EventStream();
 longPollers.broadcast(quiz.getState());
+presentationListeners.broadcast(quiz.getState());
 
-export function allQuestionsJson(req, res) {
+
+export function adminStateJson(req, res) {
   Question.find().then(questions => {
     questions = questions.map(q => q.toObject());
     for (const question of questions) {
@@ -31,13 +35,16 @@ export function allQuestionsJson(req, res) {
         question.revealingAnswers = quiz.revealingAnswers;
       }
     }
-    res.json({questions});
+    res.json({
+      questions,
+      showingLeaderboard: quiz.showingLeaderboard
+    });
   });
 }
 
 export function deleteQuestionJson(req, res) {
   Question.findByIdAndRemove(req.body.id).then(() => {
-    allQuestionsJson(req, res);
+    adminStateJson(req, res);
     return;
   }).catch(err => {
     res.status(500).json({err: err.message});
@@ -48,6 +55,7 @@ export function updateQuestionJson(req, res) {
   const update = {
     text: req.body.text,
     code: req.body.code,
+    codeType: req.body.codeType,
     multiple: !!req.body.multiple,
     answers: req.body.answers,
   };
@@ -60,8 +68,7 @@ export function updateQuestionJson(req, res) {
   update.answers = update.answers.filter(answer => String(answer.text).trim());
 
   if (!update.answers.length) {
-    // TODO update status code
-    res.status(500).json({err: "No answers provided"});
+    res.json({err: "No answers provided"});
     return;
   }
 
@@ -76,7 +83,7 @@ export function updateQuestionJson(req, res) {
 
   p.then(newQuestion => {
     if (!newQuestion) throw Error('No record found');
-    allQuestionsJson(req, res);
+    adminStateJson(req, res);
     return;
   }).catch(err => {
     res.status(500).json({err: err.message});
@@ -91,9 +98,10 @@ export function setQuestionJson(req, res) {
     }
 
     quiz.setQuestion(question);
+    presentationListeners.broadcast(quiz.getState());
     longPollers.broadcast(quiz.getState());
 
-    allQuestionsJson(req, res);
+    adminStateJson(req, res);
   }).catch(err => {
     res.status(500).json({err: err.message});
   });
@@ -112,9 +120,10 @@ export function closeQuestionJson(req, res) {
     }
 
     quiz.closeForAnswers();
+    presentationListeners.broadcast(quiz.getState());
     longPollers.broadcast(quiz.getState());
 
-    allQuestionsJson(req, res);
+    adminStateJson(req, res);
   }).catch(err => {
     res.status(500).json({err: err.message});
   });
@@ -137,7 +146,8 @@ export function revealQuestionJson(req, res) {
     return Question.find();
   }).then(qs => User.updateScores(qs)).then(() => {
     longPollers.broadcast(quiz.getState());
-    allQuestionsJson(req, res);
+    presentationListeners.broadcast(quiz.getState());
+    adminStateJson(req, res);
   }).catch(err => {
     res.status(500).json({err: err.message});
   });
@@ -157,9 +167,29 @@ export function deactivateQuestionJson(req, res) {
 
     quiz.unsetQuestion();
     longPollers.broadcast(quiz.getState());
+    presentationListeners.broadcast(quiz.getState());
 
-    allQuestionsJson(req, res);
+    adminStateJson(req, res);
   }).catch(err => {
     res.status(500).json({err: err.message});
   });
+}
+
+export function showLeaderboardJson(req, res) {
+  quiz.showLeaderboard();
+  presentationListeners.broadcast({
+    question: null,
+    leaderboard: null
+  });
+  adminStateJson(req, res);
+}
+
+export function hideLeaderboardJson(req, res) {
+  quiz.hideLeaderboard();
+  presentationListeners.broadcast(quiz.getState());
+  adminStateJson(req, res);
+}
+
+export function presentationListen(req, res) {
+  presentationListeners.add(req, res);
 }

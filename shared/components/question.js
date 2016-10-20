@@ -23,6 +23,7 @@ export default class Question extends BoundComponent {
     super(props);
 
     this.formAction = '/question-answer.json';
+    this.form = null;
 
     this.state = {
       answersChecked: []
@@ -58,9 +59,20 @@ export default class Question extends BoundComponent {
       throw err;
     }
   }
+  onChoiceChange() {
+    this.setState({
+      answersChecked: Array.from(
+        this.form.querySelectorAll('input[name=answer]')
+      ).map(el => el.checked)
+    })
+  }
   render({text, multiple, answers, closed, correctAnswers}, {answersChecked}) {
     return (
-      <form onSubmit={this.onSubmit} action={this.formAction} method="POST">
+      <form
+        onSubmit={this.onSubmit}
+        action={this.formAction}
+        method="POST"
+        ref={el => this.form = el}>
         <p>{text}</p>
         {answers.map((answer, i) =>
           <div>
@@ -72,12 +84,12 @@ export default class Question extends BoundComponent {
                 value={i}
                 checked={answersChecked[i]}
                 disabled={closed}
-                onChange={this.linkState(`answersChecked.${i}`)}
+                onChange={this.onChoiceChange}
               />
               {answer.text}
               {correctAnswers ?
                 (correctAnswers.includes(i) ? ' - This was a correct answer' : '') 
-                : ''}
+              : ''}
             </label>
           </div>
         )}

@@ -3178,6 +3178,10 @@ pretty-hrtime@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/pretty-hrtime/-/pretty-hrtime-1.0.2.tgz#70ca96f4d0628a443b918758f79416a9a7bc9fa8"
 
+prismjs:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.5.1.tgz#224990100ff6c2a7588d086be1a5ac62e83690f7"
+
 private@^0.1.6, private@~0.1.5:
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/private/-/private-0.1.6.tgz#55c6a976d0f9bafb9924851350fe47b9b5fbb7c1"
@@ -3598,6 +3602,10 @@ setprototypeof@1.0.1:
 shebang-regex@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-1.0.0.tgz#da42f49740c0b42db2ca9728571cb190c98efea3"
+
+shuffle-array:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/shuffle-array/-/shuffle-array-1.0.0.tgz#98a13e3cd9b7cc6c3d9b9b8f62c28e3356c7da06"
 
 signal-exit@^3.0.0:
   version "3.0.1"

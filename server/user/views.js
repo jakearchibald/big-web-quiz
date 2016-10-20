@@ -18,7 +18,7 @@ import google from 'googleapis';
 
 import {User} from './models';
 import {Question} from '../quiz/models';
-import {quiz} from '../quiz/views';
+import {quiz, presentationListeners} from '../quiz/views';
 import {longPollers} from '../long-pollers/views';
 import promisify from '../promisify';
 import {clientId, clientSecret, redirectOrigin} from '../settings';
@@ -282,6 +282,11 @@ export function questionAnswerJson(req, res) {
     }
 
     const answerIndex = req.user.answers.findIndex(a => a.questionId.equals(question._id));
+    
+    quiz.cacheAnswers(req.user._id, choices);
+    presentationListeners.broadcast({
+      averages: quiz.getAverages()
+    });
 
     if (answerIndex != -1) {
       req.user.answers[answerIndex].choices = choices;

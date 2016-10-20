@@ -54,6 +54,7 @@ export function home(req, res) {
   res.send(
     indexTemplate({
       content,
+      title: 'The big web quiz!',
       scripts: ['/static/js/main.js'],
       css: ['/static/css/index.css'],
       initialState: escapeJSONString(JSON.stringify(initialState)) 
@@ -64,8 +65,19 @@ export function home(req, res) {
 export function admin(req, res) {
   res.send(
     indexTemplate({
+      title: 'BWQ admin',
       scripts: ['/static/js/admin.js'],
       css: ['/static/css/admin.css']
+    })
+  );
+}
+
+export function presentation(req, res) {
+  res.send(
+    indexTemplate({
+      title: 'BWQ presentation',
+      scripts: ['/static/js/presentation.js'],
+      css: ['/static/css/presentation.css']
     })
   );
 }

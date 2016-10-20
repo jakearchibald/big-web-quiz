@@ -32,11 +32,12 @@ export default class QuestionUpdate extends BoundComponent {
       id = '',
       text = '',
       code = '',
+      codeType = '',
       answers = [createAnswerObject(), createAnswerObject()],
       multiple = false
     } = props;
 
-    this.state = {text, code, answers, multiple};
+    this.state = {text, code, codeType, answers, multiple};
   }
   async onRemoveQuestion(event) {
     event.preventDefault();
@@ -64,7 +65,7 @@ export default class QuestionUpdate extends BoundComponent {
   }
   async onSubmit(event) {
     event.preventDefault();
-    const {text, code, answers, multiple} = this.state;
+    const {text, code, codeType, answers, multiple} = this.state;
     const id = this.props.id;
 
     try {
@@ -73,8 +74,8 @@ export default class QuestionUpdate extends BoundComponent {
         credentials: 'include',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
-          text, code, answers, multiple,
-          id
+          text, code, codeType, answers,
+          multiple, id
         })
       });
 
@@ -97,7 +98,8 @@ export default class QuestionUpdate extends BoundComponent {
     return <form action={UPDATE_ACTION} method="POST" onSubmit={this.onSubmit}>
       {id ? <input type="hidden" name="id" value={id}/> : ''}
       <div><label>Question: <input type="text" value={this.state.text} onChange={this.linkState('text')}/></label></div>
-      <div><label>Code: <textarea  value={this.state.code} onChange={this.linkState('code')}/></label></div>
+      <div><label>Code: <textarea value={this.state.code} onChange={this.linkState('code')}/></label></div>
+      <div><label>Code type: <input type="text" value={this.state.codeType} onChange={this.linkState('codeType')}/></label></div>
       <div><label><input type="checkbox" checked={this.state.multiple} onChange={this.linkState('multiple')}/> Multiple answers</label></div>
       <div>
         {answers.map((answer, i) =>

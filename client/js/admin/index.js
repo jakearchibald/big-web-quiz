@@ -75,9 +75,7 @@ class App extends BoundComponent {
 
       if (data.err) throw Error(data.err);
 
-      this.setState({
-        questions: data.questions
-      });
+      this.setState(data);
     }
     catch (err) {
       // TODO
@@ -114,6 +112,42 @@ class App extends BoundComponent {
       method: 'POST'
     });
   }
+  async onShowLeaderboardClick() {
+    try {
+      const response = await fetch(`/admin/show-leaderboard.json`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+
+      if (data.err) throw Error(data.err);
+
+      this.setState(data);
+    }
+    catch (err) {
+      // TODO
+      throw err;
+    }
+  }
+  async onHideLeaderboardClick() {
+    try {
+      const response = await fetch(`/admin/hide-leaderboard.json`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+
+      if (data.err) throw Error(data.err);
+
+      this.setState(data);
+    }
+    catch (err) {
+      // TODO
+      throw err;
+    }
+  }
   async onLogDatabaseClick() {
     try {
       const response = await fetch('/admin/db.json', {
@@ -125,7 +159,7 @@ class App extends BoundComponent {
       throw err;
     }
   }
-  render(props, {questions, addingQuestion, editingQuestions}) {
+  render(props, {questions, addingQuestion, editingQuestions, showingLeaderboard}) {
     return <div>
       <ol>
         {questions.map((question, i) => {
@@ -136,6 +170,7 @@ class App extends BoundComponent {
                   id={question._id}
                   text={question.text}
                   code={question.code}
+                  codeType={question.codeType}
                   multiple={question.multiple}
                   answers={question.answers}
                   onQuestionSaved={this.onQuestionSaved}
@@ -152,6 +187,7 @@ class App extends BoundComponent {
               </p>
               <p>Text: {question.text}</p>
               <p>Code: {question.code}</p>
+              <p>Code type: {question.codeType}</p>
               <p>Multiple: {String(question.multiple)}</p>
               <p>Answers:</p>
               <ol>
@@ -174,11 +210,25 @@ class App extends BoundComponent {
       <div><button onClick={this.onDropUserAnswersClick}>Drop user answers</button></div>
       <div><button onClick={this.onDropUsersClick}>Drop users</button></div>
       <div><button onClick={this.onLogDatabaseClick}>Log database</button></div>
+      <div>
+        {showingLeaderboard ?
+          <button onClick={this.onHideLeaderboardClick}>Hide leaderboard in presentation view</button>
+          :
+          <button onClick={this.onShowLeaderboardClick}>Show leaderboard in presentation view</button>
+        }
+      </div>
     </div>;
   }
 }
 
-fetch('/admin/questions.json', {
+// TODO: you are here
+// Change /admin/questions.json to /admin/initial-state.json
+// Include whether leaderboard is shown
+// Make button above toggle (and work)
+// Make broadcasts to event-stream mergable
+// Move presentation out of admin area - check there's nothing leaked
+
+fetch('/admin/initial-state.json', {
   credentials: 'include'
 }).then(response => response.json()).then(data => {
   render(<App questions={data.questions} />, document.body);

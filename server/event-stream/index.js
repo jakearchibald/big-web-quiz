@@ -14,26 +14,29 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-export default class LongPollers {
+
+function writeMessage(res, id, data) {
+  res.write(`id: ${id}\n`);
+  res.write(`data: ${data}\n\n`);
+}
+
+export default class EventStream {
   constructor() {
     this._responses = [];
+    this._lastEventId = 0;
     this._lastMessage = null;
-  }
-  get lastMessage() {
-    return this._lastMessage;
-  }
-  get lastMessageTime() {
-    return this._lastMessage ? this._lastMessage.time : 0;
+    this._rollingState = {};
   }
   broadcast(message) {
-    this._lastMessage = {
-      message,
-      time: Date.now()
-    };
+    Object.assign(this._rollingState, message);
+    this._lastMessage = message;
+    this._lastEventId++;
+
+    const messageStr = JSON.stringify(this._lastMessage);
 
     for (const res of this._responses) {
       try {
-        res.json(this._lastMessage);
+        writeMessage(res, this._lastEventId, messageStr);
       }
       catch (err) {
         console.log(err);
@@ -41,12 +44,14 @@ export default class LongPollers {
     }
   }
   add(req, res) {
-    const queryMessageTime = Number(req.query.lastMessageTime) || 0;
-    const lastMessageTime = this.lastMessageTime;
+    const lastEventId = Number(req.get('Last-Event-ID')) || 0;
 
-    if (queryMessageTime != lastMessageTime) {
-      res.json(this._lastMessage);
-      return;
+    res.set('Content-Type', "text/event-stream");
+    res.write('retry: 100\n');
+
+    if (lastEventId != this._lastEventId) {
+      const message = JSON.stringify(this._rollingState);
+      writeMessage(res, this._lastEventId, message);
     }
 
     this._responses.push(res);

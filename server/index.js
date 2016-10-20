@@ -21,7 +21,7 @@ import session from 'express-session';
 import gzipStatic from 'connect-gzip-static';
 import bodyParser from 'body-parser';
 import {
-  home, admin, dbJson, initialStateJson
+  home, admin, dbJson, initialStateJson, presentation
 } from './views';
 import {
   userMiddleware, generateAuthUrl, handleLogin, 
@@ -31,9 +31,10 @@ import {
   deleteUsersJson, userAgreeTerms
 } from './user/views';
 import {
-  allQuestionsJson, updateQuestionJson, deleteQuestionJson,
+  adminStateJson, updateQuestionJson, deleteQuestionJson,
   setQuestionJson, closeQuestionJson, revealQuestionJson,
-  deactivateQuestionJson
+  deactivateQuestionJson, presentationListen,
+  showLeaderboardJson, hideLeaderboardJson
 } from './quiz/views';
 import {longPoll} from './long-pollers/views';
 import mongoose from './mongoose-db';
@@ -74,8 +75,10 @@ router.get('/me.json', userJson);
 router.get('/initial-state.json', initialStateJson);
 router.get('/long-poll.json', requiresLoginJson, longPoll);
 router.get('/admin/', requiresAdminHtml, admin);
-router.get('/admin/questions.json', requiresAdminJson, allQuestionsJson);
+router.get('/admin/initial-state.json', requiresAdminJson, adminStateJson);
 router.get('/admin/db.json', requiresAdminJson, dbJson);
+router.get('/admin/presentation/', requiresAdminHtml, presentation);
+router.get('/admin/presentation/listen', requiresAdminJson, presentationListen);
 
 router.post('/logout', logoutRedirect);
 router.post('/logout.json', logoutJson);
@@ -91,6 +94,8 @@ router.post('/admin/question-reveal.json', requiresAdminJson, revealQuestionJson
 router.post('/admin/question-deactivate.json', requiresAdminJson, deactivateQuestionJson);
 router.post('/admin/delete-user-answers.json', requiresAdminJson, deleteUserAnswersJson);
 router.post('/admin/delete-users.json', requiresAdminJson, deleteUsersJson);
+router.post('/admin/show-leaderboard.json', requiresAdminJson, showLeaderboardJson);
+router.post('/admin/hide-leaderboard.json', requiresAdminJson, hideLeaderboardJson);
 
 app.use(router);
 
