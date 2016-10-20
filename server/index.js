@@ -43,6 +43,7 @@ const MongoStore = connectMongo(session);
 
 import {cookieSecret} from './settings'; 
 
+const production = process.env.NODE_ENV == 'production';
 const app = express();
 const router = express.Router({
   caseSensitive: true,
@@ -50,7 +51,12 @@ const router = express.Router({
 });
 
 // Middleware:
-router.use('/static', gzipStatic(__dirname + '/static'));
+router.use(
+  '/static',
+  gzipStatic(__dirname + '/static', {
+    maxAge: production ? 1000 * 60 * 60 * 24 * 365 : 0
+  })
+);
 
 router.use(session({
   secret: cookieSecret,

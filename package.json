@@ -36,6 +36,7 @@
     "gulp-handlebars": "^4.0.0",
     "gulp-process": "^0.1.2",
     "gulp-rename": "^1.2.2",
+    "gulp-rev-all": "^0.9.7",
     "gulp-sass": "^2.3.2",
     "gulp-sourcemaps": "^1.7.3",
     "gulp-uglify": "^2.0.0",

@@ -27,6 +27,7 @@ const gzip = require('gulp-gzip');
 const uglify = require('gulp-uglify');
 const defineModule = require('gulp-define-module');
 const sass = require('gulp-sass');
+const revAll = require('gulp-rev-all');
 const respawn = require('respawn');
 const del = require('del');
 const source = require('vinyl-source-stream');
@@ -54,6 +55,10 @@ const paths = {
   scss: {
     src: 'client/css/**/*.scss',
     dest: 'build/static/css'
+  },
+  postProcess: {
+    src: 'build/static/**/*.@(css|js|svg|map)',
+    dest: 'build/static'
   }
 };
 
@@ -144,8 +149,6 @@ function scss() {
   }).pipe(sourcemaps.init())
     .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(paths.scss.dest))
-    .pipe(gzip({skipGrowingFiles: true}))
     .pipe(gulp.dest(paths.scss.dest));
 }
 
@@ -179,10 +182,8 @@ function createScriptTask(src, dest) {
       .pipe(buffer())
       .pipe(sourcemaps.init({loadMaps: true}))
       .pipe(rename({basename: /\/([^\/]+)$/.exec(parsedPath.dir)[1]}))
-      .pipe(production ? uglify() : util.noop)
+      .pipe(production ? uglify() : gutil.noop())
       .pipe(sourcemaps.write('.'))
-      .pipe(gulp.dest(dest))
-      .pipe(gzip({skipGrowingFiles: true}))
       .pipe(gulp.dest(dest));
   }
 }
@@ -195,6 +196,15 @@ const browserScripts = [
 
 for (const item of browserScripts) {
   item.task = createScriptTask(item.src, item.dest);
+}
+
+function postProcess() {
+  return gulp.src(paths.postProcess.src)
+    .pipe(revAll.revision())
+    .pipe(gzip({skipGrowingFiles: true}))
+    .pipe(gulp.dest(paths.postProcess.dest))
+    .pipe(revAll.manifestFile())
+    .pipe(gulp.dest(paths.postProcess.dest));
 }
 
 function watch() {
@@ -214,15 +224,18 @@ function watch() {
 }
 
 gulp.task('serverTemplates', serverTemplates);
+gulp.task('postProcess', postProcess);
 gulp.task('browserScripts', gulp.parallel(...browserScripts.map(i => i.task)));
 
-gulp.task('build', gulp.series(
+const mainBuild = gulp.series(
   clean,
   gulp.parallel(serverScripts, serverTemplates, sharedScripts, scss, 'browserScripts')
-));
+);
+
+gulp.task('build', gulp.series(mainBuild, postProcess));
 
 gulp.task('serve', gulp.series(
-  'build',
+  mainBuild,
   gulp.parallel(
     databaseServer,
     // Wait for database to start up
