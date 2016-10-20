@@ -21,7 +21,7 @@ import BoundComponent from './bound-component';
 import Intro from './intro';
 import QuestionWaiting from './question-waiting';
 import LoginStatus from './login-status';
-import Question from './Question';
+import Question from './question';
 import LongPoll from '../long-poll';
 
 export default class App extends BoundComponent {
