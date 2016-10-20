@@ -99,6 +99,8 @@ router.post('/admin/hide-leaderboard.json', requiresAdminJson, hideLeaderboardJs
 
 app.use(router);
 
-app.listen(3000, () => {
-  console.log('Example app listening on port 3000!');
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+  console.log(`Server up on port ${port}`);
 });
