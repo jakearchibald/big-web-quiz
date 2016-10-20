@@ -34,6 +34,8 @@ const userSchema = mongoose.Schema({
   ]
 });
 
+userSchema.index({ appearOnLeaderboard: 1, score: -1 });
+
 userSchema.statics.updateScores = function(questions) {
   return this.find().then(users => {
     for (const user of users) {

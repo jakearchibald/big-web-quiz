@@ -176,17 +176,30 @@ export function deactivateQuestionJson(req, res) {
 }
 
 export function showLeaderboardJson(req, res) {
-  quiz.showLeaderboard();
-  presentationListeners.broadcast({
-    question: null,
-    leaderboard: null
-  });
-  adminStateJson(req, res);
+  User.find({
+    appearOnLeaderboard: true
+  }).limit(10)
+    .sort({ appearOnLeaderboard: 1, score: -1 }).then(users => {
+      quiz.showLeaderboard();
+      presentationListeners.broadcast({
+        question: null,
+        leaderboard: users.map(user => {
+          return {
+            name: user.name,
+            avatarUrl: user.avatarUrl,
+            score: user.score
+          };
+        })
+      });
+      adminStateJson(req, res);
+    });
 }
 
 export function hideLeaderboardJson(req, res) {
   quiz.hideLeaderboard();
-  presentationListeners.broadcast(quiz.getState());
+  presentationListeners.broadcast(
+    Object.assign({leaderboard: null}, quiz.getState())
+  );
   adminStateJson(req, res);
 }
 

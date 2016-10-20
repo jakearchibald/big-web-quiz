@@ -28,6 +28,7 @@ class App extends BoundComponent {
 
     this.state = {
       questions: props.questions,
+      showingLeaderboard: props.showingLeaderboard, 
       addingQuestion: false,
       editingQuestions: [] // ids
     };
@@ -224,5 +225,5 @@ class App extends BoundComponent {
 fetch('/admin/initial-state.json', {
   credentials: 'include'
 }).then(response => response.json()).then(data => {
-  render(<App questions={data.questions} />, document.body);
+  render(<App questions={data.questions} showingLeaderboard={data.showingLeaderboard} />, document.body);
 });

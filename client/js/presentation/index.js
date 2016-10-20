@@ -42,7 +42,24 @@ class App extends BoundComponent {
       this.setState(data);
     };
   }
-  render(props, {question, questionClosed, correctAnswers, answerDisplayOrder, averages}) {
+  render(props, {question, questionClosed, correctAnswers, answerDisplayOrder, averages, leaderboard}) {
+    if (leaderboard) return (
+      <table>
+        <thead>
+          <tr><th>Player</th><th>Score</th></tr>
+        </thead>
+        {leaderboard.map(user => 
+          <tr>
+            <td>
+              <img src={user.avatarUrl}/>
+              {user.name}
+            </td>
+            <td>{user.score}</td>
+          </tr>
+        )}
+      </table>
+    );
+
     if (!question) return;
 
     const code = question.code && <Code code={question.code} codeType={question.codeType}></Code>;
