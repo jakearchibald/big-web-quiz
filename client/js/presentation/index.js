@@ -29,7 +29,7 @@ class App extends BoundComponent {
     super(props);
     this.state = {};
 
-    const eventSource = new EventSource('/admin/presentation/listen');
+    const eventSource = new EventSource('/presentation/listen');
     eventSource.onmessage = event => {
       const data = JSON.parse(event.data);
 

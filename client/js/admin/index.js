@@ -221,13 +221,6 @@ class App extends BoundComponent {
   }
 }
 
-// TODO: you are here
-// Change /admin/questions.json to /admin/initial-state.json
-// Include whether leaderboard is shown
-// Make button above toggle (and work)
-// Make broadcasts to event-stream mergable
-// Move presentation out of admin area - check there's nothing leaked
-
 fetch('/admin/initial-state.json', {
   credentials: 'include'
 }).then(response => response.json()).then(data => {
