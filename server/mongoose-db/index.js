@@ -16,5 +16,5 @@
 */
 import mongoose from 'mongoose';
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/bwq');
+mongoose.connect(process.env.MONGO_URL || 'mongodb://localhost/bwq');
 export default mongoose;

@@ -212,9 +212,13 @@ function watch() {
 gulp.task('serverTemplates', serverTemplates);
 gulp.task('browserScripts', gulp.parallel(...browserScripts.map(i => i.task)));
 
-gulp.task('serve', gulp.series(
+gulp.task('build', gulp.series(
   clean,
-  gulp.parallel(serverScripts, serverTemplates, sharedScripts, scss, 'browserScripts'),
+  gulp.parallel(serverScripts, serverTemplates, sharedScripts, scss, 'browserScripts')
+));
+
+gulp.task('serve', gulp.series(
+  'build',
   gulp.parallel(
     databaseServer,
     // Wait for database to start up

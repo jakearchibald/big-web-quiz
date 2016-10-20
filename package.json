@@ -5,7 +5,8 @@
   "main": "server-build/index.js",
   "scripts": {
     "install-mongo": "docker pull mongo && docker create --name bwq-mongo -p 27017:27017 mongo",
-    "serve": "gulp serve"
+    "serve": "gulp serve",
+    "postinstall": "gulp build"
   },
   "author": "",
   "license": "ISC",
