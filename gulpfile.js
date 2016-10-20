@@ -24,6 +24,7 @@ const handlebars = require('gulp-handlebars');
 const rename = require('gulp-rename');
 const debug = require('gulp-debug');
 const gzip = require('gulp-gzip');
+const uglify = require('gulp-uglify');
 const defineModule = require('gulp-define-module');
 const sass = require('gulp-sass');
 const respawn = require('respawn');
@@ -34,6 +35,8 @@ const rollup = require('rollup-stream');
 const rollupBabel = require('rollup-plugin-babel');
 const nodeResolve = require('rollup-plugin-node-resolve');
 const commonjs = require('rollup-plugin-commonjs');
+
+const production = process.env.NODE_ENV == 'production';
 
 const paths = {
   serverScripts: {
@@ -176,6 +179,7 @@ function createScriptTask(src, dest) {
       .pipe(buffer())
       .pipe(sourcemaps.init({loadMaps: true}))
       .pipe(rename({basename: /\/([^\/]+)$/.exec(parsedPath.dir)[1]}))
+      .pipe(production ? uglify() : util.noop)
       .pipe(sourcemaps.write('.'))
       .pipe(gulp.dest(dest))
       .pipe(gzip({skipGrowingFiles: true}))
