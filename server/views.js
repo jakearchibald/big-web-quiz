@@ -29,7 +29,8 @@ import {escapeJSONString} from './utils';
 import {longPollers} from './long-pollers/views';
 
 const readFile = promisify(fs, 'readFile');
-const revManifest = readFile(`${__dirname}/static/rev-manifest.json`).catch(() => ({}));
+const revManifest = readFile(`${__dirname}/static/rev-manifest.json`)
+  .then(str => JSON.parse(str)).catch(() => ({}));
 
 async function getStaticUrl(url) {
   const slicedUrl = url.slice('/static/'.length);
