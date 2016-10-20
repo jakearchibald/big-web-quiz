@@ -70,6 +70,7 @@ router.use(bodyParser.json());
 
 // Routes:
 router.get('/', home);
+router.get('/check', (req, res) => res.send('OK'));
 router.get('/oauth2callback', handleLogin);
 router.get('/me.json', userJson);
 router.get('/initial-state.json', initialStateJson);
