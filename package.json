@@ -6,7 +6,8 @@
   "scripts": {
     "install-mongo": "docker pull mongo && docker create --name bwq-mongo -p 27017:27017 mongo",
     "serve": "gulp serve",
-    "postinstall": "gulp build"
+    "postinstall": "NODE_ENV=production gulp build",
+    "deploy": "git checkout -B live && git add -f server/settings.js && git commit --allow-empty -m 'Settings' && git push --force live live:master && git checkout master && git checkout live server/settings.js && git reset server/settings.js"
   },
   "author": "",
   "license": "ISC",
