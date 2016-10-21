@@ -39,7 +39,6 @@ function authenticateUser(code) {
     const plus = google.plus('v1');
     return promisify(plus.people, 'get')({ userId: 'me', auth: oauth2Client });
   }).then(response => {
-    console.log('in final then');
     return User.findOneAndUpdate({googleId: response.id}, {
       googleId: response.id,
       name: response.displayName,
