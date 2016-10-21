@@ -28,3 +28,5 @@ const JSON_ESCAPE_REGEXP = /[\u2028\u2029&><]/g;
 export function escapeJSONString(string) {
   return string.replace(JSON_ESCAPE_REGEXP, match => JSON_ESCAPE[match]);
 }
+
+export const production = process.env.NODE_ENV == 'production';

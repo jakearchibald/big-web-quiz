@@ -43,7 +43,6 @@ async function getStaticUrl(url) {
 
 function getInitialState(req) {
   const initialState = {
-    checkedLogin: true,
     user: null
   };
 
@@ -63,9 +62,21 @@ export function initialStateJson(req, res) {
   res.json(getInitialState(req));
 }
 
+let cachedLoggedOutView;
+
 export async function home(req, res) {
   const initialState = getInitialState(req);
-  const content = render(<App initialState={initialState} server={true} />);
+  let content;
+
+  if (!initialState.user) {
+    if (!cachedLoggedOutView) {
+      cachedLoggedOutView = render(<App initialState={initialState} server={true} />);
+    }
+    content = cachedLoggedOutView;
+  }
+  else {
+    content = render(<App initialState={initialState} server={true} />);
+  }
   
   const scripts = Promise.all(['/static/js/main.js'].map(getStaticUrl));
   const css = Promise.all(['/static/css/index.css'].map(getStaticUrl));

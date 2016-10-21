@@ -42,8 +42,8 @@ import connectMongo from 'connect-mongo';
 const MongoStore = connectMongo(session);
 
 import {cookieSecret} from './settings'; 
+import {production} from './utils';
 
-const production = process.env.NODE_ENV == 'production';
 const app = express();
 const router = express.Router({
   caseSensitive: true,
