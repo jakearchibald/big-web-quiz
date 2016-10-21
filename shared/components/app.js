@@ -22,6 +22,7 @@ import Intro from './intro';
 import QuestionWaiting from './question-waiting';
 import LoginStatus from './login-status';
 import Question from './question';
+import Transition from './transition';
 import LongPoll from '../long-poll';
 
 export default class App extends BoundComponent {
@@ -74,21 +75,25 @@ export default class App extends BoundComponent {
     return (
       <div>
         <LoginStatus user={user} onLogout={this.onLogout} onUserUpdate={this.onUserUpdate}/>
-        {(user && user.agreedToTerms) ?
-          (question && !server ?
-            <Question
-              id={question.id}
-              text={question.text}
-              multiple={question.multiple}
-              answers={question.answers}
-              closed={questionClosed}
-              correctAnswers={correctAnswers}
-            />
-            : 
-            <QuestionWaiting/>
-          ) 
-          :
-          <Intro user={user} onUserAgree={this.onUserAgree}/>}
+        <Transition>
+          {(user && user.agreedToTerms) ?
+            (question && !server ?
+              <Question
+                key="question"
+                id={question.id}
+                text={question.text}
+                multiple={question.multiple}
+                answers={question.answers}
+                closed={questionClosed}
+                correctAnswers={correctAnswers}
+              />
+              : 
+              <QuestionWaiting key="question-waiting" />
+            ) 
+            :
+            <Intro key="intro" user={user} onUserAgree={this.onUserAgree}/>
+          }
+        </Transition>
       </div>
     );
   }

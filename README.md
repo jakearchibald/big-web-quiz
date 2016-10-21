@@ -43,7 +43,7 @@ sudo dokku mongo:link big-web-quiz big-web-quiz
 sudo dokku domains:add big-web-quiz bigwebquiz.com
 sudo dokku domains:remove big-web-quiz big-web-quiz.bigwebquiz.com
 sudo dokku config:set --no-restart big-web-quiz DOKKU_LETSENCRYPT_EMAIL=jaffathecake@gmail.com
-# then ship
+# then push the app (yarn run deploy), then:
 sudo dokku letsencrypt big-web-quiz
 sudo dokku letsencrypt:cron-job --add
 ```

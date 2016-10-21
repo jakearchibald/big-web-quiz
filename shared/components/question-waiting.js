@@ -18,6 +18,15 @@ import { h } from 'preact';
 import BoundComponent from './bound-component';
 
 export default class QuestionWaiting extends BoundComponent {
+  componentDidUpdate() {
+    if (!this.props.transitionOut) return;
+    /*
+    this.props.transitionOut(new Promise(r => {
+      console.log(this);
+      setTimeout(r, 1000);
+    }));
+    */
+  }
   render() {
     return (
       <div>Waiting for a question</div>
