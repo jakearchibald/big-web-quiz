@@ -28,3 +28,22 @@ npm run install-mongo
 ```sh
 npm run serve
 ```
+
+# Dokku setup
+
+1. Install Dokku
+1. Use vhosts, then:
+
+```sh
+sudo dokku plugin:install https://github.com/dokku/dokku-mongo.git mongo
+sudo dokku plugin:install https://github.com/dokku/dokku-letsencrypt.git
+sudo dokku apps:create big-web-quiz
+sudo dokku mongo:create big-web-quiz
+sudo dokku mongo:link big-web-quiz big-web-quiz
+sudo dokku domains:add big-web-quiz bigwebquiz.com
+sudo dokku domains:remove big-web-quiz big-web-quiz.bigwebquiz.com
+sudo dokku config:set --no-restart big-web-quiz DOKKU_LETSENCRYPT_EMAIL=jaffathecake@gmail.com
+# then ship
+sudo dokku letsencrypt big-web-quiz
+sudo dokku letsencrypt:cron-job --add
+```
