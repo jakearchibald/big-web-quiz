@@ -144,9 +144,8 @@ function serverRestart(cb) {
 }
 
 function scss() {
-  return gulp.src(paths.scss.src, {
-    since: gulp.lastRun(scss)
-  }).pipe(sourcemaps.init())
+  return gulp.src(paths.scss.src)
+    .pipe(sourcemaps.init())
     .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(paths.scss.dest));
