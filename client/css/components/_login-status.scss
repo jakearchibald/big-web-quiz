@@ -1,0 +1,78 @@
+.login-status {
+  position: relative;
+}
+
+.login-details-button {
+  @extend %button-unstyle;
+  display: block;
+
+  & .avatar {
+    border-radius: 100%;
+    display: block;
+  }
+}
+
+.login-bubble {
+  position: absolute;
+  top: 127%;
+  top: calc(100% + 11px);
+  right: 0;
+  pointer-events: none;
+  will-change: opacity;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+
+  & .login-bubble-frame {
+    will-change: transform;
+    transition: transform 0.3s ease-in-out;
+    transform: translate(0, -100%);
+  }
+
+  &.active {
+    pointer-events: auto;
+    opacity: 1;
+
+    & .login-bubble-frame {
+      transform: none;
+    }
+  }
+
+  &::before {
+    content: '';
+    display: block;
+    border-color: rgba(0, 0, 0, 0);
+    border-bottom-color: #fff;
+    border-style: dashed dashed solid;
+    border-width: 0 8.5px 8.5px;
+    position: absolute;
+    bottom: 100%;
+    right: 9px;
+  }
+}
+
+.login-bubble-hider {
+  overflow: hidden;
+}
+
+.login-bubble-frame {
+  background: #fff;
+  color: #000;
+  border-radius: 0 0 2px 2px;
+}
+
+.login-bubble-profile {
+  padding: 1rem;
+
+  & .user-name,
+  & .user-email {
+    line-height: 1.3;
+  }
+
+  & .user-name {
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
+  & .user-email {
+    font-size: 0.8rem;
+  }
+}

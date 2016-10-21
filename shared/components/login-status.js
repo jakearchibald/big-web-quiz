@@ -18,19 +18,22 @@ import { h } from 'preact';
 import {Logout} from './user';
 import BoundComponent from './bound-component';
 
+const UPDATE_USER_FORM_ACTION = '/update-me.json';
+
 export default class LoginStatus extends BoundComponent {
   constructor() {
     super();
-    this.leaderboardFormAction = '/update-me.json';
+
     this.state = {
-      leaderboardPending: false
+      leaderboardPending: false,
+      bubbleOpen: false
     };
   }
   async onLeaderboardChange(event) {
     this.setState({leaderboardPending: true});
 
     try {
-      const response = await fetch(this.leaderboardFormAction, {
+      const response = await fetch(UPDATE_USER_FORM_ACTION, {
         method: 'POST',
         credentials: 'include',
         headers: {'Content-Type': 'application/json'},
@@ -49,7 +52,25 @@ export default class LoginStatus extends BoundComponent {
     }
     this.setState({leaderboardPending: false});
   }
-  render({user, onLogout, server}, {leaderboardPending}) {
+  onAvatarClick(event) {
+    this.setState({
+      bubbleOpen: !this.state.bubbleOpen 
+    });
+  }
+  onWindowClick(event) {
+    if (!this.state.bubbleOpen || event.target.closest('.login-details-button') || event.target.closest('.login-bubble')) return;
+
+    this.setState({
+      bubbleOpen: false
+    });
+  }
+  componentDidMount() {
+    window.addEventListener('click', this.onWindowClick);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('click', this.onWindowClick);
+  }
+  render({user, onLogout, server}, {leaderboardPending, bubbleOpen}) {
     if (!user) {
       return (<div>Not logged in</div>);
     }
@@ -57,25 +78,45 @@ export default class LoginStatus extends BoundComponent {
     let leaderboardToggle;
 
     if (!server) {
-      leaderboardToggle = <form action={this.leaderboardFormAction} method="POST">
-        <label>
-          <input 
-            type="checkbox"
-            name="appear-on-leaderboard"
-            onChange={this.onLeaderboardChange}
-            checked={user.appearOnLeaderboard}
-            disabled={leaderboardPending}
-          />
-          Appear on leaderboard
-        </label>
-      </form>;
+      leaderboardToggle = (
+        <form action={UPDATE_USER_FORM_ACTION} method="POST">
+          <label>
+            <input 
+              type="checkbox"
+              name="appear-on-leaderboard"
+              onChange={this.onLeaderboardChange}
+              checked={user.appearOnLeaderboard}
+              disabled={leaderboardPending}
+            />
+            Appear on leaderboard
+          </label>
+        </form>
+      );
     }
 
     return (
-      <div>
-        <img src={user.avatarUrl}/> Logged in as {user.name} <Logout onLogout={onLogout}/>
-        {leaderboardToggle}
-        <div>Score: {user.score}</div>
+      <div class="login-status">
+        <button onClick={this.onAvatarClick} class="login-details-button">
+          <img
+            class="avatar"
+            width="34" height="34"
+            src={`${user.avatarUrl}?sz=34`}
+            sizes={`${user.avatarUrl}?sz=68 2x, ${user.avatarUrl}?sz=136 3x`}
+          />
+        </button>
+        <div class={`login-bubble ${bubbleOpen ? 'active' : ''}`}>
+          <div class="login-bubble-hider">
+            <div class="login-bubble-frame">
+              <div class="login-bubble-profile">
+                <div class="user-name">{user.name}</div>
+                <div class="user-email">{user.email}</div>
+                <div class="score">Score: {user.score}</div>
+                {leaderboardToggle}
+              </div>
+              <Logout onLogout={onLogout}/>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

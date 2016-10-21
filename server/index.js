@@ -20,6 +20,7 @@ import express from 'express';
 import session from 'express-session';
 import gzipStatic from 'connect-gzip-static';
 import bodyParser from 'body-parser';
+import multer from 'multer';
 import {
   home, admin, dbJson, initialStateJson, presentation
 } from './views';
@@ -73,6 +74,10 @@ router.use(session({
 
 router.use(userMiddleware);
 router.use(bodyParser.json());
+router.use(bodyParser.urlencoded({
+  extended: true
+}));
+router.use(multer().none());
 
 // Routes:
 router.get('/', home);

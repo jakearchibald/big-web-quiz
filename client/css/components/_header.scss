@@ -1,0 +1,15 @@
+.page-header {
+  padding: 0 16px;
+  height: 56px;
+  background: $primary-color;
+  display: flex;
+  align-items: center;
+
+  & .title {
+    line-height: 1;
+  }
+
+  & .login-status {
+    margin-left: auto;
+  }
+}

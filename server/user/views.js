@@ -39,11 +39,17 @@ function authenticateUser(code) {
     const plus = google.plus('v1');
     return promisify(plus.people, 'get')({ userId: 'me', auth: oauth2Client });
   }).then(response => {
+    let avatarUrl = '';
+
+    if (response.image) {
+      avatarUrl = response.image.url.replace(/\?.*$/, '');
+    }
+
     return User.findOneAndUpdate({googleId: response.id}, {
       googleId: response.id,
       name: response.displayName,
       email: response.emails[0].value,
-      avatarUrl: response.image.url
+      avatarUrl
     }, {upsert: true, new: true});
   });
 }
@@ -104,6 +110,7 @@ export function handleLogin(req, res) {
 export function simpleUserObject(user) {
   return {
     name: user.name,
+    email: user.email,
     avatarUrl: user.avatarUrl,
     appearOnLeaderboard: !!user.appearOnLeaderboard,
     score: user.score,

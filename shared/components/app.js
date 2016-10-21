@@ -74,7 +74,10 @@ export default class App extends BoundComponent {
   render({server}, {user, question, questionClosed, correctAnswers}) {
     return (
       <div>
-        <LoginStatus user={user} onLogout={this.onLogout} onUserUpdate={this.onUserUpdate}/>
+        <header class="page-header">
+          <div class="title">The Big Web Quiz</div>
+          <LoginStatus user={user} onLogout={this.onLogout} onUserUpdate={this.onUserUpdate}/>
+        </header>
         <Transition>
           {(user && user.agreedToTerms) ?
             (question && !server ?

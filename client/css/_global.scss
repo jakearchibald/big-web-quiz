@@ -1,0 +1,57 @@
+$mobile-boundry: 530px;
+$primary-color-dark:   #F57C00;
+$primary-color:        #FF9800;
+$primary-color-light:  #FFE0B2;
+$primary-color-text:   #212121;
+$accent-color:         #009688;
+$primary-text-color:   #212121;
+$secondary-text-color: #757575;
+$divider-color:        #BDBDBD;
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Roboto'), local('Roboto-Regular'), url(https://fonts.gstatic.com/s/roboto/v15/CrYjSnGjrRCn0pd9VQsnFOvvDin1pK8aKteLpeZ5c0A.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Roboto Bold'), local('Roboto-Bold'), url(https://fonts.gstatic.com/s/roboto/v15/d-6IYplOFocCacKzxwXSOLO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+}
+
+html {
+  font-family: Roboto, sans-serif;
+  background: #000;
+  color: #fff;
+  font-size: 15px;
+  line-height: 1.9;
+  @media screen and (min-width: $mobile-boundry) {
+    font-size: 16px;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  -webkit-text-size-adjust: 100%;
+}
+
+button,
+input[type=button] {
+  cursor: pointer;
+}
+
+%button-unstyle {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+
+  &::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+  }
+}
