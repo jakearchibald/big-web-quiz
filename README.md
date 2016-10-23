@@ -51,10 +51,12 @@ sudo dokku letsencrypt:cron-job --add
 Then up the connection limits in `/etc/nginx/nginx.conf`.
 
 ```
-worker_rlimit_nofile 30000;
+worker_rlimit_nofile 90000;
 
 events {
-        worker_connections 30000;
+        worker_connections 90000;
         # multi_accept on;
 }
 ```
+
+…then restart nginx.

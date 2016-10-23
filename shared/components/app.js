@@ -63,9 +63,6 @@ export default class App extends BoundComponent {
   onUserUpdate(user) {
     this.setState({user});
   }
-  onUserAgree(user) {
-    this.setState({user});
-  }
   onLogout() {
     this.setState({
       user: null
@@ -79,7 +76,7 @@ export default class App extends BoundComponent {
           <LoginStatus user={user} onLogout={this.onLogout} onUserUpdate={this.onUserUpdate}/>
         </header>
         <Transition>
-          {(user && user.agreedToTerms) ?
+          {user ?
             (question && !server ?
               <Question
                 key="question"
@@ -94,7 +91,7 @@ export default class App extends BoundComponent {
               <QuestionWaiting key="question-waiting" />
             ) 
             :
-            <Intro key="intro" user={user} onUserAgree={this.onUserAgree}/>
+            <Intro key="intro"/>
           }
         </Transition>
       </div>

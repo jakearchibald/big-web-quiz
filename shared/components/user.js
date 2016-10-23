@@ -55,39 +55,3 @@ export class Logout extends BoundComponent {
 Logout.defaultProps = {
   onLogout: function(){}
 };
-
-export class Agree extends BoundComponent {
-  constructor(props) {
-    super(props);
-    this.agreeUrl = '/agree';
-  }
-  async onSubmit(event) {
-    event.preventDefault();
-
-    try {
-      const response = await fetch(this.agreeUrl + '.json', {
-        credentials: 'include',
-        method: 'POST'
-      });
-      const data = await response.json();
-
-      if (data.err) throw Error(err);
-      this.props.onAgree(data.user);
-    }
-    catch (err) {
-      throw err;
-    }
-  }
-  render() {
-    return (
-      <form action={this.agreeUrl} method="POST" onSubmit={this.onSubmit}>
-        <p>For privacy reasons, you must be 13 or older to play.</p>
-        <div><button>I am 13 or older</button></div>
-      </form>
-    );
-  }
-}
-
-Agree.defaultProps = {
-  onAgree: function(){}
-};

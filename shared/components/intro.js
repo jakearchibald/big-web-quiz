@@ -16,30 +16,15 @@
 */
 import { h } from 'preact';
 import BoundComponent from './bound-component';
-import {Login, Agree} from './user';
+import {Login} from './user';
 
 export default class Intro extends BoundComponent {
-  onUserAgree(updatedUser) {
-    this.props.onUserAgree(updatedUser);
-  }
-  render({user}) {
-    if (!user) {
-      return (
-        <div>
-          Welcome to the big web quiz! First you need to log in:
-          <Login/>
-        </div>
-      );
-    }
-
-    if (!user.agreedToTerms) {
-      return <Agree onAgree={this.onUserAgree}/>;
-    }
-
-    throw Error("Shouldn't display <Intro/> if logged in & agreed to terms.");
+  render() {
+    return (
+      <div>
+        Welcome to the big web quiz! First you need to log in:
+        <Login/>
+      </div>
+    );
   }
 }
-
-Intro.defaultProps = {
-  onUserAgree: function(){}
-};

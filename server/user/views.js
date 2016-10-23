@@ -113,8 +113,7 @@ export function simpleUserObject(user) {
     email: user.email,
     avatarUrl: user.avatarUrl,
     appearOnLeaderboard: !!user.appearOnLeaderboard,
-    score: user.score,
-    agreedToTerms: user.agreedToTerms
+    score: user.score
   }
 }
 
@@ -157,18 +156,6 @@ export function updateUser(req, res) {
   }
 
   req.user.appearOnLeaderboard = !!req.body.appearOnLeaderboard;
-  req.user.save().then(newUser => {
-    res.json({
-      user: simpleUserObject(newUser)
-    });
-  }).catch(err => {
-    res.status(500).json({err: 'Update failed'})
-    throw err;
-  });
-}
-
-export function userAgreeTerms(req, res) {
-  req.user.agreedToTerms = true;
   req.user.save().then(newUser => {
     res.json({
       user: simpleUserObject(newUser)
