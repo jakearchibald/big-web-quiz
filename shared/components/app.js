@@ -45,18 +45,23 @@ export default class App extends BoundComponent {
     this.state = props.initialState;
 
     if (this.state.user && !props.server) {
-      const longPoll = new LongPoll(props.initialState.lastMessageTime);
+      // trying to stop the spinner on Safari
+      window.load.then(() => {
+        requestAnimationFrame(() => {
+          const longPoll = new LongPoll(props.initialState.lastMessageTime);
 
-      longPoll.on('message', msg => {
-        if (msg.correctAnswers) { // update the score
-          // TODO: change view while this is updating?
-          fetch('/me.json', {
-            credentials: 'include'
-          }).then(r => r.json()).then(data => {
-            this.setState({user: data.user});
+          longPoll.on('message', msg => {
+            if (msg.correctAnswers) { // update the score
+              // TODO: change view while this is updating?
+              fetch('/me.json', {
+                credentials: 'include'
+              }).then(r => r.json()).then(data => {
+                this.setState({user: data.user});
+              });
+            }
+            this.setState(msg);
           });
-        }
-        this.setState(msg);
+        })
       });
     }
   }

@@ -22,10 +22,22 @@ self.global = self;
 // so we don't have to keep importing it
 self.regeneratorRuntime = regeneratorRuntime;
 
+window.load = new Promise(resolve => {
+  window.addEventListener('load', () => resolve());
+});
+
+function loadScript(url) {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.onload = () => resolve();
+    script.onerror = () => reject();
+    script.src = url;
+    document.head.insertBefore(script, document.head.firstChild);
+  });
+}
+
 async function getInitialState() {
   if (self.initialState) return self.initialState;
-
-  // TODO get from IDB
 
   const response = await fetch('/initial-state.json', {
     credentials: 'include'
@@ -34,7 +46,11 @@ async function getInitialState() {
   return response.json();
 }
 
-getInitialState().then(state => {
+const scriptLoading = [];
+
+if (!window.fetch) scriptLoading.push(loadScript('/static/js/polyfills.js'));
+
+Promise.all(scriptLoading).then(() => getInitialState()).then(state => {
   document.body.innerHTML = '';
   render(<App initialState={state}/>, document.body);
 });
