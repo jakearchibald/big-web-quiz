@@ -173,6 +173,7 @@ class App extends BoundComponent {
                   code={question.code}
                   codeType={question.codeType}
                   multiple={question.multiple}
+                  scored={question.scored}
                   answers={question.answers}
                   onQuestionSaved={this.onQuestionSaved}
                   onQuestionRemoved={this.onQuestionRemoved}
@@ -190,6 +191,7 @@ class App extends BoundComponent {
               <p>Code: {question.code}</p>
               <p>Code type: {question.codeType}</p>
               <p>Multiple: {String(question.multiple)}</p>
+              <p>Scored: {String(question.scored)}</p>
               <p>Answers:</p>
               <ol>
                 {question.answers.map((answer, i) => 

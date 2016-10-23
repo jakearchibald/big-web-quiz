@@ -50,6 +50,8 @@ userSchema.statics.updateScores = function(questions) {
       let score = 0;
 
       for (const question of questions) {
+        if (!question.scored) continue;
+        
         const userAnswer = user.answers.find(answer => question._id.equals(answer.questionId));
         if (!userAnswer) continue;
         const choices = userAnswer.choices;

@@ -34,10 +34,11 @@ export default class QuestionUpdate extends BoundComponent {
       code = '',
       codeType = '',
       answers = [createAnswerObject(), createAnswerObject()],
-      multiple = false
+      multiple = false,
+      scored = true
     } = props;
 
-    this.state = {text, code, codeType, answers, multiple};
+    this.state = {text, code, codeType, answers, multiple, scored};
   }
   async onRemoveQuestion(event) {
     event.preventDefault();
@@ -65,7 +66,7 @@ export default class QuestionUpdate extends BoundComponent {
   }
   async onSubmit(event) {
     event.preventDefault();
-    const {text, code, codeType, answers, multiple} = this.state;
+    const {text, code, codeType, answers, multiple, scored} = this.state;
     const id = this.props.id;
 
     try {
@@ -75,7 +76,7 @@ export default class QuestionUpdate extends BoundComponent {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
           text, code, codeType, answers,
-          multiple, id
+          multiple, scored, id
         })
       });
 
@@ -101,6 +102,7 @@ export default class QuestionUpdate extends BoundComponent {
       <div><label>Code: <textarea value={this.state.code} onChange={this.linkState('code')}/></label></div>
       <div><label>Code type: <input type="text" value={this.state.codeType} onChange={this.linkState('codeType')}/></label></div>
       <div><label><input type="checkbox" checked={this.state.multiple} onChange={this.linkState('multiple')}/> Multiple answers</label></div>
+      <div><label><input type="checkbox" checked={this.state.scored} onChange={this.linkState('scored')}/> Scored</label></div>
       <div>
         {answers.map((answer, i) =>
           <div key={'answer-' + i}>

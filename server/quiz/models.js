@@ -25,6 +25,8 @@ const questionSchema = mongoose.Schema({
   codeType: String,
   // User can select multiple answers (checkboxes rather than radios)
   multiple: Boolean,
+  // Scored? Questions can be non-scored for simple polls
+  scored: {type: Boolean, default: true},
   // Array of answers
   answers: [{
     text: {type: String, required: true},
@@ -106,6 +108,7 @@ export class Quiz {
         code: this._activeQuestion.code,
         codeType: this._activeQuestion.codeType,
         multiple: this._activeQuestion.multiple,
+        scored: this._activeQuestion.scored,
         // Don't want to send which answers are correct all the time,
         // see `correctAnswers` below
         answers: this._activeQuestion.answers.map(answer => ({text: answer.text}))

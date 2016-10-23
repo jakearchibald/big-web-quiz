@@ -57,7 +57,8 @@ export function updateQuestionJson(req, res) {
     code: req.body.code,
     codeType: req.body.codeType,
     multiple: !!req.body.multiple,
-    answers: req.body.answers,
+    scored: !!req.body.scored,
+    answers: req.body.answers
   };
 
   if (!Array.isArray(update.answers)) {
