@@ -17,6 +17,11 @@
 import mongoose from '../mongoose-db';
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
+const ADMIN_IDS = [
+  '116237864387312784020', // Jake
+  '102813120987797040209' // Paul Lewis
+];
+
 const userSchema = mongoose.Schema({
   googleId: {type: String, unique: true, required: true},
   name: {type: String, required: true},
@@ -34,6 +39,10 @@ const userSchema = mongoose.Schema({
 });
 
 userSchema.index({ appearOnLeaderboard: 1, score: -1 });
+
+userSchema.methods.isAdmin = function() {
+  return ADMIN_IDS.includes(this.googleId);
+};
 
 userSchema.statics.updateScores = function(questions) {
   return this.find().then(users => {

@@ -58,17 +58,12 @@ function logout(req) {
   return new Promise(r => req.session.destroy(r));
 }
 
-const ADMIN_IDS = [
-  '116237864387312784020' // Jake
-];
-
 function requiresAdmin(req) {
   if (!req.user) {
     return "Login required";
   }
 
-  if (!ADMIN_IDS.includes(req.user.googleId)) {
-    res.status(403).send("Admin only, soz");
+  if (!req.user.isAdmin()) {
     return "Admin only, soz";
   }
 

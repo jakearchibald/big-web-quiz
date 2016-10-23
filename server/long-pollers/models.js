@@ -16,7 +16,7 @@
 */
 export default class LongPollers {
   constructor() {
-    this._responses = [];
+    this._pollers = []; // [{req, res}]
     this._lastMessage = null;
   }
   get lastMessage() {
@@ -31,7 +31,7 @@ export default class LongPollers {
       time: Date.now()
     };
 
-    for (const res of this._responses) {
+    for (const res of this._pollers.map(poll => poll.res)) {
       try {
         res.json(this._lastMessage);
       }
@@ -39,6 +39,12 @@ export default class LongPollers {
         console.log(err);
       }
     }
+  }
+  countPollersForUser(user) {
+    return this._pollers.reduce((num, poll) => {
+      if (poll.req.user.equals(user)) num++;
+      return num;
+    }, 0);
   }
   add(req, res) {
     const queryMessageTime = Number(req.query.lastMessageTime) || 0;
@@ -49,17 +55,23 @@ export default class LongPollers {
       return;
     }
 
-    this._responses.push(res);
+    // Allowing admin to make too many connections for testing purposes
+    if (!req.user.isAdmin() && this.countPollersForUser(req.user) > 10) {
+      res.status(429).json({err: 'Too many open polling requests'});
+      return;
+    }
+
+    this._pollers.push({req, res});
 
     const connectionEnded = () => {
       res.removeListener('finish', connectionEnded);
       res.removeListener('close', connectionEnded);
 
       // remove from the pool
-      const index = this._responses.indexOf(res);
+      const index = this._pollers.findIndex(poll => poll.res == res);
 
       if (index != -1) {
-        this._responses.splice(index, 1);
+        this._pollers.splice(index, 1);
       }
     };
 
