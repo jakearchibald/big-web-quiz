@@ -22,7 +22,8 @@ import gzipStatic from 'connect-gzip-static';
 import bodyParser from 'body-parser';
 import multer from 'multer';
 import {
-  home, admin, dbJson, initialStateJson, presentation
+  home, admin, dbJson, initialStateJson, presentation,
+  dbSetJson
 } from './views';
 import {
   userMiddleware, generateAuthUrl, handleLogin, 
@@ -107,6 +108,7 @@ router.post('/admin/delete-user-answers.json', requiresAdminJson, deleteUserAnsw
 router.post('/admin/delete-users.json', requiresAdminJson, deleteUsersJson);
 router.post('/admin/show-leaderboard.json', requiresAdminJson, showLeaderboardJson);
 router.post('/admin/hide-leaderboard.json', requiresAdminJson, hideLeaderboardJson);
+router.post('/admin/db.json', requiresAdminJson, dbSetJson);
 
 app.use(router);
 

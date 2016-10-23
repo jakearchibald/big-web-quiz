@@ -23,11 +23,11 @@ const ADMIN_IDS = [
 ];
 
 const userSchema = mongoose.Schema({
-  googleId: {type: String, unique: true, required: true},
+  googleId: {type: String, unique: true, required: true, index: true},
   name: {type: String, required: true},
   email: {type: String, required: true},
   avatarUrl: String,
-  appearOnLeaderboard: {type: Boolean, index: true},
+  appearOnLeaderboard: {type: Boolean},
   // Optimisation. See `updateScore`.
   score: {type: Number, default: 0},
   answers: [
@@ -51,7 +51,7 @@ userSchema.statics.updateScores = function(questions) {
 
       for (const question of questions) {
         if (!question.scored) continue;
-        
+
         const userAnswer = user.answers.find(answer => question._id.equals(answer.questionId));
         if (!userAnswer) continue;
         const choices = userAnswer.choices;

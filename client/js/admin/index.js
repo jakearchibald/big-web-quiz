@@ -30,7 +30,8 @@ class App extends BoundComponent {
       questions: props.questions,
       showingLeaderboard: props.showingLeaderboard, 
       addingQuestion: false,
-      editingQuestions: [] // ids
+      editingQuestions: [], // ids
+      outputValue: ''
     };
   }
   onQuestionSaved(id, questions) {
@@ -149,18 +150,38 @@ class App extends BoundComponent {
       throw err;
     }
   }
-  async onLogDatabaseClick() {
+  async onOutputClick(types) {
     try {
-      const response = await fetch('/admin/db.json', {
+      const response = await fetch('/admin/db.json?' + types.map(t => `types[]=${t}`).join('&'), {
         credentials: 'include'
       });
-      console.log(await response.json());
+      const data = await response.json();
+      console.log(data);
+      this.setState({outputValue: JSON.stringify(data, null, 2)});
     }
     catch (err) {
       throw err;
     }
   }
-  render(props, {questions, addingQuestion, editingQuestions, showingLeaderboard}) {
+  async onRestoreClick() {
+    try {
+      const response = await fetch('/admin/db.json', {
+        credentials: 'include',
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: this.state.outputValue
+      });
+      const data = await response.json();
+      const initialStateResponse = await fetch('/admin/initial-state.json', {
+        credentials: 'include'
+      });
+      this.setState(await initialStateResponse.json());
+    }
+    catch (err) {
+      throw err;
+    }
+  }
+  render(props, {questions, addingQuestion, editingQuestions, showingLeaderboard, outputValue}) {
     return <div>
       <ol>
         {questions.map((question, i) => {
@@ -212,7 +233,6 @@ class App extends BoundComponent {
       }
       <div><button onClick={this.onDropUserAnswersClick}>Drop user answers</button></div>
       <div><button onClick={this.onDropUsersClick}>Drop users</button></div>
-      <div><button onClick={this.onLogDatabaseClick}>Log database</button></div>
       <div>
         {showingLeaderboard ?
           <button onClick={this.onHideLeaderboardClick}>Hide leaderboard in presentation view</button>
@@ -220,6 +240,13 @@ class App extends BoundComponent {
           <button onClick={this.onShowLeaderboardClick}>Show leaderboard in presentation view</button>
         }
       </div>
+      <div>
+        <button onClick={() => this.onOutputClick(['Question'])}>Output questions</button> 
+        <button onClick={() => this.onOutputClick(['User'])}>Output users</button> 
+        <button onClick={() => this.onOutputClick(['Question', 'User'])}>Output both</button>
+      </div>
+      <div><textarea value={outputValue} onChange={this.linkState('outputValue')}></textarea></div>
+      <div><button onClick={this.onRestoreClick}>Restore models from above</button> Only touches models that are mentioned in the above JSON. All existing data in that model is replaced.</div>
     </div>;
   }
 }

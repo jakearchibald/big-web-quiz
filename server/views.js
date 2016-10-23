@@ -121,20 +121,53 @@ export async function presentation(req, res) {
 export function dbJson(req, res) {
   const output = {};
   const promises = [];
+  const types = req.query.types;
 
-  for (const name of mongoose.connection.modelNames()) {
-    const modelOutput = {};
+  if (!types || !Array.isArray(types)) {
+    res.json({err: 'No type set'});
+    return;
+  }
+
+  const names = mongoose.connection.modelNames();
+
+  for (const name of types) {
+    if (!names.includes(name)) {
+      res.json({err: `Type "${name}" unknown`});
+      return;
+    }
+  }
+
+  for (const name of types) {
     const model = mongoose.connection.model(name);
-    modelOutput.schema = model.schema;
     promises.push(
       model.find().then(docs => {
-        modelOutput.docs = docs;
+        output[name] = docs;
       })
     );
-    output[name] = modelOutput;
   }
 
   Promise.all(promises).then(() => {
     res.json(output);
+  }).catch(err => {
+    res.status(500).json({err: err.message});
+    throw err;
+  });
+}
+
+export function dbSetJson(req, res) {
+  const promises = [];
+
+  for (const key of Object.keys(req.body)) {
+    const model = mongoose.connection.model(key);
+    promises.push(
+      model.remove({}).then(() => model.insertMany(req.body[key]))
+    );
+  }
+
+  Promise.all(promises).then(() => {
+    res.json({ok: true});
+  }).catch(err => {
+    res.status(500).json({err: err.message});
+    throw err;
   });
 }
