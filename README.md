@@ -47,3 +47,14 @@ sudo dokku config:set --no-restart big-web-quiz DOKKU_LETSENCRYPT_EMAIL=jaffathe
 sudo dokku letsencrypt big-web-quiz
 sudo dokku letsencrypt:cron-job --add
 ```
+
+Then up the connection limits in `/etc/nginx/nginx.conf`.
+
+```
+worker_rlimit_nofile 30000;
+
+events {
+        worker_connections 30000;
+        # multi_accept on;
+}
+```
