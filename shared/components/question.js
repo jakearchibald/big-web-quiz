@@ -30,6 +30,13 @@ export default class Question extends BoundComponent {
       answersChecked: []
     };
   }
+  componentWillReceiveProps(newProps) {
+    if (this.props.id != newProps.id) {
+      this.setState({
+        answersChecked: []
+      });
+    }
+  }
   async onSubmit(event) {
     event.preventDefault();
     // TODO feedback and progress
@@ -67,7 +74,7 @@ export default class Question extends BoundComponent {
       ).map(el => el.checked)
     })
   }
-  render({title, text, multiple, answers, closed, correctAnswers, code, codeType}, {answersChecked}) {
+  render({id, title, text, multiple, answers, closed, correctAnswers, code, codeType}, {answersChecked}) {
     const codeEl = code && <Code code={code} codeType={codeType}></Code>;
 
     return (
@@ -80,10 +87,9 @@ export default class Question extends BoundComponent {
         <p>{text}</p>
         {codeEl}
         {answers.map((answer, i) =>
-          <div>
+          <div key={`question-${id}-answer-${i}`}>
             <label>
               <input
-                key={`answer-${i}`}
                 type={multiple ? 'checkbox' : 'radio'}
                 name="answer"
                 value={i}
