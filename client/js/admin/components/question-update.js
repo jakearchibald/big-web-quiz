@@ -100,7 +100,17 @@ export default class QuestionUpdate extends BoundComponent {
       {id ? <input type="hidden" name="id" value={id}/> : ''}
       <div><label>Question: <input type="text" value={this.state.text} onChange={this.linkState('text')}/></label></div>
       <div><label>Code: <textarea value={this.state.code} onChange={this.linkState('code')}/></label></div>
-      <div><label>Code type: <input type="text" value={this.state.codeType} onChange={this.linkState('codeType')}/></label></div>
+      <div>
+        <label>
+          Code type:
+          <select value={this.state.codeType} onChange={this.linkState('codeType')}>
+            <option value="">None</option>
+            <option value="javascript">JavaScript</option>
+            <option value="markup">Markup</option>
+            <option value="css">CSS</option>
+          </select>
+        </label>
+      </div>
       <div><label><input type="checkbox" checked={this.state.multiple} onChange={this.linkState('multiple')}/> Multiple answers</label></div>
       <div><label><input type="checkbox" checked={this.state.scored} onChange={this.linkState('scored')}/> Scored</label></div>
       <div>
