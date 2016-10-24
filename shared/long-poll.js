@@ -42,7 +42,6 @@ export default class LongPoll extends EventEmitter {
     const connectionStart = Date.now();
 
     try {
-      console.log('fetch');
       const response = await fetch(`/long-poll.json?lastMessageTime=${this._lastMessageTime}`, {
         credentials: 'include'
       });
