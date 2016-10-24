@@ -201,6 +201,7 @@ for (const item of browserScripts) {
 function postProcess() {
   return gulp.src(paths.postProcess.src)
     .pipe(revAll.revision())
+    .pipe(gulp.dest(paths.postProcess.dest))
     .pipe(gzip({skipGrowingFiles: true}))
     .pipe(gulp.dest(paths.postProcess.dest))
     .pipe(revAll.manifestFile())
