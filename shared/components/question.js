@@ -18,6 +18,7 @@ import {h} from 'preact';
 
 import BoundComponent from './bound-component';
 import Code from './code';
+import QuestionSpinner from './question-spinner';
 
 export default class Question extends BoundComponent {
   constructor(props) {
@@ -27,7 +28,8 @@ export default class Question extends BoundComponent {
     this.form = null;
 
     this.state = {
-      answersChecked: []
+      answersChecked: [],
+      spinnerState: ''
     };
   }
   componentWillReceiveProps(newProps) {
@@ -39,7 +41,10 @@ export default class Question extends BoundComponent {
   }
   async onSubmit(event) {
     event.preventDefault();
-    // TODO feedback and progress
+    
+    this.setState({
+      spinnerState: 'spinning'
+    });
 
     try {
       const response = await fetch(this.formAction, {
@@ -66,6 +71,10 @@ export default class Question extends BoundComponent {
       // TODO
       throw err;
     }
+
+    this.setState({
+      spinnerState: ''
+    });
   }
   onChoiceChange() {
     this.setState({
@@ -74,38 +83,41 @@ export default class Question extends BoundComponent {
       ).map(el => el.checked)
     })
   }
-  render({id, title, text, multiple, answers, closed, correctAnswers, code, codeType}, {answersChecked}) {
+  render({id, title, text, multiple, answers, closed, correctAnswers, code, codeType}, {answersChecked, spinnerState}) {
     const codeEl = code && <Code code={code} codeType={codeType}></Code>;
 
     return (
-      <form
-        onSubmit={this.onSubmit}
-        action={this.formAction}
-        method="POST"
-        ref={el => this.form = el}>
-        <h1>{title}</h1>
-        <p>{text}</p>
-        {codeEl}
-        {answers.map((answer, i) =>
-          <div key={`question-${id}-answer-${i}`}>
-            <label>
-              <input
-                type={multiple ? 'checkbox' : 'radio'}
-                name="answer"
-                value={i}
-                checked={answersChecked[i]}
-                disabled={closed}
-                onChange={this.onChoiceChange}
-              />
-              {answer.text}
-              {correctAnswers ?
-                (correctAnswers.includes(i) ? ' - This was a correct answer' : '') 
-              : ''}
-            </label>
-          </div>
-        )}
-        <button>Submit</button>
-      </form>
+      <section>
+        <form
+          onSubmit={this.onSubmit}
+          action={this.formAction}
+          method="POST"
+          ref={el => this.form = el}>
+          <h1>{title}</h1>
+          <p>{text}</p>
+          {codeEl}
+          {answers.map((answer, i) =>
+            <div key={`question-${id}-answer-${i}`}>
+              <label>
+                <input
+                  type={multiple ? 'checkbox' : 'radio'}
+                  name="answer"
+                  value={i}
+                  checked={answersChecked[i]}
+                  disabled={closed}
+                  onChange={this.onChoiceChange}
+                />
+                {answer.text}
+                {correctAnswers ?
+                  (correctAnswers.includes(i) ? ' - This was a correct answer' : '') 
+                : ''}
+              </label>
+            </div>
+          )}
+          <button>Submit</button>
+        </form>
+        <QuestionSpinner state={spinnerState}/>
+      </section>
     );
   }
 }
