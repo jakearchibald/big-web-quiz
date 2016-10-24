@@ -23,6 +23,7 @@ export default class QuestionWaiting extends BoundComponent {
     return (
       <div>
         Waiting for a question
+        <div>Score: {user.score}</div>
         {!server &&
           <LeaderboardToggle
             onUserUpdate={onUserUpdate}
