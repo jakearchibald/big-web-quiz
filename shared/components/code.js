@@ -33,7 +33,7 @@ export default class Code extends BoundComponent {
   componentDidMount() {
     this.highlightCode();
   }
-  componentDidUpdate({code: oldCode}) {
+  componentDidUpdate() {
     this.highlightCode();
   }
   render({code, codeType}) {

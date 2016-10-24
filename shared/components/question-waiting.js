@@ -16,20 +16,24 @@
 */
 import { h } from 'preact';
 import BoundComponent from './bound-component';
+import LeaderboardToggle from './leaderboard-toggle';
 
 export default class QuestionWaiting extends BoundComponent {
-  componentDidUpdate() {
-    if (!this.props.transitionOut) return;
-    /*
-    this.props.transitionOut(new Promise(r => {
-      console.log(this);
-      setTimeout(r, 1000);
-    }));
-    */
-  }
-  render() {
+  render({server, onUserUpdate, user}) {
     return (
-      <div>Waiting for a question</div>
+      <div>
+        Waiting for a question
+        {!server &&
+          <LeaderboardToggle
+            onUserUpdate={onUserUpdate}
+            checked={user.appearOnLeaderboard}
+          />
+        }
+      </div>
     );
   }
 }
+
+QuestionWaiting.defaultProps = {
+  onUserUpdate: function(){}
+};

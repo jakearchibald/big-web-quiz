@@ -78,7 +78,12 @@ export default class App extends BoundComponent {
       <div>
         <header class="page-header">
           <div class="title">The Big Web Quiz</div>
-          <LoginStatus user={user} onLogout={this.onLogout} onUserUpdate={this.onUserUpdate}/>
+          <LoginStatus
+            server={server}
+            user={user}
+            onLogout={this.onLogout}
+            onUserUpdate={this.onUserUpdate}
+          />
         </header>
         <Transition>
           {user ?
@@ -96,7 +101,12 @@ export default class App extends BoundComponent {
                 correctAnswers={correctAnswers}
               />
               : 
-              <QuestionWaiting key="question-waiting" />
+              <QuestionWaiting
+                key="question-waiting"
+                user={user}
+                server={server} 
+                onUserUpdate={this.onUserUpdate}
+              />
             ) 
             :
             <Intro key="intro"/>

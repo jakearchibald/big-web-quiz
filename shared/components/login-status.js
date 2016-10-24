@@ -17,8 +17,7 @@
 import { h } from 'preact';
 import {Logout} from './user';
 import BoundComponent from './bound-component';
-
-const UPDATE_USER_FORM_ACTION = '/update-me.json';
+import LeaderboardToggle from './leaderboard-toggle';
 
 export default class LoginStatus extends BoundComponent {
   constructor() {
@@ -28,29 +27,6 @@ export default class LoginStatus extends BoundComponent {
       leaderboardPending: false,
       bubbleOpen: false
     };
-  }
-  async onLeaderboardChange(event) {
-    this.setState({leaderboardPending: true});
-
-    try {
-      const response = await fetch(UPDATE_USER_FORM_ACTION, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({appearOnLeaderboard: event.target.checked})
-      });
-      
-      const data = await response.json();
-
-      if (data.err) throw Error(data.err);
-
-      this.props.onUserUpdate(data.user);
-    }
-    catch (err) {
-      // TODO: toast?
-      throw err;
-    }
-    this.setState({leaderboardPending: false});
   }
   onAvatarClick(event) {
     this.setState({
@@ -70,7 +46,7 @@ export default class LoginStatus extends BoundComponent {
   componentWillUnmount() {
     window.removeEventListener('click', this.onWindowClick);
   }
-  render({user, onLogout, server}, {leaderboardPending, bubbleOpen}) {
+  render({user, onLogout, server, onUserUpdate}, {leaderboardPending, bubbleOpen}) {
     if (!user) {
       return (<div>Not logged in</div>);
     }
@@ -79,18 +55,10 @@ export default class LoginStatus extends BoundComponent {
 
     if (!server) {
       leaderboardToggle = (
-        <form action={UPDATE_USER_FORM_ACTION} method="POST">
-          <label>
-            <input 
-              type="checkbox"
-              name="appear-on-leaderboard"
-              onChange={this.onLeaderboardChange}
-              checked={user.appearOnLeaderboard}
-              disabled={leaderboardPending}
-            />
-            Appear on leaderboard
-          </label>
-        </form>
+        <LeaderboardToggle
+          checked={user.appearOnLeaderboard}
+          onUserUpdate={onUserUpdate}
+        />
       );
     }
 
