@@ -31,9 +31,9 @@ export default class LongPollers {
       time: Date.now()
     };
 
-    for (const res of this._pollers.map(poll => poll.res)) {
+    for (const poller of this._pollers) {
       try {
-        res.json(this._lastMessage);
+        poller.res.json(this._lastMessage);
       }
       catch (err) {
         console.log(err);

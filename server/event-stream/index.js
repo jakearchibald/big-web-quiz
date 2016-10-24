@@ -22,7 +22,7 @@ function writeMessage(res, id, data) {
 
 export default class EventStream {
   constructor() {
-    this._responses = [];
+    this._pollers = []; // [{req, res}]
     this._lastEventId = 0;
     this._lastMessage = null;
     this._rollingState = {};
@@ -34,17 +34,29 @@ export default class EventStream {
 
     const messageStr = JSON.stringify(this._lastMessage);
 
-    for (const res of this._responses) {
+    for (const poller of this._pollers) {
       try {
-        writeMessage(res, this._lastEventId, messageStr);
+        writeMessage(poller.res, this._lastEventId, messageStr);
       }
       catch (err) {
         console.log(err);
       }
     }
   }
+  countListenersForUser(user) {
+    return this._pollers.reduce((num, poll) => {
+      if (poll.req.user.equals(user)) num++;
+      return num;
+    }, 0);
+  }
   add(req, res) {
     const lastEventId = Number(req.get('Last-Event-ID')) || 0;
+
+    // Allowing admin to make too many connections for testing purposes
+    if (!req.user.isAdmin() && this.countListenersForUser(req.user) > 10) {
+      res.status(429).json({err: 'Too many open polling requests'});
+      return;
+    }
 
     res.set('Content-Type', "text/event-stream");
     res.write('retry: 100\n');
@@ -54,17 +66,17 @@ export default class EventStream {
       writeMessage(res, this._lastEventId, message);
     }
 
-    this._responses.push(res);
+    this._pollers.push({req, res});
 
     const connectionEnded = () => {
       res.removeListener('finish', connectionEnded);
       res.removeListener('close', connectionEnded);
 
       // remove from the pool
-      const index = this._responses.indexOf(res);
+      const index = this._pollers.findIndex(poller => poller.res == res);
 
       if (index != -1) {
-        this._responses.splice(index, 1);
+        this._pollers.splice(index, 1);
       }
     };
 

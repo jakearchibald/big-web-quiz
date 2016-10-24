@@ -90,8 +90,8 @@ router.get('/long-poll.json', requiresLoginJson, longPoll);
 router.get('/admin/', requiresAdminHtml, admin);
 router.get('/admin/initial-state.json', requiresAdminJson, adminStateJson);
 router.get('/admin/db.json', requiresAdminJson, dbJson);
-router.get('/presentation/', presentation);
-router.get('/presentation/listen', presentationListen);
+router.get('/presentation/', requiresLogin, presentation);
+router.get('/presentation/listen', requiresLoginJson, presentationListen);
 
 router.post('/logout', logoutRedirect);
 router.post('/logout.json', logoutJson);
