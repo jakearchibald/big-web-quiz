@@ -86,6 +86,7 @@ export default class App extends BoundComponent {
               <Question
                 key="question"
                 id={question.id}
+                title={question.title}
                 text={question.text}
                 multiple={question.multiple}
                 answers={question.answers}

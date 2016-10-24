@@ -190,6 +190,7 @@ class App extends BoundComponent {
               <li key={question._id}>
                 <QuestionUpdate
                   id={question._id}
+                  title={question.title}
                   text={question.text}
                   code={question.code}
                   codeType={question.codeType}
@@ -208,6 +209,7 @@ class App extends BoundComponent {
                 <button onClick={event => this.onEditQuestionClick(event, question)}>Edit</button>
                 {this.questionActionButton(question)}
               </p>
+              <p>Title: {question.title}</p>
               <p>Text: {question.text}</p>
               <p>Code: {question.code}</p>
               <p>Code type: {question.codeType}</p>

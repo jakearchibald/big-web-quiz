@@ -66,7 +66,8 @@ class App extends BoundComponent {
 
     return (
       <div>
-        <h1>{question.text}</h1>
+        <h1>{question.title}</h1>
+        <p>{question.text}</p>
         {code}
         {answerDisplayOrder.map((i) =>
           <div>

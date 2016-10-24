@@ -53,6 +53,7 @@ export function deleteQuestionJson(req, res) {
 
 export function updateQuestionJson(req, res) {
   const update = {
+    title: req.body.title,
     text: req.body.text,
     code: req.body.code,
     codeType: req.body.codeType,

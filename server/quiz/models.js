@@ -17,7 +17,9 @@
 import mongoose from '../mongoose-db';
 
 const questionSchema = mongoose.Schema({
-  // The question
+  // Short title of the question, eg "Question 1"
+  title: {type: String, required: true, default: "Question!"},
+  // The actual question
   text: {type: String, required: true},
   // Answers can optionally have a code example
   code: String,
@@ -104,6 +106,7 @@ export class Quiz {
     return {
       question: this._activeQuestion && {
         id: this._activeQuestion._id,
+        title: this._activeQuestion.title,
         text: this._activeQuestion.text,
         code: this._activeQuestion.code,
         codeType: this._activeQuestion.codeType,

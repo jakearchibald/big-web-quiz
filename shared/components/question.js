@@ -67,7 +67,7 @@ export default class Question extends BoundComponent {
       ).map(el => el.checked)
     })
   }
-  render({text, multiple, answers, closed, correctAnswers, code, codeType}, {answersChecked}) {
+  render({title, text, multiple, answers, closed, correctAnswers, code, codeType}, {answersChecked}) {
     const codeEl = code && <Code code={code} codeType={codeType}></Code>;
 
     return (
@@ -76,6 +76,7 @@ export default class Question extends BoundComponent {
         action={this.formAction}
         method="POST"
         ref={el => this.form = el}>
+        <h1>{title}</h1>
         <p>{text}</p>
         {codeEl}
         {answers.map((answer, i) =>

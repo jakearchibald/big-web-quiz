@@ -27,9 +27,9 @@ function createAnswerObject() {
 export default class QuestionUpdate extends BoundComponent {
   constructor(props) {
     super(props);
-
     const {
       id = '',
+      title = '',
       text = '',
       code = '',
       codeType = '',
@@ -38,7 +38,7 @@ export default class QuestionUpdate extends BoundComponent {
       scored = true
     } = props;
 
-    this.state = {text, code, codeType, answers, multiple, scored};
+    this.state = {title, text, code, codeType, answers, multiple, scored};
   }
   async onRemoveQuestion(event) {
     event.preventDefault();
@@ -66,7 +66,7 @@ export default class QuestionUpdate extends BoundComponent {
   }
   async onSubmit(event) {
     event.preventDefault();
-    const {text, code, codeType, answers, multiple, scored} = this.state;
+    const {title, text, code, codeType, answers, multiple, scored} = this.state;
     const id = this.props.id;
 
     try {
@@ -75,8 +75,8 @@ export default class QuestionUpdate extends BoundComponent {
         credentials: 'include',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
-          text, code, codeType, answers,
-          multiple, scored, id
+          title, text, code, codeType,
+          answers, multiple, scored, id
         })
       });
 
@@ -98,6 +98,7 @@ export default class QuestionUpdate extends BoundComponent {
   render({id}, {answers, multiple}) {
     return <form action={UPDATE_ACTION} method="POST" onSubmit={this.onSubmit}>
       {id ? <input type="hidden" name="id" value={id}/> : ''}
+      <div><label>Title: <input type="text" value={this.state.title} onChange={this.linkState('title')}/></label></div>
       <div><label>Question: <input type="text" value={this.state.text} onChange={this.linkState('text')}/></label></div>
       <div><label>Code: <textarea value={this.state.code} onChange={this.linkState('code')}/></label></div>
       <div>
