@@ -17,6 +17,7 @@
 import {h} from 'preact';
 
 import BoundComponent from './bound-component';
+import Code from './code';
 
 export default class Question extends BoundComponent {
   constructor(props) {
@@ -66,7 +67,9 @@ export default class Question extends BoundComponent {
       ).map(el => el.checked)
     })
   }
-  render({text, multiple, answers, closed, correctAnswers}, {answersChecked}) {
+  render({text, multiple, answers, closed, correctAnswers, code, codeType}, {answersChecked}) {
+    const codeEl = code && <Code code={code} codeType={codeType}></Code>;
+
     return (
       <form
         onSubmit={this.onSubmit}
@@ -74,6 +77,7 @@ export default class Question extends BoundComponent {
         method="POST"
         ref={el => this.form = el}>
         <p>{text}</p>
+        {codeEl}
         {answers.map((answer, i) =>
           <div>
             <label>

@@ -21,7 +21,7 @@ self.regeneratorRuntime = regeneratorRuntime;
 
 import shuffle from 'shuffle-array';
 
-import Code from './components/code';
+import Code from '../../../shared/components/code';
 import BoundComponent from '../../../shared/components/bound-component';
 
 class App extends BoundComponent {

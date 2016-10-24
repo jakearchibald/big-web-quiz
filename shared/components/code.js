@@ -16,7 +16,7 @@
 */
 import {h} from 'preact';
 import Prism from 'prismjs';
-import BoundComponent from '../../../../shared/components/bound-component';
+import BoundComponent from './bound-component';
 
 export default class Code extends BoundComponent {
   constructor(props) {
