@@ -101,7 +101,7 @@ export default class LoginStatus extends BoundComponent {
             class="avatar"
             width="34" height="34"
             src={`${user.avatarUrl}?sz=34`}
-            sizes={`${user.avatarUrl}?sz=68 2x, ${user.avatarUrl}?sz=136 3x`}
+            srcset={`${user.avatarUrl}?sz=68 2x, ${user.avatarUrl}?sz=136 3x`}
           />
         </button>
         <div class={`login-bubble ${bubbleOpen ? 'active' : ''}`}>
