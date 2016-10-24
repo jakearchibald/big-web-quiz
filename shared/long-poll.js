@@ -23,46 +23,53 @@ export default class LongPoll extends EventEmitter {
     this._active = false;
     this._fetchInFlight = false;
     this._lastMessageTime = lastMessageTime;
+    this._visible = false;
+
+    this._updateVisibility();
     this.start();
+
+    document.addEventListener('visibilitychange', () => {
+      this._updateVisibility();
+      this._poll();
+    });
+  }
+  _updateVisibility() {
+    this._visible = document.visibilityState == 'visible';
+  }
+  async _poll() {
+    if (this._fetchInFlight || !this._active || !this._visible) return;
+    this._fetchInFlight = true;
+    const connectionStart = Date.now();
+
+    try {
+      console.log('fetch');
+      const response = await fetch(`/long-poll.json?lastMessageTime=${this._lastMessageTime}`, {
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+
+      if (this._active) {
+        this._lastMessageTime = data.time;
+        this.emit('message', data.message);
+      }
+    }
+    catch(err) {
+      console.log('Poll error', err);
+    }
+
+    const connectionEnd = Date.now();
+
+    if (connectionEnd - connectionStart < 3000) {
+      await wait(3000 - (connectionEnd - connectionStart));
+    }
+
+    this._fetchInFlight = false;
+    this._poll();
   }
   start() {
     this._active = true;
-    if (this._fetchInFlight) return;
-
-    const poll = async () => {
-      const connectionStart = Date.now();
-
-      try {
-        const response = await fetch(`/long-poll.json?lastMessageTime=${this._lastMessageTime}`, {
-          credentials: 'include'
-        });
-
-        const data = await response.json();
-
-        if (this._active) {
-          this._lastMessageTime = data.time;
-          this.emit('message', data.message);
-        }
-      }
-      catch(err) {
-        console.log('Poll error', err);
-      }
-
-      if (!this._active) {
-        this._fetchInFlight = false;
-        return;
-      }
-
-      const connectionEnd = Date.now();
-
-      if (connectionEnd - connectionStart < 3000) {
-        await wait(3000 - (connectionEnd - connectionStart));
-      }
-
-      poll();
-    }
-
-    poll();
+    this._poll();
   }
   stop() {
     this._active = false;
