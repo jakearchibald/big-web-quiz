@@ -216,7 +216,7 @@ function replaceIfMap(filename) {
   return filename;
 }
 
-function postProcess() {
+function revStatic() {
   return gulp.src(paths.postProcess.src)
     .pipe(rev())
     .pipe(revReplace({
@@ -224,9 +224,13 @@ function postProcess() {
       modifyReved: replaceIfMap
     }))
     .pipe(gulp.dest(paths.postProcess.dest))
-    .pipe(gzip({skipGrowingFiles: true}))
-    .pipe(gulp.dest(paths.postProcess.dest))
     .pipe(rev.manifest())
+    .pipe(gulp.dest(paths.postProcess.dest));
+}
+
+function gzipStatic() {
+  return gulp.src(paths.postProcess.src)
+    .pipe(gzip({skipGrowingFiles: true}))
     .pipe(gulp.dest(paths.postProcess.dest));
 }
 
@@ -248,7 +252,6 @@ function watch() {
 }
 
 gulp.task('serverTemplates', serverTemplates);
-gulp.task('postProcess', postProcess);
 gulp.task('browserScripts', gulp.parallel(...browserScripts.map(i => i.task)));
 
 const mainBuild = gulp.series(
@@ -256,7 +259,7 @@ const mainBuild = gulp.series(
   gulp.parallel(serverScripts, serverTemplates, sharedScripts, images, scss, 'browserScripts')
 );
 
-gulp.task('build', gulp.series(mainBuild, postProcess));
+gulp.task('build', gulp.series(mainBuild, revStatic, gzipStatic));
 
 gulp.task('serve', gulp.series(
   mainBuild,
