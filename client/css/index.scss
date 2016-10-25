@@ -16,5 +16,10 @@
 */
 @import '../../node_modules/prismjs/themes/prism-okaidia';
 @import 'global';
+@import 'components/app';
 @import 'components/header';
 @import 'components/login-status';
+@import 'components/intro';
+@import 'components/question-waiting';
+@import 'components/question-closed';
+@import 'components/question';

@@ -15,22 +15,23 @@
  * limitations under the License.
  */
 
-.page-header {
-  padding: 0 16px;
-  height: 70px;
+.app {
   display: flex;
-  align-items: center;
-  z-index: 1;
+  flex-direction: column;
+  height: 100%;
+  flex: 1;
   position: relative;
+  z-index: 0;
+  overflow: hidden;
 
-  & .title {
-    line-height: 1;
-    font-size: 22px;
-    color: #FFFFFF;
+  .container {
+    display: flex;
+    flex-direction: column;
     flex: 1;
-  }
-
-  & .login-status {
-    margin-left: auto;
+    width: 100%;
+    margin: 0 auto;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
   }
 }

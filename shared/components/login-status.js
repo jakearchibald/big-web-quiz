@@ -30,7 +30,7 @@ export default class LoginStatus extends BoundComponent {
   }
   onAvatarClick(event) {
     this.setState({
-      bubbleOpen: !this.state.bubbleOpen 
+      bubbleOpen: !this.state.bubbleOpen
     });
   }
   onWindowClick(event) {
@@ -48,7 +48,7 @@ export default class LoginStatus extends BoundComponent {
   }
   render({user, onLogout, server, onUserUpdate}, {leaderboardPending, bubbleOpen}) {
     if (!user) {
-      return (<div>Not logged in</div>);
+      return (<div class="page-header__not-logged-in">Not logged in</div>);
     }
 
     let leaderboardToggle;
@@ -67,7 +67,7 @@ export default class LoginStatus extends BoundComponent {
         <button onClick={this.onAvatarClick} class="login-details-button">
           <img
             class="avatar"
-            width="34" height="34"
+            width="48" height="49"
             src={`${user.avatarUrl}?sz=34`}
             srcset={`${user.avatarUrl}?sz=68 2x, ${user.avatarUrl}?sz=136 3x`}
           />
@@ -78,7 +78,6 @@ export default class LoginStatus extends BoundComponent {
               <div class="login-bubble-profile">
                 <div class="user-name">{user.name}</div>
                 <div class="user-email">{user.email}</div>
-                <div class="score">Score: {user.score}</div>
                 {leaderboardToggle}
               </div>
               <Logout onLogout={onLogout}/>

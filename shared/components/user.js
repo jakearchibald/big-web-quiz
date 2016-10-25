@@ -44,8 +44,8 @@ export class Logout extends BoundComponent {
     });
   }
   render(props, state) {
-    return ( 
-      <form action={this.logoutUrl} method="POST" onSubmit={this.onSubmit}>
+    return (
+      <form class="logout-form" action={this.logoutUrl} method="POST" onSubmit={this.onSubmit}>
         <button>Log out</button>
       </form>
     );

@@ -19,6 +19,7 @@ import {h} from 'preact';
 import BoundComponent from './bound-component';
 import Code from './code';
 import QuestionSpinner from './question-spinner';
+import QuestionClosed from './question-closed'
 
 export default class Question extends BoundComponent {
   constructor(props) {
@@ -29,7 +30,8 @@ export default class Question extends BoundComponent {
 
     this.state = {
       answersChecked: [],
-      spinnerState: ''
+      spinnerState: '',
+      submittedAnswers: false
     };
   }
   componentWillReceiveProps(newProps) {
@@ -41,7 +43,7 @@ export default class Question extends BoundComponent {
   }
   async onSubmit(event) {
     event.preventDefault();
-    
+
     this.setState({
       spinnerState: 'spinning'
     });
@@ -68,12 +70,17 @@ export default class Question extends BoundComponent {
       if (data.err) throw Error(data.err);
     }
     catch (err) {
-      // TODO
+      this.setState({
+        spinnerState: '',
+        submittedAnswers: false
+      });
+
       throw err;
     }
 
     this.setState({
-      spinnerState: ''
+      spinnerState: '',
+      submittedAnswers: true
     });
   }
   onChoiceChange() {
@@ -83,40 +90,57 @@ export default class Question extends BoundComponent {
       ).map(el => el.checked)
     })
   }
-  render({id, title, text, multiple, answers, closed, correctAnswers, code, codeType}, {answersChecked, spinnerState}) {
+  render({id, title, text, multiple, answers, closed, correctAnswers, code, codeType}, {answersChecked, spinnerState, submittedAnswers}) {
     const codeEl = code && <Code code={code} codeType={codeType}></Code>;
 
     return (
-      <section>
+      <section class="question">
         <form
+          class={closed && (!correctAnswers) ? 'question__form question__form--closed' : 'question__form'}
           onSubmit={this.onSubmit}
           action={this.formAction}
           method="POST"
           ref={el => this.form = el}>
-          <h1>{title}</h1>
-          <p>{text}</p>
+          <h1 class="question__title">{title}</h1>
+          <p class="question__text">{text}</p>
           {codeEl}
           {answers.map((answer, i) =>
-            <div key={`question-${id}-answer-${i}`}>
-              <label>
-                <input
-                  type={multiple ? 'checkbox' : 'radio'}
-                  name="answer"
-                  value={i}
-                  checked={answersChecked[i]}
-                  disabled={closed}
-                  onChange={this.onChoiceChange}
-                />
-                {answer.text}
-                {correctAnswers ?
-                  (correctAnswers.includes(i) ? ' - This was a correct answer' : '') 
-                : ''}
+            <div class="question__answer" key={`question-${id}-answer-${i}`}>
+              <input
+                id={`question-${id}-answer-${i}`}
+                type={multiple ? 'checkbox' : 'radio'}
+                name="answer"
+                value={i}
+                checked={answersChecked[i]}
+                disabled={closed}
+                onChange={this.onChoiceChange}
+              />
+              <label
+                for={`question-${id}-answer-${i}`}
+                class={correctAnswers ?
+                  (correctAnswers.includes(i) ?
+                    'question__answer-label question__answer-label--correct' :
+                    'question__answer-label question__answer-label--incorrect')
+                : 'question__answer-label'}>
+                <span class="question__answer-label-text">{answer.text}</span>
               </label>
             </div>
           )}
-          <button>Submit</button>
+          <div class="question__submit-container">
+            <div class={
+              submittedAnswers ?
+                'question__submitted-answer question__submitted-answer--success' :
+                'question__submitted-answer'
+            }>{submittedAnswers ? 'Answer submitted' : ''}</div>
+            <button disabled={closed || spinnerState} class={
+              spinnerState ?
+                'question__submit question__submit--pending' :
+                'question__submit'
+            }>Submit</button>
+          </div>
         </form>
-        <QuestionSpinner state={spinnerState}/>
+        <QuestionClosed state={closed && (!correctAnswers)}/>
+
       </section>
     );
   }

@@ -21,9 +21,13 @@ import LeaderboardToggle from './leaderboard-toggle';
 export default class QuestionWaiting extends BoundComponent {
   render({server, onUserUpdate, user}) {
     return (
-      <div>
-        Waiting for a question
-        <div>Score: {user.score}</div>
+      <div class="question-waiting">
+        <div class="your-score">
+          <div class="your-score__title">Your score:</div>
+          <div class="your-score__value">{user.score}</div>
+        </div>
+
+        <p class="message">Waiting for a question</p>
         {!server &&
           <LeaderboardToggle
             onUserUpdate={onUserUpdate}

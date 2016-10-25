@@ -15,22 +15,16 @@
  * limitations under the License.
  */
 
-.page-header {
-  padding: 0 16px;
-  height: 70px;
+.intro {
+  margin: 0 auto;
   display: flex;
   align-items: center;
-  z-index: 1;
-  position: relative;
-
-  & .title {
-    line-height: 1;
-    font-size: 22px;
-    color: #FFFFFF;
-    flex: 1;
-  }
-
-  & .login-status {
-    margin-left: auto;
-  }
+  justify-content: center;
+  flex-direction: column;
+  max-width: 680px;
+  flex: 1;
+  font-size: 32px;
+  text-align: center;
+  line-height: 1.4;
+  padding: 0 32px 10vh 32px;
 }
