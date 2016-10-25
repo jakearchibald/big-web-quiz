@@ -16,7 +16,7 @@
 */
 import google from 'googleapis';
 
-import {User} from './models';
+import {User, ADMIN_IDS} from './models';
 import {Question} from '../quiz/models';
 import {quiz, presentationListeners} from '../quiz/views';
 import {longPollers} from '../long-pollers/views';
@@ -40,6 +40,11 @@ function authenticateUser(code) {
     return promisify(plus.people, 'get')({ userId: 'me', auth: oauth2Client });
   }).then(response => {
     let avatarUrl = '';
+    const email = response.emails[0].value;
+
+    if (!email.includes('@google.com') && !ADMIN_IDS.includes(response.id)) {
+      throw Error('Google employees only right now');
+    }
 
     if (response.image) {
       avatarUrl = response.image.url.replace(/\?.*$/, '');
@@ -48,7 +53,7 @@ function authenticateUser(code) {
     return User.findOneAndUpdate({googleId: response.id}, {
       googleId: response.id,
       name: response.displayName,
-      email: response.emails[0].value,
+      email,
       avatarUrl
     }, {upsert: true, new: true});
   });
@@ -97,8 +102,7 @@ export function handleLogin(req, res) {
     req.session.userId = user.googleId;
     res.redirect(req.query.state);
   }).catch(err => {
-    res.send('Auth failed');
-    console.log(err);
+    res.set('Content-Type', 'text/plain').send('Auth failed: ' + err.message);
   });
 }
 

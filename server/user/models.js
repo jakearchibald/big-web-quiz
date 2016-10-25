@@ -17,7 +17,7 @@
 import mongoose from '../mongoose-db';
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
-const ADMIN_IDS = [
+export const ADMIN_IDS = [
   '116237864387312784020', // Jake
   '102813120987797040209' // Paul Lewis
 ];
