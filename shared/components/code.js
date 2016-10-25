@@ -38,9 +38,11 @@ export default class Code extends BoundComponent {
   }
   render({code, codeType}) {
     return (
-      <pre ref={el => this.pre = el} class={`language-${codeType}`}>
-        <code>{code}</code>
-      </pre>
+      <div class="question__code-container">
+        <pre class="question__code" ref={el => this.pre = el} class={`language-${codeType}`}>
+          <code>{code}</code>
+        </pre>
+      </div>
     );
   }
 }
