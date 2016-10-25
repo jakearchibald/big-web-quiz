@@ -46,11 +46,9 @@ async function getInitialState() {
   return response.json();
 }
 
-const scriptLoading = [];
-// as its own far for the renamer to pick it up :(
-const polyfills = 'polyfills.js'; 
+const scriptLoading = []; 
 
-if (!window.fetch) scriptLoading.push(loadScript('/static/js/' + polyfills));
+if (!window.fetch) scriptLoading.push(loadScript('/static/js/polyfills.js'));
 
 Promise.all(scriptLoading).then(() => getInitialState()).then(state => {
   document.body.innerHTML = '';

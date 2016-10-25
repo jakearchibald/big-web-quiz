@@ -27,7 +27,8 @@ const gzip = require('gulp-gzip');
 const uglify = require('gulp-uglify');
 const defineModule = require('gulp-define-module');
 const sass = require('gulp-sass');
-const revAll = require('gulp-rev-all');
+const rev = require('gulp-rev');
+const revReplace = require('gulp-rev-replace');
 const respawn = require('respawn');
 const del = require('del');
 const source = require('vinyl-source-stream');
@@ -208,13 +209,24 @@ for (const item of browserScripts) {
   item.task = createScriptTask(item.src, item.dest);
 }
 
+function replaceIfMap(filename) {
+  if (filename.indexOf('.map') > -1) {
+    return filename.replace(/^[^/]+\//, '');
+  }
+  return filename;
+}
+
 function postProcess() {
   return gulp.src(paths.postProcess.src)
-    .pipe(revAll.revision())
+    .pipe(rev())
+    .pipe(revReplace({
+      modifyUnreved: replaceIfMap,
+      modifyReved: replaceIfMap
+    }))
     .pipe(gulp.dest(paths.postProcess.dest))
     .pipe(gzip({skipGrowingFiles: true}))
     .pipe(gulp.dest(paths.postProcess.dest))
-    .pipe(revAll.manifestFile())
+    .pipe(rev.manifest())
     .pipe(gulp.dest(paths.postProcess.dest));
 }
 
