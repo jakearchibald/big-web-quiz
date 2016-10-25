@@ -51,7 +51,7 @@ function getInitialState(req) {
   }
 
   if (longPollers.lastMessageTime) {
-    initialState.lastMessageTime = longPollers.lastMessageTime; 
+    initialState.lastMessageTime = longPollers.lastMessageTime;
     Object.assign(initialState, quiz.getState());
   }
 
@@ -77,17 +77,17 @@ export async function home(req, res) {
   else {
     content = render(<App initialState={initialState} server={true} />);
   }
-  
+
   const scripts = Promise.all(['/static/js/main.js'].map(getStaticUrl));
   const css = Promise.all(['/static/css/index.css'].map(getStaticUrl));
 
   res.send(
     indexTemplate({
       content,
-      title: 'The big web quiz!',
+      title: 'The Big Web Quiz!',
       scripts: await scripts,
       css: await css,
-      initialState: escapeJSONString(JSON.stringify(initialState)) 
+      initialState: escapeJSONString(JSON.stringify(initialState))
     })
   );
 }

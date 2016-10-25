@@ -21,8 +21,9 @@ import {Login} from './user';
 export default class Intro extends BoundComponent {
   render() {
     return (
-      <div>
-        Welcome to the big web quiz! First you need to log in:
+      <div class="intro">
+        <img class="intro__icon" width="96" src="/static/images/icon@192.png" alt="The Big Web Quiz!" />
+        <p>Welcome to the Big Web Quiz! First you need to log in:</p>
         <Login/>
       </div>
     );

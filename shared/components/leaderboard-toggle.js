@@ -46,7 +46,7 @@ export default class LeaderboardToggle extends BoundComponent {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({appearOnLeaderboard: event.target.checked})
       });
-      
+
       const data = await response.json();
 
       if (data.err) throw Error(data.err);
@@ -61,9 +61,9 @@ export default class LeaderboardToggle extends BoundComponent {
   }
   render(props, {leaderboardPending, checked}) {
     return (
-      <form action={UPDATE_USER_FORM_ACTION} method="POST">
+      <form class="leaderboard-toggle" action={UPDATE_USER_FORM_ACTION} method="POST">
         <label>
-          <input 
+          <input
             type="checkbox"
             name="appear-on-leaderboard"
             onChange={this.onLeaderboardChange}

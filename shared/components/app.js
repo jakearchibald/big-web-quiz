@@ -75,7 +75,7 @@ export default class App extends BoundComponent {
   }
   render({server}, {user, question, questionClosed, correctAnswers}) {
     return (
-      <div>
+      <div class="app">
         <header class="page-header">
           <div class="title">The Big Web Quiz</div>
           <LoginStatus
@@ -100,14 +100,14 @@ export default class App extends BoundComponent {
                 closed={questionClosed}
                 correctAnswers={correctAnswers}
               />
-              : 
+              :
               <QuestionWaiting
                 key="question-waiting"
                 user={user}
-                server={server} 
+                server={server}
                 onUserUpdate={this.onUserUpdate}
               />
-            ) 
+            )
             :
             <Intro key="intro"/>
           }

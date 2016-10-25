@@ -14,12 +14,40 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-@import '../../node_modules/prismjs/themes/prism-okaidia';
-@import 'global';
-@import 'components/app';
-@import 'components/header';
-@import 'components/login-status';
-@import 'components/intro';
-@import 'components/question-waiting';
-@import 'components/question-closed';
-@import 'components/question';
+
+html, body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.admin__question {
+  border-bottom: 1px solid #333;
+  padding-bottom: 32px;
+  margin-bottom: 32px;
+}
+
+.admin__buttons button {
+  cursor: pointer;
+  background: #444;
+  border-radius: 3px;
+  border: none;
+  font-size: 18px;
+  color: #FFFFFF;
+  line-height: 32px;
+  padding: 8px 32px;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  margin-right: 16px;
+}
+
+td {
+  padding: 4px;
+  vertical-align: top;
+
+  &:first-of-type {
+    font-weight: bold;
+    padding-right: 32px;
+  }
+}
+
+td ol {
+  padding-left: 16px;
+}

@@ -44,7 +44,7 @@ export default class Transition extends BoundComponent {
   }
   render({children}, state) {
     if (children.length > 1) throw Error('Only one child allowed in Transition');
-    
+
     const child = children[0];
 
     if (!child.key) throw Error('Child must have key');
@@ -62,7 +62,7 @@ export default class Transition extends BoundComponent {
     if (state.exitingChild) els.push(state.exitingChild);
     if (state.currentChild) els.push(state.currentChild);
 
-    return <div>{els}</div>;
+    return <div class="container">{els}</div>;
   }
 }
 
