@@ -26,6 +26,7 @@
   }
 
   &__form {
+    will-change: transform;
     display: flex;
     flex-direction: column;
     transition: transform 0.5s cubic-bezier(0.6, 0, 0.3, 1),
@@ -59,6 +60,7 @@
       color: #FFFFFF;
       transition: transform 0.5s cubic-bezier(0.6, 0, 0.3, 1) 1s;
       -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      will-change: transform;
 
       &-text {
         position: relative;
@@ -106,6 +108,7 @@
     input {
       position: absolute;
       opacity: 0;
+      will-change: transform;
     }
 
     input:checked ~ &-label:hover:before,

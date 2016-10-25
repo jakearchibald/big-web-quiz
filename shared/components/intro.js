@@ -22,7 +22,8 @@ export default class Intro extends BoundComponent {
   render() {
     return (
       <div class="intro">
-      <p>Welcome to the Big Web Quiz! First you need to log in:</p>
+        <img class="intro__icon" width="96" src="/static/images/icon@192.png" alt="The Big Web Quiz!" />
+        <p>Welcome to the Big Web Quiz! First you need to log in:</p>
         <Login/>
       </div>
     );

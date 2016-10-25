@@ -23,8 +23,14 @@
   flex-direction: column;
   max-width: 680px;
   flex: 1;
-  font-size: 32px;
+  font-size: 24px;
   text-align: center;
   line-height: 1.4;
   padding: 0 32px 10vh 32px;
+
+  &__icon {
+    border: 4px solid #FFF;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+  }
 }

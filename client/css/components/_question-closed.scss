@@ -22,10 +22,10 @@
   top: 0;
   left: 0;
   pointer-events: none;
-  opacity: 0;
+  opacity: 0.1;
   overflow: hidden;
   transition: opacity 0.1s cubic-bezier(0.3, 0, 0.1, 1);
-  will-change: opacity;
+  will-change: opacity, transform;
 
   &:before {
     content: '';
@@ -34,6 +34,7 @@
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.3);
+    will-change: transform;
     transition: opacity 2s cubic-bezier(0.3, 0, 0.1, 1);
   }
 
@@ -47,18 +48,19 @@
     position: absolute;
     top: 0;
     left: 0;
-    opacity: 0;
+    opacity: 0.1;
     transition: opacity 0.4s cubic-bezier(0.3, 0, 0.1, 1);
   }
 
   &__sides {
+    will-change: transform;
     transition: transform 1.4s cubic-bezier(0.3, 0, 0.1, 1),
         opacity 0.1s cubic-bezier(0, 0, 0.3, 1);
     transform-style: preserve-3d;
     width: 100%;
     height: 100%;
     position: relative;
-    opacity: 0;
+    opacity: 0.1;
   }
 
   &__front, &__back {
@@ -77,13 +79,6 @@
     font-size: 52px;
   }
 
-  &__front {
-    animation-name: rotate;
-    animation-duration: 1s;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-  }
-
   &__front-inner {
     display: flex;
     align-items: center;
@@ -95,11 +90,6 @@
     line-height: 1.2;
     background: #FFF;
     box-shadow: 0px 2px 8px 0px rgba(112,0,0,0.24);
-    animation-name: rotate;
-    animation-duration: 1s;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-    animation-direction: reverse;
   }
 
   &__back {
@@ -134,6 +124,23 @@
 
     &:before {
       opacity: 1;
+    }
+
+    .question-closed__front {
+      animation-name: rotate;
+      animation-duration: 1s;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+      animation-delay: 1s;
+
+      &-inner {
+        animation-name: rotate;
+        animation-duration: 1s;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+        animation-direction: reverse;
+        animation-delay: 1s;
+      }
     }
 
     .question-closed__container,
