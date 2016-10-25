@@ -56,8 +56,12 @@ const paths = {
     src: 'client/css/**/*.scss',
     dest: 'build/static/css'
   },
+  images: {
+    src: 'client/images/**/*',
+    dest: 'build/static/images'
+  },
   postProcess: {
-    src: 'build/static/**/*.@(css|js|svg|map)',
+    src: 'build/static/**/*',
     dest: 'build/static'
   }
 };
@@ -151,6 +155,12 @@ function scss() {
     .pipe(gulp.dest(paths.scss.dest));
 }
 
+function images() {
+  return gulp.src(paths.images.src, {
+    since: gulp.lastRun(images)
+  }).pipe(gulp.dest(paths.images.dest));
+}
+
 function createScriptTask(src, dest) {
   const parsedPath = path.parse(src);
   let cache;
@@ -218,6 +228,7 @@ function watch() {
 
   // client
   gulp.watch(paths.scss.src, scss);
+  gulp.watch(paths.images.src, images);
 
   for (const item of browserScripts) {
     gulp.watch(path.parse(item.src).dir + '/**/*.js', item.task);
@@ -230,7 +241,7 @@ gulp.task('browserScripts', gulp.parallel(...browserScripts.map(i => i.task)));
 
 const mainBuild = gulp.series(
   clean,
-  gulp.parallel(serverScripts, serverTemplates, sharedScripts, scss, 'browserScripts')
+  gulp.parallel(serverScripts, serverTemplates, sharedScripts, images, scss, 'browserScripts')
 );
 
 gulp.task('build', gulp.series(mainBuild, postProcess));
