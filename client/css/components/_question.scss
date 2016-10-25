@@ -16,13 +16,26 @@
  */
 
 .question {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 0 16px 80px 16px;
+  padding-bottom: 80px;
 
   &__container {
-    width: 90%;
+    width: 100%;
     margin: 0 auto;
+  }
+
+  &__code-container {
+    background: #0E062B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 32px;
+
+    pre[class*="language-"] {
+      background: none;
+      display: inline-block;
+      width: auto;
+      border-radius: 0;
+    }
   }
 
   &__form {
@@ -145,14 +158,29 @@
     color: #FFFFFF;
     margin: 0;
     padding: 0;
+    width: 85%;
+    min-width: 260px;
+    max-width: 680px;
+    margin: 0 auto;
   }
 
   &__text {
     font-size: 20px;
     color: #00BFA3;
     line-height: 32px;
-    margin: 0 0 16px 0;
-    padding: 0;
+    margin: 0;
+    padding: 0 0 16px 0;
+    width: 85%;
+    min-width: 260px;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  &__answer-container {
+    width: 85%;
+    min-width: 260px;
+    max-width: 680px;
+    margin: 0 auto;
   }
 
   &__submit-container {
@@ -230,6 +258,5 @@
 @media (min-width: 360px) {
   .question__submitted-answer:after {
     display: inline-block;
-    margin-right: 32px;
   }
 }

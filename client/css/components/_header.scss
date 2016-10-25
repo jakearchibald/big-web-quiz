@@ -17,11 +17,12 @@
 
 .page-header {
   padding: 0 16px;
-  height: 70px;
+  height: 76px;
   display: flex;
   align-items: center;
   z-index: 1;
   position: relative;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
   & .title {
     line-height: 1;
