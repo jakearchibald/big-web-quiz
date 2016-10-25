@@ -8,7 +8,7 @@ $primary-text-color:   #212121;
 $secondary-text-color: #757575;
 $divider-color:        #BDBDBD;
 $button-color:         #00BFA3;
-$selected-color:       #F71C98;
+$selected-color:       #13B1E7;
 $correct-color:        #00BFA3;
 $incorrect-color:      #B41A6F;
 
@@ -63,11 +63,12 @@ input[type=button] {
   color: #FFFFFF;
   line-height: 32px;
   padding: 8px 32px;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 button[disabled],
 input[type=button][disabled] {
-  opacity: 0.3;
+  opacity: 0.7;
 }
 
 %button-unstyle {

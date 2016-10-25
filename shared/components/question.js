@@ -37,7 +37,8 @@ export default class Question extends BoundComponent {
   componentWillReceiveProps(newProps) {
     if (this.props.id != newProps.id) {
       this.setState({
-        answersChecked: []
+        answersChecked: [],
+        submittedAnswers: false
       });
     }
   }
@@ -101,42 +102,48 @@ export default class Question extends BoundComponent {
           action={this.formAction}
           method="POST"
           ref={el => this.form = el}>
-          <h1 class="question__title">{title}</h1>
-          <p class="question__text">{text}</p>
-          {codeEl}
-          {answers.map((answer, i) =>
-            <div class="question__answer" key={`question-${id}-answer-${i}`}>
-              <input
-                id={`question-${id}-answer-${i}`}
-                type={multiple ? 'checkbox' : 'radio'}
-                name="answer"
-                value={i}
-                checked={answersChecked[i]}
-                disabled={closed}
-                onChange={this.onChoiceChange}
-              />
-              <label
-                for={`question-${id}-answer-${i}`}
-                class={correctAnswers ?
-                  (correctAnswers.includes(i) ?
-                    'question__answer-label question__answer-label--correct' :
-                    'question__answer-label question__answer-label--incorrect')
-                : 'question__answer-label'}>
-                <span class="question__answer-label-text">{answer.text}</span>
-              </label>
+          <div class="question__container">
+            <h1 class="question__title">{title}</h1>
+            <p class="question__text">{text}</p>
+            {codeEl}
+            {answers.map((answer, i) =>
+              <div class={
+                closed ?
+                  'question__answer question__answer--closed' :
+                  'question__answer'
+              } key={`question-${id}-answer-${i}`}>
+                <input
+                  id={`question-${id}-answer-${i}`}
+                  type={multiple ? 'checkbox' : 'radio'}
+                  name="answer"
+                  value={i}
+                  checked={answersChecked[i]}
+                  disabled={closed}
+                  onChange={this.onChoiceChange}
+                />
+                <label
+                  for={`question-${id}-answer-${i}`}
+                  class={correctAnswers ?
+                    (correctAnswers.includes(i) ?
+                      'question__answer-label question__answer-label--correct' :
+                      'question__answer-label question__answer-label--incorrect')
+                  : 'question__answer-label'}>
+                  <span class="question__answer-label-text">{answer.text}</span>
+                </label>
+              </div>
+            )}
+            <div class="question__submit-container">
+              <div class={
+                (submittedAnswers && !closed) ?
+                  'question__submitted-answer question__submitted-answer--success' :
+                  'question__submitted-answer'
+              }>Answer submitted</div>
+              <button disabled={closed || spinnerState || answersChecked.length === 0} class={
+                spinnerState ?
+                  'question__submit question__submit--pending' :
+                  'question__submit'
+              }>Submit</button>
             </div>
-          )}
-          <div class="question__submit-container">
-            <div class={
-              submittedAnswers ?
-                'question__submitted-answer question__submitted-answer--success' :
-                'question__submitted-answer'
-            }>{submittedAnswers ? 'Answer submitted' : ''}</div>
-            <button disabled={closed || spinnerState} class={
-              spinnerState ?
-                'question__submit question__submit--pending' :
-                'question__submit'
-            }>Submit</button>
           </div>
         </form>
         <QuestionClosed state={closed && (!correctAnswers)}/>
