@@ -215,11 +215,15 @@ class App extends BoundComponent {
                   <td>Text:</td>
                   <td>{question.text}</td>
                 </tr>
-                { question.code ? `
+                {question.code &&
                   <tr>
-                    <td>Code: ${question.code}</td>
-                    <td>Code type: {question.codeType}</td>
-                  </tr>` : '' }
+                    <td>Code:</td>
+                    <td>
+                      {question.codeType}:
+                      <pre>{question.code}</pre>
+                    </td>
+                  </tr>
+                }
                 <tr>
                   <td>Multiple:</td>
                   <td>{String(question.multiple)}</td>
