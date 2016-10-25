@@ -28,7 +28,7 @@ class App extends BoundComponent {
 
     this.state = {
       questions: props.questions,
-      showingLeaderboard: props.showingLeaderboard, 
+      showingLeaderboard: props.showingLeaderboard,
       addingQuestion: false,
       editingQuestions: [], // ids
       outputValue: ''
@@ -204,26 +204,44 @@ class App extends BoundComponent {
             );
           }
           return (
-            <li key={question._id}>
-              <p>
+            <li class="admin__question" key={question._id}>
+              <p class="admin__buttons">
                 <button onClick={event => this.onEditQuestionClick(event, question)}>Edit</button>
                 {this.questionActionButton(question)}
               </p>
-              <p>Title: {question.title}</p>
-              <p>Text: {question.text}</p>
-              <p>Code: {question.code}</p>
-              <p>Code type: {question.codeType}</p>
-              <p>Multiple: {String(question.multiple)}</p>
-              <p>Scored: {String(question.scored)}</p>
-              <p>Answers:</p>
-              <ol>
-                {question.answers.map((answer, i) => 
-                  <li key={`${question.id}-answer-${i}`}>
-                    {answer.text}
-                    {answer.correct ? ' - correct' : ''}
-                  </li>
-                )}
-              </ol>
+              <h1>Title: {question.title}</h1>
+              <table>
+                <tr>
+                  <td>Text:</td>
+                  <td>{question.text}</td>
+                </tr>
+                { question.code ? `
+                  <tr>
+                    <td>Code: ${question.code}</td>
+                    <td>Code type: {question.codeType}</td>
+                  </tr>` : '' }
+                <tr>
+                  <td>Multiple:</td>
+                  <td>{String(question.multiple)}</td>
+                </tr>
+                <tr>
+                  <td>Scored:</td>
+                  <td>{String(question.scored)}</td>
+                </tr>
+                <tr>
+                  <td>Answers:</td>
+                  <td>
+                    <ol>
+                      {question.answers.map((answer, i) =>
+                        <li key={`${question.id}-answer-${i}`}>
+                          {answer.text}
+                          {answer.correct ? ' - correct' : ''}
+                        </li>
+                      )}
+                    </ol>
+                  </td>
+                </tr>
+              </table>
             </li>
           );
         })}
@@ -243,8 +261,8 @@ class App extends BoundComponent {
         }
       </div>
       <div>
-        <button onClick={() => this.onOutputClick(['Question'])}>Output questions</button> 
-        <button onClick={() => this.onOutputClick(['User'])}>Output users</button> 
+        <button onClick={() => this.onOutputClick(['Question'])}>Output questions</button>
+        <button onClick={() => this.onOutputClick(['User'])}>Output users</button>
         <button onClick={() => this.onOutputClick(['Question', 'User'])}>Output both</button>
       </div>
       <div><textarea value={outputValue} onChange={this.linkState('outputValue')}></textarea></div>

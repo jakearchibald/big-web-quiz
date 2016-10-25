@@ -1,0 +1,53 @@
+/**
+*
+* Copyright 2016 Google Inc. All rights reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+html, body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.admin__question {
+  border-bottom: 1px solid #333;
+  padding-bottom: 32px;
+  margin-bottom: 32px;
+}
+
+.admin__buttons button {
+  cursor: pointer;
+  background: #444;
+  border-radius: 3px;
+  border: none;
+  font-size: 18px;
+  color: #FFFFFF;
+  line-height: 32px;
+  padding: 8px 32px;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  margin-right: 16px;
+}
+
+td {
+  padding: 4px;
+  vertical-align: top;
+
+  &:first-of-type {
+    font-weight: bold;
+    padding-right: 32px;
+  }
+}
+
+td ol {
+  padding-left: 16px;
+}
