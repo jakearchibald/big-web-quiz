@@ -43,7 +43,8 @@ class App extends BoundComponent {
     eventSource.onmessage = event => {
       const data = JSON.parse(event.data);
 
-      if (data.question && !this.state.question) { // new question!
+      // Is this a new question?
+      if (data.question && !this.state.question || (this.state.question && data.question.id != this.state.question.id)) { 
         // Random order to display answers
         data.answerDisplayOrder = shuffle(data.question.answers.map((_, i) => i));
         data.averages = data.averages || Array(data.question.answers.length).fill(0);
