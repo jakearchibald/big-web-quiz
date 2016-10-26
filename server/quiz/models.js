@@ -44,6 +44,7 @@ export class Quiz {
     this._acceptingAnswers = false;
     this._revealingAnswers = false;
     this._showingLeaderboard = false;
+    this._showingLiveResults = false;
     this._cachedUserAnswers = {};
   }
   get activeQuestion() {
@@ -58,11 +59,18 @@ export class Quiz {
   get showingLeaderboard() {
     return this._showingLeaderboard;
   }
+  get showingLiveResults() {
+    return this._showingLiveResults;
+  }
   setQuestion(question) {
     this._activeQuestion = question;
     this._acceptingAnswers = true;
     this._revealingAnswers = false;
+    this._showingLiveResults = false;
     this._cachedUserAnswers = {};
+  }
+  showLiveResults() {
+    this._showingLiveResults = true;
   }
   cacheAnswers(userId, answers) {
     this._cachedUserAnswers[userId] = answers;
@@ -85,16 +93,19 @@ export class Quiz {
     if (!this._activeQuestion) throw Error("No active question");
     this._acceptingAnswers = false;
     this._revealingAnswers = false;
-  }
-  unsetQuestion() {
-    this._activeQuestion = null;
-    this._acceptingAnswers = false;
-    this._revealingAnswers = false;
+    this._showingLiveResults = true;
   }
   revealAnswers() {
     if (!this._activeQuestion) throw Error("No active question");
     this._acceptingAnswers = false;
     this._revealingAnswers = true;
+    this._showingLiveResults = true;
+  }
+  unsetQuestion() {
+    this._activeQuestion = null;
+    this._acceptingAnswers = false;
+    this._revealingAnswers = false;
+    this._showingLiveResults = false;
   }
   showLeaderboard() {
     this._showingLeaderboard = true;
@@ -116,6 +127,7 @@ export class Quiz {
         // see `correctAnswers` below
         answers: this._activeQuestion.answers.map(answer => ({text: answer.text}))
       },
+      showLiveResults: this._showingLiveResults,
       questionClosed: !this._acceptingAnswers,
       // array of indexes for the correct answers
       correctAnswers: this._revealingAnswers &&

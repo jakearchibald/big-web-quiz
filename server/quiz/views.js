@@ -33,6 +33,7 @@ export function adminStateJson(req, res) {
       if (question.active) {
         question.closed = !quiz.acceptingAnswers;
         question.revealingAnswers = quiz.revealingAnswers;
+        question.showingLiveResults = quiz.showingLiveResults;
       }
     }
     res.json({
@@ -171,6 +172,27 @@ export function deactivateQuestionJson(req, res) {
     longPollers.broadcast(quiz.getState());
     presentationListeners.broadcast(quiz.getState());
 
+    adminStateJson(req, res);
+  }).catch(err => {
+    res.status(500).json({err: err.message});
+  });
+}
+
+export function liveResultsQuestionJson(req, res) {
+  Question.findById(req.body.id).then(question => {
+    if (!question) {
+      res.status(404).json({err: "Question not found"});
+      return;
+    }
+
+    if (!quiz.activeQuestion || !question.equals(quiz.activeQuestion)) {
+      res.status(404).json({err: "This isn't the active question"});
+      return;
+    }
+
+    quiz.showLiveResults();
+
+    presentationListeners.broadcast(quiz.getState());
     adminStateJson(req, res);
   }).catch(err => {
     res.status(500).json({err: err.message});

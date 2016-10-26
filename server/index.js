@@ -36,7 +36,8 @@ import {
   adminStateJson, updateQuestionJson, deleteQuestionJson,
   setQuestionJson, closeQuestionJson, revealQuestionJson,
   deactivateQuestionJson, presentationListen,
-  showLeaderboardJson, hideLeaderboardJson
+  showLeaderboardJson, hideLeaderboardJson,
+  liveResultsQuestionJson
 } from './quiz/views';
 import {longPoll} from './long-pollers/views';
 import mongoose from './mongoose-db';
@@ -101,6 +102,7 @@ router.post('/question-answer.json', requiresLoginJson, questionAnswerJson);
 router.post('/admin/question-update.json', requiresAdminJson, updateQuestionJson);
 router.post('/admin/question-delete.json', requiresAdminJson, deleteQuestionJson);
 router.post('/admin/question-activate.json', requiresAdminJson, setQuestionJson);
+router.post('/admin/question-show-live-results.json', requiresAdminJson, liveResultsQuestionJson);
 router.post('/admin/question-close.json', requiresAdminJson, closeQuestionJson);
 router.post('/admin/question-reveal.json', requiresAdminJson, revealQuestionJson);
 router.post('/admin/question-deactivate.json', requiresAdminJson, deactivateQuestionJson);

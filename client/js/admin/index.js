@@ -86,13 +86,16 @@ class App extends BoundComponent {
   }
   questionActionButton(question) {
     if (question.active) {
-      if (question.closed) {
-        if (question.revealingAnswers) {
-          return <button onClick={event => this.setQuestionState(question, 'deactivate')}>Deactivate</button>;
+      if (question.showingLiveResults) {
+        if (question.closed) {
+          if (question.revealingAnswers) {
+            return <button onClick={event => this.setQuestionState(question, 'deactivate')}>Deactivate</button>;
+          }
+          return <button onClick={event => this.setQuestionState(question, 'reveal')}>Reveal Answers</button>;
         }
-        return <button onClick={event => this.setQuestionState(question, 'reveal')}>Reveal Answers</button>;
+        return <button onClick={event => this.setQuestionState(question, 'close')}>Close</button>;
       }
-      return <button onClick={event => this.setQuestionState(question, 'close')}>Close</button>;
+      return <button onClick={event => this.setQuestionState(question, 'show-live-results')}>Show live results</button>;
     }
     return <button onClick={event => this.setQuestionState(question, 'activate')}>Activate</button>;
   }
