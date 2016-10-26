@@ -87,7 +87,7 @@ export default class App extends BoundComponent {
         </header>
         <Transition>
           {user ?
-            (question && !server ?
+            (question && !(questionClosed && !question.scored) && !server ?
               <Question
                 key="question"
                 id={question.id}

@@ -88,7 +88,7 @@ class App extends BoundComponent {
     if (question.active) {
       if (question.showingLiveResults) {
         if (question.closed) {
-          if (question.revealingAnswers) {
+          if (question.revealingAnswers || !question.scored) {
             return <button onClick={event => this.setQuestionState(question, 'deactivate')}>Deactivate</button>;
           }
           return <button onClick={event => this.setQuestionState(question, 'reveal')}>Reveal Answers</button>;
