@@ -42,7 +42,7 @@ class App extends BoundComponent {
       this.setState(data);
     };
   }
-  render(props, {question, questionClosed, correctAnswers, answerDisplayOrder, averages, leaderboard}) {
+  render(props, {question, questionClosed, correctAnswers, answerDisplayOrder, averages, leaderboard, showLiveResults}) {
     if (leaderboard) return (
       <table>
         <thead>
@@ -69,15 +69,17 @@ class App extends BoundComponent {
         <h1>{question.title}</h1>
         <p>{question.text}</p>
         {code}
-        {answerDisplayOrder.map((i) =>
-          <div>
-            {Math.round(averages[i] * 100)}%
-            {questionClosed ? <div>{question.answers[i].text}</div> : ''}
-            {correctAnswers ?
-              <div>{correctAnswers.includes(i) ? 'Yes' : 'No'}</div> 
-            :''}
-          </div>
-        )}
+        {showLiveResults && 
+          answerDisplayOrder.map(i =>
+            <div>
+              {Math.round(averages[i] * 100)}%
+              {questionClosed ? <div>{question.answers[i].text}</div> : ''}
+              {correctAnswers ?
+                <div>{correctAnswers.includes(i) ? 'Yes' : 'No'}</div> 
+              :''}
+            </div>
+          )
+        }
       </div>
     );
   }
