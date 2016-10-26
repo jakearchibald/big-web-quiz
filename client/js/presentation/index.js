@@ -21,13 +21,23 @@ self.regeneratorRuntime = regeneratorRuntime;
 
 import shuffle from 'shuffle-array';
 
-import Code from '../../../shared/components/code';
+import Waiting from './components/waiting';
+import Question from '../../../shared/components/question';
+import AverageValue from './components/average-value';
 import BoundComponent from '../../../shared/components/bound-component';
 
 class App extends BoundComponent {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      colors: [
+        '#47DDBE',
+        '#89DCEB',
+        '#EEBB68',
+        '#E576D4',
+        '#F4ECB8'
+      ]
+    };
 
     const eventSource = new EventSource('/presentation/listen');
     eventSource.onmessage = event => {
@@ -48,7 +58,7 @@ class App extends BoundComponent {
         <thead>
           <tr><th>Player</th><th>Score</th></tr>
         </thead>
-        {leaderboard.map(user => 
+        {leaderboard.map(user =>
           <tr>
             <td>
               <img src={user.avatarUrl}/>
@@ -60,25 +70,39 @@ class App extends BoundComponent {
       </table>
     );
 
-    if (!question) return;
-
-    const code = question.code && <Code code={question.code} codeType={question.codeType}></Code>;
+    if (!question) return (
+      <Waiting />
+    );
 
     return (
       <div>
-        <h1>{question.title}</h1>
-        <p>{question.text}</p>
-        {code}
-        {showLiveResults && 
-          answerDisplayOrder.map(i =>
-            <div>
-              {Math.round(averages[i] * 100)}%
-              {questionClosed ? <div>{question.answers[i].text}</div> : ''}
-              {correctAnswers ?
-                <div>{correctAnswers.includes(i) ? 'Yes' : 'No'}</div> 
-              :''}
-            </div>
-          )
+        <Question
+          key="question"
+          id={question.id}
+          title={question.title}
+          text={question.text}
+          multiple={question.multiple}
+          answers={question.answers}
+          code={question.code}
+          codeType={question.codeType}
+          closed={questionClosed}
+          correctAnswers={correctAnswers}
+          showLiveResults={showLiveResults}
+          presentation={true}
+        />
+
+        {showLiveResults && answerDisplayOrder && !correctAnswers ?
+          <div class="live-results">
+            {answerDisplayOrder.map(i =>
+              <AverageValue
+                color={this.state.colors[i % this.state.colors.length]}
+                questionClosed={questionClosed}
+                text={question.answers[i].text}
+                key={`avg-${question.id}-answer-${i}`}
+                targetValue={averages[i]} />
+            )}
+          </div>
+          : ''
         }
       </div>
     );

@@ -243,6 +243,14 @@
       transform: translateX(0px);
     }
   }
+
+  &--presentation &__answer-container {
+    pointer-events: none;
+  }
+
+  &--presentation &__answer-label--correct {
+    opacity: 1;
+  }
 }
 
 @keyframes spin {
