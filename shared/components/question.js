@@ -91,13 +91,13 @@ export default class Question extends BoundComponent {
       ).map(el => el.checked)
     })
   }
-  render({id, title, text, multiple, answers, closed, correctAnswers, code, codeType}, {answersChecked, spinnerState, submittedAnswers}) {
+  render({id, title, text, multiple, answers, closed, showLiveResults, correctAnswers, code, codeType, presentation}, {answersChecked, spinnerState, submittedAnswers}) {
     const codeEl = code && <Code code={code} codeType={codeType}></Code>;
 
     return (
       <section class="question">
         <form
-          class={closed && (!correctAnswers) ? 'question__form question__form--closed' : 'question__form'}
+          class={(closed || showLiveResults) && (!correctAnswers) ? 'question__form question__form--closed' : 'question__form'}
           onSubmit={this.onSubmit}
           action={this.formAction}
           method="POST"
@@ -134,23 +134,26 @@ export default class Question extends BoundComponent {
                 </div>
               )}
 
-              <div class="question__submit-container">
-                <div class={
-                  (submittedAnswers && !closed) ?
-                    'question__submitted-answer question__submitted-answer--success' :
-                    'question__submitted-answer'
-                }>Answer submitted</div>
-                <button disabled={closed || spinnerState || answersChecked.length === 0} class={
-                  spinnerState ?
-                    'question__submit question__submit--pending' :
-                    'question__submit'
-                }>Submit</button>
-              </div>
-
+              { presentation ? '' :
+                <div class="question__submit-container">
+                  <div class={
+                    (submittedAnswers && !closed) ?
+                      'question__submitted-answer question__submitted-answer--success' :
+                      'question__submitted-answer'
+                  }>Answer submitted</div>
+                  <button disabled={closed || spinnerState || answersChecked.length === 0} class={
+                    spinnerState ?
+                      'question__submit question__submit--pending' :
+                      'question__submit'
+                  }>Submit</button>
+                </div>
+              }
             </div>
           </div>
         </form>
-        <QuestionClosed state={closed && (!correctAnswers)}/>
+        { presentation ? '' :
+          <QuestionClosed presentation={presentation} state={closed && (!correctAnswers)}/>
+        }
 
       </section>
     );

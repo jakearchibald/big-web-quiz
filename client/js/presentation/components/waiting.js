@@ -14,18 +14,16 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-@import '../../node_modules/prismjs/themes/prism-okaidia';
-@import 'global';
-@import 'components/app';
-@import 'components/waiting';
-@import 'components/question-waiting';
-@import 'components/question-closed';
-@import 'components/question';
+import { h } from 'preact';
+import BoundComponent from '../../../../shared/components/bound-component';
 
-.live-results {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+export default class Waiting extends BoundComponent {
+  render() {
+    return (
+      <div class="waiting">
+        <img class="waiting__icon" width="96" src="/static/images/icon@192.png" alt="The Big Web Quiz!" />
+        <p>Waiting on a question.</p>
+      </div>
+    );
+  }
 }
