@@ -95,7 +95,11 @@ export default class Question extends BoundComponent {
     const codeEl = code && <Code code={code} codeType={codeType}></Code>;
 
     return (
-      <section class="question">
+      <section class={
+        presentation ?
+          'question question--presentation' :
+          'question'
+        }>
         <form
           class={(closed || showLiveResults) && (!correctAnswers) ? 'question__form question__form--closed' : 'question__form'}
           onSubmit={this.onSubmit}

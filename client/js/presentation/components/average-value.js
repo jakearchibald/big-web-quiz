@@ -24,35 +24,43 @@ export default class AverageValue extends BoundComponent {
     this.state = {
       animating: false,
       value: props.targetValue || 0,
-      targetValue: props.targetValue || 0
+      targetValue: props.targetValue || 0,
+      visible: false
     };
-
-    this.onResize = this.onResize.bind(this);
   }
 
   componentDidMount () {
-    console.log('mount');
     window.addEventListener('resize', this.onResize);
-    this.onResize();
+
+    requestAnimationFrame(_ => {
+      this.onResize();
+      this.state.visible = true;
+      this.forceUpdate();
+    });
   }
 
   componentWillUnmount () {
-    console.log('unmount');
     window.removeEventListener('resize', this.onResize);
   }
 
   onResize () {
+    // Reset the canvas.
+    this.canvas.style.display = 'none';
+
     const containerSize = this.container.getBoundingClientRect();
     const dPR = window.devicePixelRatio;
 
     this.width = containerSize.width;
-    this.height = containerSize.height;
+    this.height = Math.min(300, containerSize.height);
+
+    this.width = this.height = Math.min(this.width, this.height);
 
     this.canvas.width = this.width * dPR;
     this.canvas.height = this.height * dPR;
 
     this.canvas.style.width = `${this.width}px`;
     this.canvas.style.height = `${this.height}px`;
+    this.canvas.style.display = 'block';
 
     this.ctx = this.canvas.getContext('2d');
     this.ctx.scale(dPR, dPR);
@@ -76,7 +84,7 @@ export default class AverageValue extends BoundComponent {
   }
 
   draw () {
-    const diameter = Math.min(this.width, this.height) - 4;
+    const diameter = Math.max(0, Math.min(this.width, this.height) - 4);
     const radius = diameter / 2;
     const radiusInner = Math.round(radius * 0.8);
     const TAU = Math.PI * 2;
@@ -91,7 +99,7 @@ export default class AverageValue extends BoundComponent {
     this.ctx.clearRect(0, 0, this.width, this.height);
 
     // White background.
-    this.ctx.fillStyle = '#FFF';
+    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
     this.ctx.beginPath();
     this.ctx.arc(midX, midY, radius, 0, TAU);
     this.ctx.closePath();
@@ -154,10 +162,21 @@ export default class AverageValue extends BoundComponent {
     requestAnimationFrame(_ => this.update());
   }
 
-  render({id, targetValue, color}, {value}) {
+  render({id, targetValue, color, text, questionClosed}, {value, visible}) {
     return (
-      <div key={id} class="average-value" ref={container => this.container = container}>
+      <div class={
+        visible ?
+        'average-value average-value--visible' :
+        'average-value'
+      } ref={container => this.container = container}>
         <canvas ref={canvas => this.canvas = canvas}></canvas>
+        <div class={
+          questionClosed ?
+            'average-value__text average-value__text--visible' :
+            'average-value__text'
+        }>
+          {text}
+        </div>
       </div>
     );
   }

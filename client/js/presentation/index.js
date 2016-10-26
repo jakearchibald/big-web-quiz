@@ -31,11 +31,11 @@ class App extends BoundComponent {
     super(props);
     this.state = {
       colors: [
-        '#FF00FF',
-        '#00FF00',
-        '#0000FF',
-        '#00FFFF',
-        '#FFFF00'
+        '#47DDBE',
+        '#89DCEB',
+        '#EEBB68',
+        '#E576D4',
+        '#F4ECB8'
       ]
     };
 
@@ -74,25 +74,6 @@ class App extends BoundComponent {
       <Waiting />
     );
 
-
-
-    // <div>
-    //     <h1>{question.title}</h1>
-    //     <p>{question.text}</p>
-    //     {code}
-    //     {showLiveResults &&
-    //       answerDisplayOrder.map(i =>
-    //         <div>
-    //           {Math.round(averages[i] * 100)}%
-    //           {questionClosed ? <div>{question.answers[i].text}</div> : ''}
-    //           {correctAnswers ?
-    //             <div>{correctAnswers.includes(i) ? 'Yes' : 'No'}</div>
-    //           :''}
-    //         </div>
-    //       )
-    //     }
-    //   </div>
-
     return (
       <div>
         <Question
@@ -110,12 +91,14 @@ class App extends BoundComponent {
           presentation={true}
         />
 
-        {showLiveResults && answerDisplayOrder ?
+        {showLiveResults && answerDisplayOrder && !correctAnswers ?
           <div class="live-results">
             {answerDisplayOrder.map(i =>
               <AverageValue
                 color={this.state.colors[i % this.state.colors.length]}
-                id={`question-${question.id}-answer-${i}`}
+                questionClosed={questionClosed}
+                text={question.answers[i].text}
+                key={`avg-${question.id}-answer-${i}`}
                 targetValue={averages[i]} />
             )}
           </div>
