@@ -1,0 +1,71 @@
+/**
+ *
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.live-results {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 1620px;
+  transform: translateX(-50%);
+
+  .average-value {
+    margin: 0 16px;
+    max-width: 330px;
+    min-width: 100px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+    opacity: 0;
+
+    &--visible,
+    &__text--visible {
+      animation-name: scaleIn;
+      animation-duration: 0.5s;
+      animation-timing-function: cubic-bezier(0.6, 0, 0.3, 1);
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      opacity: 1;
+    }
+
+    &__text {
+      opacity: 0;
+      font-size: 32px;
+    }
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(1.1);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

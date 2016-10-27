@@ -44,7 +44,7 @@ class App extends BoundComponent {
       const data = JSON.parse(event.data);
 
       // Is this a new question?
-      if (data.question && (!this.state.question || data.question.id != this.state.question.id)) { 
+      if (data.question && (!this.state.question || data.question.id != this.state.question.id)) {
         // Random order to display answers
         data.answerDisplayOrder = shuffle(data.question.answers.map((_, i) => i));
         data.averages = data.averages || Array(data.question.answers.length).fill(0);
@@ -54,21 +54,60 @@ class App extends BoundComponent {
     };
   }
   render(props, {question, questionClosed, correctAnswers, answerDisplayOrder, averages, leaderboard, showLiveResults}) {
+
+    // TODO: delete this when the leaderboard is working.
+    var players = [];
+    for (var i = 0; i < 100; i++) {
+      players.push({
+        name: 'Player ' + (i+1),
+        score: 100 - i,
+        avatarUrl: "https://lh5.googleusercontent.com/-y9r3dQqlH1g/AAAAAAAAAAI/AAAAAAAAKXM/2GuT9LHmC88/photo.jpg"
+      });
+    }
+
     if (leaderboard) return (
-      <table>
-        <thead>
-          <tr><th>Player</th><th>Score</th></tr>
-        </thead>
-        {leaderboard.map(user =>
-          <tr>
-            <td>
-              <img src={user.avatarUrl}/>
-              {user.name}
-            </td>
-            <td>{user.score}</td>
-          </tr>
-        )}
-      </table>
+      <div class="leaderboard">
+        <div class="leaderboard__winners">
+          {players.map((player, index) =>
+            index > 2 ? '' :
+            <div class={`leaderboard__winner leaderboard__winner-${index}`}>
+              <div class="leaderboard__winner-block"></div>
+              <img
+                    class="leaderboard__winner-avatar"
+                    width="110"
+                    height="110"
+                    src={`${player.avatarUrl}?sz=110`}
+                    srcset={`${player.avatarUrl}?sz=220 2x, ${player.avatarUrl}?sz=330 3x`}
+                  />
+
+              <div class="leaderboard__winner-position">{index + 1}</div>
+              <div class="leaderboard__winner-name">{player.name}</div>
+              <div class="leaderboard__winner-score">{player.score}</div>
+            </div>
+          )}
+        </div>
+
+        <table class="leaderboard__scores" cellSpacing="0">
+          <tbody>
+            {players.map((player, index) =>
+              index < 3 ? '' :
+              <tr>
+                <td>
+                  {index+1}.
+                </td>
+
+                <td>
+                  {player.name}
+                </td>
+
+                <td>
+                  {player.score}
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     );
 
     if (!question) return (

@@ -67,9 +67,9 @@ export default class LoginStatus extends BoundComponent {
         <button onClick={this.onAvatarClick} class="login-details-button">
           <img
             class="avatar"
-            width="48" height="49"
-            src={`${user.avatarUrl}?sz=34`}
-            srcset={`${user.avatarUrl}?sz=68 2x, ${user.avatarUrl}?sz=136 3x`}
+            width="48" height="48"
+            src={`${user.avatarUrl}?sz=48`}
+            srcset={`${user.avatarUrl}?sz=96 2x, ${user.avatarUrl}?sz=144 3x`}
           />
         </button>
         <div class={`login-bubble ${bubbleOpen ? 'active' : ''}`}>
