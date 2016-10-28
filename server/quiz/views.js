@@ -203,21 +203,20 @@ export function showLeaderboardJson(req, res) {
   User.find({
     optIntoLeaderboard: true,
     bannedFromLeaderboard: false
-  }).limit(10)
-    .sort({score: -1}).then(users => {
-      quiz.showLeaderboard();
-      presentationListeners.broadcast({
-        question: null,
-        leaderboard: users.map(user => {
-          return {
-            name: user.name,
-            avatarUrl: user.avatarUrl,
-            score: user.score
-          };
-        })
-      });
-      adminStateJson(req, res);
+  }).limit(10).sort({score: -1}).then(users => {
+    quiz.showLeaderboard();
+    presentationListeners.broadcast({
+      question: null,
+      leaderboard: users.map(user => {
+        return {
+          name: user.name,
+          avatarUrl: user.avatarUrl,
+          score: user.score
+        };
+      })
     });
+    adminStateJson(req, res);
+  });
 }
 
 export function hideLeaderboardJson(req, res) {
