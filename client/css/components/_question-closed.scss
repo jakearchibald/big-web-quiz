@@ -16,6 +16,7 @@
  */
 
 .question-closed {
+  z-index: 1000;
   position: fixed;
   width: 100%;
   height: 100%;
@@ -25,18 +26,6 @@
   opacity: 0.1;
   overflow: hidden;
   transition: opacity 0.1s cubic-bezier(0.3, 0, 0.1, 1);
-  will-change: opacity, transform;
-
-  &:before {
-    content: '';
-    opacity: 0;
-    display: block;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    will-change: transform;
-    transition: opacity 2s cubic-bezier(0.3, 0, 0.1, 1);
-  }
 
   &__container,
   &__shadow-container {
@@ -121,10 +110,6 @@
   &--active {
     pointer-events: auto;
     opacity: 1;
-
-    &:before {
-      opacity: 1;
-    }
 
     .question-closed__front {
       animation-name: rotate;

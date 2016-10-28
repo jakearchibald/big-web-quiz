@@ -39,7 +39,7 @@
   }
 
   &__form {
-    will-change: transform;
+    backface-visibility: hidden;
     display: flex;
     flex-direction: column;
     transition: transform 0.5s cubic-bezier(0.6, 0, 0.3, 1),
@@ -48,7 +48,7 @@
     &--closed {
       pointer-events: none;
       transform: scale(0.6);
-      opacity: 0.1;
+      opacity: 0;
     }
   }
 
@@ -71,9 +71,10 @@
       align-items: center;
       justify-content: center;
       color: #FFFFFF;
-      transition: transform 0.5s cubic-bezier(0.6, 0, 0.3, 1) 1s;
+      transition: transform 0.5s cubic-bezier(0.6, 0, 0.3, 1) 1s,
+          opacity 0.5s cubic-bezier(0.6, 0, 0.3, 1) 1s;
       -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-      will-change: transform;
+      backface-visibility: hidden;
 
       &-text {
         position: relative;
@@ -94,12 +95,12 @@
 
       &--correct {
         background: $correct-color url(/static/images/ic_check_white_24px.svg) 24px 18px no-repeat;
-        opacity: 0.35;
+        opacity: 0.6;
         transform: scale(1.1);
       }
 
       &--incorrect {
-        opacity: 0.35;
+        opacity: 0.6;
         transform: scale(0.9);
       }
     }
