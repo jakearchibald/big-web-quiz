@@ -21,6 +21,7 @@ self.regeneratorRuntime = regeneratorRuntime;
 
 import shuffle from 'shuffle-array';
 
+import Audio from './components/audio';
 import Waiting from './components/waiting';
 import Question from '../../../shared/components/question';
 import AverageValue from './components/average-value';
@@ -56,6 +57,9 @@ class App extends BoundComponent {
   render(props, {question, questionClosed, correctAnswers, answerDisplayOrder, averages, leaderboard, showLiveResults}) {
 
     // TODO: delete this when the leaderboard is working.
+
+
+
     var players = [];
     for (var i = 0; i < 100; i++) {
       players.push({
@@ -116,6 +120,7 @@ class App extends BoundComponent {
 
     return (
       <div>
+        <Audio key="the-amaze-audio" closed={questionClosed} />
         <Question
           key="question"
           id={question.id}
