@@ -201,9 +201,10 @@ export function liveResultsQuestionJson(req, res) {
 
 export function showLeaderboardJson(req, res) {
   User.find({
-    appearOnLeaderboard: true
+    optIntoLeaderboard: true,
+    bannedFromLeaderboard: false
   }).limit(10)
-    .sort({ appearOnLeaderboard: 1, score: -1 }).then(users => {
+    .sort({score: -1}).then(users => {
       quiz.showLeaderboard();
       presentationListeners.broadcast({
         question: null,

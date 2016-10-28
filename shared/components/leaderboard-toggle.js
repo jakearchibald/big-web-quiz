@@ -44,7 +44,7 @@ export default class LeaderboardToggle extends BoundComponent {
         method: 'POST',
         credentials: 'include',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({appearOnLeaderboard: event.target.checked})
+        body: JSON.stringify({optIntoLeaderboard: event.target.checked})
       });
 
       const data = await response.json();

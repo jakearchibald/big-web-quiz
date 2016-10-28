@@ -30,7 +30,7 @@ import {
   login, logoutRedirect, logoutJson, userJson, 
   updateUser, requiresLogin, requiresLoginJson, requiresAdminHtml,
   requiresAdminJson, questionAnswerJson, deleteUserAnswersJson,
-  deleteUsersJson
+  deleteUsersJson, getTopUsersJson, setLeaderboardBanJson
 } from './user/views';
 import {
   adminStateJson, updateQuestionJson, deleteQuestionJson,
@@ -90,6 +90,7 @@ router.get('/initial-state.json', initialStateJson);
 router.get('/long-poll.json', requiresLoginJson, longPoll);
 router.get('/admin/', requiresAdminHtml, admin);
 router.get('/admin/initial-state.json', requiresAdminJson, adminStateJson);
+router.get('/admin/top-users.json', requiresAdminJson, getTopUsersJson);
 router.get('/admin/db.json', requiresAdminJson, dbJson);
 router.get('/presentation/', requiresLogin, presentation);
 router.get('/presentation/listen', requiresLoginJson, presentationListen);
@@ -111,6 +112,7 @@ router.post('/admin/delete-users.json', requiresAdminJson, deleteUsersJson);
 router.post('/admin/show-leaderboard.json', requiresAdminJson, showLeaderboardJson);
 router.post('/admin/hide-leaderboard.json', requiresAdminJson, hideLeaderboardJson);
 router.post('/admin/db.json', requiresAdminJson, dbSetJson);
+router.post('/admin/set-leaderboard-ban.json', requiresAdminJson, setLeaderboardBanJson);
 
 app.use(router);
 

@@ -27,9 +27,10 @@ const userSchema = mongoose.Schema({
   name: {type: String, required: true},
   email: {type: String, required: true},
   avatarUrl: String,
-  appearOnLeaderboard: {type: Boolean},
+  optIntoLeaderboard: {type: Boolean, default: false},
+  bannedFromLeaderboard: {type: Boolean, default: false},
   // Optimisation. See `updateScore`.
-  score: {type: Number, default: 0},
+  score: {type: Number, default: 0, index: true},
   answers: [
     {
       questionId: {type: ObjectId, required: true},
@@ -38,7 +39,7 @@ const userSchema = mongoose.Schema({
   ]
 });
 
-userSchema.index({ appearOnLeaderboard: 1, score: -1 });
+userSchema.index({ optIntoLeaderboard: 1, bannedFromLeaderboard: 1, score: -1 });
 
 userSchema.methods.isAdmin = function() {
   return ADMIN_IDS.includes(this.googleId);

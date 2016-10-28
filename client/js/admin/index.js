@@ -20,7 +20,8 @@ import regeneratorRuntime from 'regenerator-runtime/runtime';
 self.regeneratorRuntime = regeneratorRuntime;
 
 import BoundComponent from '../../../shared/components/bound-component';
-import QuestionUpdate from './components/question-update.js';
+import QuestionUpdate from './components/question-update';
+import Leaderboard from './components/leaderboard';
 
 class App extends BoundComponent {
   constructor(props) {
@@ -213,7 +214,7 @@ class App extends BoundComponent {
                 {this.questionActionButton(question)}
               </p>
               <h1>Title: {question.title}</h1>
-              <table>
+              <table class="question-table">
                 <tr>
                   <td>Text:</td>
                   <td>{question.text}</td>
@@ -274,6 +275,8 @@ class App extends BoundComponent {
       </div>
       <div><textarea value={outputValue} onChange={this.linkState('outputValue')}></textarea></div>
       <div><button onClick={this.onRestoreClick}>Restore models from above</button> Only touches models that are mentioned in the above JSON. All existing data in that model is replaced.</div>
+      <hr/>
+      <Leaderboard/>
     </div>;
   }
 }

@@ -108,10 +108,11 @@ export function handleLogin(req, res) {
 
 export function simpleUserObject(user) {
   return {
+    googleId: user.googleId,
     name: user.name,
     email: user.email,
     avatarUrl: user.avatarUrl,
-    appearOnLeaderboard: !!user.appearOnLeaderboard,
+    optIntoLeaderboard: user.optIntoLeaderboard,
     score: user.score
   }
 }
@@ -148,13 +149,13 @@ export function login(req, res) {
 }
 
 export function updateUser(req, res) {
-  // only dealing with appearOnLeaderboard for now
-  if (!('appearOnLeaderboard' in req.body)) {
+  // only dealing with optIntoLeaderboard for now
+  if (!('optIntoLeaderboard' in req.body)) {
     res.json(simpleUserObject(req.user));
     return;
   }
 
-  req.user.appearOnLeaderboard = !!req.body.appearOnLeaderboard;
+  req.user.optIntoLeaderboard = !!req.body.optIntoLeaderboard;
   req.user.save().then(newUser => {
     res.json({
       user: simpleUserObject(newUser)
@@ -292,5 +293,40 @@ export function questionAnswerJson(req, res) {
   }).catch(err => {
     res.status(500).json({err: "Unknown error"});
     throw err;
+  });
+}
+
+function topUsers() {
+  return User.find().limit(100).sort({score: -1}).then(users => {
+    const userObjs = users.map(user => {
+      const obj = simpleUserObject(user);
+      obj.bannedFromLeaderboard = user.bannedFromLeaderboard;
+      return obj;
+    });
+    return {users: userObjs};
+  });
+}
+
+export function getTopUsersJson(req, res) {
+  // this is for admins only
+  topUsers().then(obj => {
+    res.json(obj);
+  }).catch(err => {
+    res.status(500).json({err: err.message});
+  });
+}
+
+export function setLeaderboardBanJson(req, res) {
+  User.findOne({googleId: req.body.id}).then(user => {
+    if (!user) {
+      res.json({err: 'User not found'});
+      return;
+    }
+    user.bannedFromLeaderboard = req.body.ban;
+    return user.save();
+  }).then(() => topUsers()).then(obj => {
+    res.json(obj);
+  }).catch(err => {
+    res.status(500).json({err: err.message});
   });
 }

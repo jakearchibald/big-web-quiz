@@ -30,7 +30,7 @@ export default class App extends BoundComponent {
     super(props);
     // State looks like:
     // {
-    //   user: {name: String, avatarUrl: String, appearOnLeaderboard: Boolean},
+    //   user: see simpleUserObject in server/user/views.js,
     //   lastMessageTime: Number, // the last message time sent to long-pollers
     //   question: {
     //     id: String,

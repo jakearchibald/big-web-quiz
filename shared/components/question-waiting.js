@@ -31,7 +31,7 @@ export default class QuestionWaiting extends BoundComponent {
         {!server &&
           <LeaderboardToggle
             onUserUpdate={onUserUpdate}
-            checked={user.appearOnLeaderboard}
+            checked={user.optIntoLeaderboard}
           />
         }
       </div>

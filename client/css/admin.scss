@@ -38,16 +38,25 @@ html, body {
   margin-right: 16px;
 }
 
-td {
-  padding: 4px;
-  vertical-align: top;
+.question-table {
+  & td {
+    padding: 4px;
+    vertical-align: top;
 
-  &:first-of-type {
-    font-weight: bold;
-    padding-right: 32px;
+    &:first-of-type {
+      font-weight: bold;
+      padding-right: 32px;
+    }
+
+    & ol {
+      padding-left: 16px;
+    }
   }
 }
 
-td ol {
-  padding-left: 16px;
+.leaderboard-table {
+  & td,
+  & th {
+    padding: 1rem;
+  }
 }

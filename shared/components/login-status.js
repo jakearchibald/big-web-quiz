@@ -56,7 +56,7 @@ export default class LoginStatus extends BoundComponent {
     if (!server) {
       leaderboardToggle = (
         <LeaderboardToggle
-          checked={user.appearOnLeaderboard}
+          checked={user.optIntoLeaderboard}
           onUserUpdate={onUserUpdate}
         />
       );
