@@ -27,8 +27,8 @@ const userSchema = mongoose.Schema({
   name: {type: String, required: true},
   email: {type: String, required: true},
   avatarUrl: String,
-  optIntoLeaderboard: {type: Boolean, default: false},
-  bannedFromLeaderboard: {type: Boolean, default: false},
+  optIntoLeaderboard: {type: Boolean, required: true, default: false},
+  bannedFromLeaderboard: {type: Boolean, required: true, default: false},
   // Optimisation. See `updateScore`.
   score: {type: Number, default: 0, index: true},
   answers: [

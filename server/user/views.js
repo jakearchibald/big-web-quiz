@@ -55,7 +55,7 @@ function authenticateUser(code) {
       name: response.displayName,
       email,
       avatarUrl
-    }, {upsert: true, new: true});
+    }, {upsert: true, new: true, setDefaultsOnInsert: true});
   });
 }
 
