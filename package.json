@@ -7,7 +7,8 @@
     "install-mongo": "docker pull mongo && docker create --name bwq-mongo -p 27017:27017 mongo",
     "serve": "gulp serve",
     "postinstall": "NODE_ENV=production gulp build",
-    "deploy": "git checkout -B live && git add -f server/settings.js && git commit --allow-empty -m 'Settings' && git push --force live live:master && git checkout master && git checkout live server/settings.js && git reset server/settings.js"
+    "deploy": "git checkout -B live && rm -f $(git ls-tree -r --name-only live/private) && git cherry-pick live/private && git push --force live live:master && git checkout master && git cherry-pick live/private --no-commit && git reset",
+    "get-secrets": "git fetch && rm -f $(git ls-tree -r --name-only live/private) && git cherry-pick live/private --no-commit && git reset"
   },
   "author": "",
   "license": "ISC",
