@@ -20,8 +20,6 @@ import {wait} from '../../../../shared/utils';
 
 const context = new AudioContext();
 
-// 14.515229167 next loop start
-
 function loadSoundAsAudioBuffer(url) {
   return fetch(url).then(r => r.arrayBuffer())
     .then(data => context.decodeAudioData(data));
