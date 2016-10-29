@@ -16,7 +16,6 @@
 */
 import { h } from 'preact';
 import BoundComponent from '../../../../shared/components/bound-component';
-import {wait} from '../../../../shared/utils';
 
 const context = new AudioContext();
 
@@ -88,8 +87,7 @@ export default class Audio extends BoundComponent {
 
   async stopLoop() {
     const loopSource = await loop;
-    await wait(500);
-    loopSource.stop();
+    loopSource.stop(context.currentTime + 0.5);
   }
 
   async playStab() {
