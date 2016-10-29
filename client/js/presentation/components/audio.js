@@ -25,10 +25,9 @@ function loadSoundAsAudioBuffer(url) {
 }
 
 function audioSourceFromBuffer(buffer) {
-    const source = context.createBufferSource();
-    source.buffer = buffer;
-    source.connect(context.destination);
-    return source;
+  const source = context.createBufferSource();
+  source.buffer = buffer;
+  return source;
 }
 
 const loopBuffer = loadSoundAsAudioBuffer('/static/audio/loop.wav');
@@ -75,10 +74,18 @@ export default class Audio extends BoundComponent {
   }
 
   async playLoop() {
+    const fadeInTime = 0.7;
     const loopSource = audioSourceFromBuffer(await loopBuffer);
+
+    const gainNode = context.createGain();
+    gainNode.gain.setValueAtTime(0.001, context.currentTime);
+    gainNode.connect(context.destination);
+    gainNode.gain.exponentialRampToValueAtTime(1, context.currentTime + fadeInTime);
+
+    loopSource.connect(gainNode);
     loopSource.loop = true;
     loopSource.loopEnd = 6.841041667;
-    loopSource.start(0);
+    loopSource.start(0, loopSource.loopEnd - fadeInTime);
     return loopSource;
   }
 
@@ -95,6 +102,7 @@ export default class Audio extends BoundComponent {
 
   async playStab() {
     const stabSource = audioSourceFromBuffer(await stabBuffer);
+    stabSource.connect(context.destination);
     stabSource.start(0);
 
     return stabSource;
