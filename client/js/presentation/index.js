@@ -120,7 +120,7 @@ class App extends BoundComponent {
 
     return (
       <div>
-        <Audio key="the-amaze-audio" closed={questionClosed} />
+        <Audio key="the-amaze-audio" closed={questionClosed} stepItUp={showLiveResults} />
         <Question
           key="question"
           id={question.id}

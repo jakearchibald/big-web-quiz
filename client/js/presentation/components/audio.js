@@ -16,103 +16,94 @@
 */
 import { h } from 'preact';
 import BoundComponent from '../../../../shared/components/bound-component';
+import {wait} from '../../../../shared/utils';
+
+const context = new AudioContext();
+
+// 14.515229167 next loop start
+
+function loadSoundAsAudioBuffer(url) {
+  return fetch(url).then(r => r.arrayBuffer())
+    .then(data => context.decodeAudioData(data));
+}
+
+const loop = loadSoundAsAudioBuffer('/static/audio/loop.wav');
+const stab = loadSoundAsAudioBuffer('/static/audio/stab.mp3');
 
 export default class Audio extends BoundComponent {
-
   constructor(props) {
     super(props);
-    this.state = {
-      context: new AudioContext()
+    this.looping = false;
+    this.playingLoop = Promise.resolve();
+  }
+
+  update({
+    closed: previouslyClosed = false,
+    stepItUp: alreadySteppingItUp = false
+  }={}) {
+    if (this.props.closed) {
+      if (previouslyClosed) return;
+      
+      if (this.looping) {
+        this.looping = false;
+        this.stopLoop();
+      }
+      
+      this.playStab();
+      return;
     };
 
-    this._init = Promise.all([
-      this.loadSoundAsAudioBuffer('/static/audio/loop.wav'),
-      this.loadSoundAsAudioBuffer('/static/audio/stab.wav')
-    ]);
-  }
-
-  loadSoundAsAudioBuffer (url) {
-    return fetch(url)
-        .then(r => r.blob())
-        .then(audioBlob => {
-          return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.addEventListener('load', _ => {
-              resolve(reader.result);
-            });
-            reader.addEventListener('error', reject);
-            reader.readAsArrayBuffer(audioBlob);
-          });
-        })
-        .then(data => {
-          return new Promise((resolve, reject) => {
-            this.state.context.decodeAudioData(data, resolve, reject);
-          });
-        })
-        .catch(e => console.warn('No sounds'));
-  }
-
-  componentDidMount () {
-    if (this.props.closed) {
-      return;
+    if (!this.looping) {
+      this.looping = true;
+      this.playingLoop = this.playLoop();
     }
-
-    this.playLoop();
-  }
-
-  componentWillUpdate (newProps) {
-    if (newProps.closed === this.props.closed) {
-      return;
-    }
-
-    if (newProps.closed) {
-      this.playSting();
+    if (this.props.stepItUp && !alreadySteppingItUp) {
+      this.upgradeLoop();
     }
   }
 
-  playLoop () {
-    this._init.then(sounds => {
-      if (!sounds) {
-        return;
-      }
-
-      if (this.state.sting) {
-        this.state.sting.stop();
-        this.state.sting = null;
-      }
-
-      const sfx = sounds[0];
-      const context = this.state.context;
-      this.state.loop = context.createBufferSource();
-      this.state.loop.buffer = sfx;
-      this.state.loop.connect(context.destination);
-      this.state.loop.start(0);
-    });
+  componentDidMount() {
+    this.update();
   }
 
-  playSting () {
-    this._init.then(sounds => {
-      if (!sounds) {
-        return;
-      }
-
-      if (this.state.loop) {
-        setTimeout(_ => {
-          this.state.loop.stop();
-          this.state.loop = null;
-        }, 500);
-      }
-
-      const sfx = sounds[1];
-      const context = this.state.context;
-      this.state.sting = context.createBufferSource();
-      this.state.sting.buffer = sfx;
-      this.state.sting.connect(context.destination);
-      this.state.sting.start(0);
-    });
+  componentDidUpdate(prevProps) {
+    this.update(prevProps);
   }
 
-  render() {
-    return (<div class="audio"></div>);
+  async playLoop() {
+    const loopBuffer = await loop;
+
+    const loopSource = context.createBufferSource();
+    loopSource.buffer = loopBuffer;
+    loopSource.connect(context.destination);
+    loopSource.loop = true;
+    loopSource.loopEnd = 6.841041667;
+    loopSource.start(0);
+
+    return loopSource;
+  }
+
+  async upgradeLoop() {
+    const loopSource = await this.playingLoop;
+    const {duration} = await loop;
+    loopSource.loopStart = 13.694375;
+    loopSource.loopEnd = duration;
+  }
+
+  async stopLoop() {
+    const loopSource = await this.playingLoop;
+    await wait(500);
+    loopSource.stop();
+  }
+
+  async playStab() {
+    const stabBuffer = await stab;
+
+    const stabSource = context.createBufferSource();
+    stabSource.buffer = stabBuffer;
+    stabSource.connect(context.destination);
+    stabSource.start(0);
+
+    return stabSource;
   }
 }
