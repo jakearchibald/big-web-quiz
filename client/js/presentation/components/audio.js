@@ -54,7 +54,7 @@ export default class Audio extends BoundComponent {
       
       this.playStab();
       return;
-    };
+    }
 
     if (!this.looping) {
       this.looping = true;
