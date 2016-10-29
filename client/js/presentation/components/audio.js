@@ -20,19 +20,24 @@ import {wait} from '../../../../shared/utils';
 
 const context = new AudioContext();
 
-function loadSoundAsAudioBuffer(url) {
+function loadSoundAsAudioSource(url) {
   return fetch(url).then(r => r.arrayBuffer())
-    .then(data => context.decodeAudioData(data));
+    .then(data => context.decodeAudioData(data))
+    .then(buffer => {
+      const source = context.createBufferSource();
+      source.buffer = buffer;
+      source.connect(context.destination);
+      return source;
+    });
 }
 
-const loop = loadSoundAsAudioBuffer('/static/audio/loop.wav');
-const stab = loadSoundAsAudioBuffer('/static/audio/stab.mp3');
+const loop = loadSoundAsAudioSource('/static/audio/loop.wav');
+const stab = loadSoundAsAudioSource('/static/audio/stab.mp3');
 
 export default class Audio extends BoundComponent {
   constructor(props) {
     super(props);
     this.looping = false;
-    this.playingLoop = Promise.resolve();
   }
 
   update({
@@ -53,7 +58,7 @@ export default class Audio extends BoundComponent {
 
     if (!this.looping) {
       this.looping = true;
-      this.playingLoop = this.playLoop();
+      this.playLoop();
     }
     if (this.props.stepItUp && !alreadySteppingItUp) {
       this.upgradeLoop();
@@ -69,37 +74,26 @@ export default class Audio extends BoundComponent {
   }
 
   async playLoop() {
-    const loopBuffer = await loop;
-
-    const loopSource = context.createBufferSource();
-    loopSource.buffer = loopBuffer;
-    loopSource.connect(context.destination);
+    const loopSource = await loop;
     loopSource.loop = true;
     loopSource.loopEnd = 6.841041667;
     loopSource.start(0);
-
-    return loopSource;
   }
 
   async upgradeLoop() {
-    const loopSource = await this.playingLoop;
-    const {duration} = await loop;
+    const loopSource = await loop;
     loopSource.loopStart = 13.694375;
-    loopSource.loopEnd = duration;
+    loopSource.loopEnd = loopSource.buffer.duration;
   }
 
   async stopLoop() {
-    const loopSource = await this.playingLoop;
+    const loopSource = await loop;
     await wait(500);
     loopSource.stop();
   }
 
   async playStab() {
-    const stabBuffer = await stab;
-
-    const stabSource = context.createBufferSource();
-    stabSource.buffer = stabBuffer;
-    stabSource.connect(context.destination);
+    const stabSource = await stab;
     stabSource.start(0);
 
     return stabSource;
