@@ -56,63 +56,71 @@ class App extends BoundComponent {
   }
   render(props, {question, questionClosed, correctAnswers, answerDisplayOrder, averages, leaderboard, showLiveResults}) {
 
-    // TODO: delete this when the leaderboard is working.
+    if (leaderboard) {
+      let type = 0;
+      let position = 1;
+      let lastScore = (leaderboard.length > 0) ? leaderboard[0].score : -1;
+      for (let i = 0; i < leaderboard.length; i++) {
+        if (!leaderboard[i]) {
+          continue;
+        }
 
+        if (i > 0 && leaderboard[i].score !== lastScore) {
+          type++;
+          position++;
+        }
+        console.log(leaderboard[i]);
 
+        leaderboard[i].type = type;
+        leaderboard[i].position = position;
+        lastScore = leaderboard[i].score;
+      }
 
-    var players = [];
-    for (var i = 0; i < 100; i++) {
-      players.push({
-        name: 'Player ' + (i+1),
-        score: 100 - i,
-        avatarUrl: "https://lh5.googleusercontent.com/-y9r3dQqlH1g/AAAAAAAAAAI/AAAAAAAAKXM/2GuT9LHmC88/photo.jpg"
-      });
-    }
+      return (
+        <div class="leaderboard">
+          <div class="leaderboard__winners">
+            {leaderboard.map((player, index) =>
+              index > 2 ? '' :
+              <div class={`leaderboard__winner leaderboard__winner-${player.type}`}>
+                <div class="leaderboard__winner-block"></div>
+                <img
+                      class="leaderboard__winner-avatar"
+                      width="110"
+                      height="110"
+                      src={`${player.avatarUrl}?sz=110`}
+                      srcset={`${player.avatarUrl}?sz=220 2x, ${player.avatarUrl}?sz=330 3x`}
+                    />
 
-    if (leaderboard) return (
-      <div class="leaderboard">
-        <div class="leaderboard__winners">
-          {players.map((player, index) =>
-            index > 2 ? '' :
-            <div class={`leaderboard__winner leaderboard__winner-${index}`}>
-              <div class="leaderboard__winner-block"></div>
-              <img
-                    class="leaderboard__winner-avatar"
-                    width="110"
-                    height="110"
-                    src={`${player.avatarUrl}?sz=110`}
-                    srcset={`${player.avatarUrl}?sz=220 2x, ${player.avatarUrl}?sz=330 3x`}
-                  />
-
-              <div class="leaderboard__winner-position">{index + 1}</div>
-              <div class="leaderboard__winner-name">{player.name}</div>
-              <div class="leaderboard__winner-score">{player.score}</div>
-            </div>
-          )}
-        </div>
-
-        <table class="leaderboard__scores" cellSpacing="0">
-          <tbody>
-            {players.map((player, index) =>
-              index < 3 ? '' :
-              <tr>
-                <td>
-                  {index+1}.
-                </td>
-
-                <td>
-                  {player.name}
-                </td>
-
-                <td>
-                  {player.score}
-                </td>
-              </tr>
+                <div class="leaderboard__winner-position">{player.position}</div>
+                <div class="leaderboard__winner-name">{player.name}</div>
+                <div class="leaderboard__winner-score">{player.score}</div>
+              </div>
             )}
-          </tbody>
-        </table>
-      </div>
-    );
+          </div>
+
+          <table class="leaderboard__scores" cellSpacing="0">
+            <tbody>
+              {leaderboard.map((player, index) =>
+                index < 3 ? '' :
+                <tr>
+                  <td>
+                    {player.position}.
+                  </td>
+
+                  <td>
+                    {player.name}
+                  </td>
+
+                  <td>
+                    {player.score}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      );
+    }
 
     if (!question) return (
       <Waiting />
@@ -138,9 +146,9 @@ class App extends BoundComponent {
 
         {showLiveResults && answerDisplayOrder && !correctAnswers ?
           <div class="live-results">
-            {answerDisplayOrder.map(i =>
+            {answerDisplayOrder.map((i, j) =>
               <AverageValue
-                color={this.state.colors[i % this.state.colors.length]}
+                color={this.state.colors[j % this.state.colors.length]}
                 questionClosed={questionClosed}
                 text={question.answers[i].text}
                 key={`avg-${question.id}-answer-${i}`}
