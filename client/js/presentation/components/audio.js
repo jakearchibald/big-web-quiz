@@ -30,14 +30,30 @@ function audioSourceFromBuffer(buffer) {
   return source;
 }
 
-const loopBuffer = loadSoundAsAudioBuffer('/static/audio/loop.wav');
-const stabBuffer = loadSoundAsAudioBuffer('/static/audio/stab.mp3');
+function onBarSwitchTime(playTime, loopStart, loopBarLength) {
+  const loopPlaytime = playTime - loopStart;
+  const timeInBar = loopPlaytime % loopBarLength;
+  let untilSwitch = loopBarLength - timeInBar;
+  if (untilSwitch < safetyOffset) untilSwitch += loopBarLength;
+
+  return untilSwitch + playTime;
+}
+
+const safetyOffset = 0.25;
+const loop1Buffer = loadSoundAsAudioBuffer('/static/audio/loop1.wav');
+const loop1BarLength = (60 / 110 /*BPM*/) * 4;
+const loop2Buffer = loadSoundAsAudioBuffer('/static/audio/loop2.wav');
+const loop2BarLength = (60 / 123 /*BPM*/) * 4;
+const stabBuffer = loadSoundAsAudioBuffer('/static/audio/stab.wav');
 
 export default class Audio extends BoundComponent {
   constructor(props) {
     super(props);
-    this.looping = false;
-    this.loopSource = Promise.resolve();
+    this.initialLoopPlaying = false;
+    this.loop1Start = 0;
+    this.loop2Start = 0;
+    this.loop1Source = Promise.resolve();
+    this.loop2Source = Promise.resolve();
   }
 
   update({
@@ -47,20 +63,18 @@ export default class Audio extends BoundComponent {
     if (this.props.closed) {
       if (previouslyClosed) return;
       
-      if (this.looping) {
-        this.looping = false;
-        this.stopLoop();
-      }
-      
+      this.initialLoopPlaying = false;
       this.playStab();
       return;
     }
 
-    if (!this.looping) {
-      this.looping = true;
-      this.loopSource = this.playLoop();
+    
+    if (!this.initialLoopPlaying && !this.props.stepItUp) {
+      this.initialLoopPlaying = true;
+      this.playLoop();
     }
     if (this.props.stepItUp && !alreadySteppingItUp) {
+      this.initialLoopPlaying = false;
       this.upgradeLoop();
     }
   }
@@ -73,38 +87,58 @@ export default class Audio extends BoundComponent {
     this.update(prevProps);
   }
 
-  async playLoop() {
-    const fadeInTime = 0.7;
-    const loopSource = audioSourceFromBuffer(await loopBuffer);
+  playLoop() {
+    this.loop1Source = new Promise(async resolve => {
+      const loop1Source = audioSourceFromBuffer(await loop1Buffer);
+      const loop2Source = await this.loop2Source;
 
-    const gainNode = context.createGain();
-    gainNode.gain.setValueAtTime(0.001, context.currentTime);
-    gainNode.connect(context.destination);
-    gainNode.gain.exponentialRampToValueAtTime(1, context.currentTime + fadeInTime);
+      // this would only happen if we go from "revealing" back to activate
+      if (loop2Source) {
+        this.loop2Source = Promise.resolve();
+        loop2Source.stop();
+      } 
 
-    loopSource.connect(gainNode);
-    loopSource.loop = true;
-    loopSource.loopEnd = 6.841041667;
-    loopSource.start(0, loopSource.loopEnd - fadeInTime);
-    return loopSource;
+      loop1Source.connect(context.destination);
+      loop1Source.loop = true;
+
+      this.loop1Start = context.currentTime + safetyOffset;
+      loop1Source.start(this.loop1Start);
+      resolve(loop1Source);
+    });
   }
 
-  async upgradeLoop() {
-    const loopSource = await this.loopSource;
-    loopSource.loopStart = 13.694375;
-    loopSource.loopEnd = loopSource.buffer.duration;
-  }
+  upgradeLoop() {
+    const loop1SourcePromise = this.loop1Source;
+    this.loop1Source = Promise.resolve();
 
-  async stopLoop() {
-    const loopSource = await this.loopSource;
-    loopSource.stop(context.currentTime + 0.5);
+    this.loop2Source = new Promise(async resolve => {
+      const loop2Source = audioSourceFromBuffer(await loop2Buffer);
+      const loop1Source = await loop1SourcePromise;
+
+      loop2Source.connect(context.destination);
+      loop2Source.loop = true;
+
+      const switchTime = onBarSwitchTime(context.currentTime, this.loop1Start, loop1BarLength);
+
+      this.loop2Start = switchTime;
+      if (loop1Source) loop1Source.stop(switchTime);
+      loop2Source.start(switchTime);
+      resolve(loop2Source);
+    });
   }
 
   async playStab() {
-    const stabSource = audioSourceFromBuffer(await stabBuffer);
-    stabSource.connect(context.destination);
-    stabSource.start(0);
+    const loop2SourcePromise = this.loop2Source;
+    this.loop2Source = Promise.resolve();
 
-    return stabSource;
+    const stabSource = audioSourceFromBuffer(await stabBuffer);
+    const loop2Source = await loop2SourcePromise;
+
+    stabSource.connect(context.destination);
+
+    const switchTime = onBarSwitchTime(context.currentTime, this.loop2Start, loop2BarLength);
+
+    stabSource.start(switchTime);
+    if (loop2Source) loop2Source.stop(switchTime);
   }
 }
