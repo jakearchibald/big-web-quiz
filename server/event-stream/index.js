@@ -15,6 +15,8 @@
 * limitations under the License.
 */
 
+import {wait} from '../shared/utils';
+
 function writeMessage(res, id, data) {
   res.write(`id: ${id}\n`);
   res.write(`data: ${data}\n\n`);
@@ -26,6 +28,8 @@ export default class EventStream {
     this._lastEventId = 0;
     this._lastMessage = null;
     this._rollingState = {};
+    this._waitingForThrottledSend = false;
+    this._throttleMessage = null;
   }
   broadcast(message) {
     Object.assign(this._rollingState, message);
@@ -42,6 +46,14 @@ export default class EventStream {
         console.log(err);
       }
     }
+  }
+  async broadcastThrottled(message) {
+    this._throttleMessage = message;
+    if (this._waitingForThrottledSend) return;
+    this._waitingForThrottledSend = true;
+    await wait(300);
+    this.broadcast(this._throttleMessage);
+    this._waitingForThrottledSend = false;
   }
   countListenersForUser(user) {
     return this._pollers

@@ -277,7 +277,7 @@ export function questionAnswerJson(req, res) {
     const answerIndex = req.user.answers.findIndex(a => a.questionId.equals(question._id));
     
     quiz.cacheAnswers(req.user._id, choices);
-    presentationListeners.broadcast({
+    presentationListeners.broadcastThrottled({
       averages: quiz.getAverages()
     });
 
