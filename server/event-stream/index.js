@@ -44,10 +44,8 @@ export default class EventStream {
     }
   }
   countListenersForUser(user) {
-    return this._pollers.reduce((num, poll) => {
-      if (poll.req.user.equals(user)) num++;
-      return num;
-    }, 0);
+    return this._pollers
+      .filter(poll => poll.req.user.equals(user)).length;
   }
   add(req, res) {
     const lastEventId = Number(req.get('Last-Event-ID')) || 0;
