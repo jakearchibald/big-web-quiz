@@ -29,16 +29,17 @@ export default class Question extends BoundComponent {
     this.form = null;
 
     this.state = {
-      answersChecked: [],
+      answersChecked: props.answersSubmitted || [],
+      answersSubmitted: props.answersSubmitted || [],
       spinnerState: '',
-      submittedAnswers: false
+      submittedAnswersThisSession: false
     };
   }
   componentWillReceiveProps(newProps) {
     if (this.props.id != newProps.id) {
       this.setState({
         answersChecked: [],
-        submittedAnswers: false
+        submittedAnswersThisSession: false
       });
     }
   }
@@ -49,6 +50,8 @@ export default class Question extends BoundComponent {
       spinnerState: 'spinning'
     });
 
+    const answersChecked = this.state.answersChecked;
+
     try {
       const response = await fetch(this.formAction, {
         method: 'POST',
@@ -57,7 +60,7 @@ export default class Question extends BoundComponent {
         body: JSON.stringify({
           id: this.props.id,
           // becomes an array of indexes checked
-          choices: this.state.answersChecked.reduce((arr, choiceChecked, i) => {
+          choices: answersChecked.reduce((arr, choiceChecked, i) => {
             if (choiceChecked) {
               arr.push(i);
             }
@@ -73,26 +76,30 @@ export default class Question extends BoundComponent {
     catch (err) {
       this.setState({
         spinnerState: '',
-        submittedAnswers: false
+        submittedAnswersThisSession: false
       });
 
       throw err;
     }
 
     this.setState({
+      answersSubmitted: answersChecked,
       spinnerState: '',
-      submittedAnswers: true
+      submittedAnswersThisSession: true
     });
   }
   onChoiceChange() {
     this.setState({
+      submittedAnswersThisSession: false,
       answersChecked: Array.from(
         this.form.querySelectorAll('input[name=answer]')
       ).map(el => el.checked)
     })
   }
-  render({id, title, text, multiple, answers, closed, showLiveResults, correctAnswers, code, codeType, presentation}, {answersChecked, spinnerState, submittedAnswers}) {
+  render({id, title, text, multiple, answers, closed, showLiveResults, correctAnswers, code, codeType, presentation}, {answersChecked, answersSubmitted, spinnerState, submittedAnswersThisSession}) {
     const codeEl = code && <Code code={code} codeType={codeType}></Code>;
+
+    const answersToCheck = closed ? answersSubmitted : answersChecked;
 
     return (
       <section class={
@@ -122,7 +129,7 @@ export default class Question extends BoundComponent {
                     type={multiple ? 'checkbox' : 'radio'}
                     name="answer"
                     value={i}
-                    checked={answersChecked[i]}
+                    checked={answersToCheck[i]}
                     disabled={closed}
                     onChange={this.onChoiceChange}
                   />
@@ -141,7 +148,7 @@ export default class Question extends BoundComponent {
               { (presentation || closed) ? '' :
                 <div class="question__submit-container">
                   <div class={
-                    (submittedAnswers && !closed) ?
+                    (submittedAnswersThisSession && !closed) ?
                       'question__submitted-answer question__submitted-answer--success' :
                       'question__submitted-answer'
                   }>Answer submitted</div>
@@ -155,7 +162,7 @@ export default class Question extends BoundComponent {
             </div>
           </div>
         </form>
-        { presentation ? '' :
+        { !presentation &&
           <QuestionClosed presentation={presentation} state={closed && (!correctAnswers)}/>
         }
 

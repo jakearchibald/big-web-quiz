@@ -55,6 +55,19 @@ function getInitialState(req) {
     Object.assign(initialState, quiz.getState());
   }
 
+  if (quiz.activeQuestion) {
+    const userAnswers = req.user.answers
+      .find(a => a.questionId.equals(quiz.activeQuestion._id));
+    
+    if (userAnswers) {
+      initialState.answersSubmitted = quiz.activeQuestion.answers
+        .map((_, i) => userAnswers.choices.includes(i));
+    }
+    else {
+      initialState.answersSubmitted = [];
+    }
+  }
+
   return initialState;
 }
 

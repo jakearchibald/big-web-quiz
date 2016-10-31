@@ -40,7 +40,8 @@ export default class App extends BoundComponent {
     //     answers: [{text: String}]
     //   },
     //   questionClosed: Boolean,
-    //   correctAnswers: [Number]
+    //   correctAnswers: [Number],
+    //   answersSubmitted: [Number], answers the user submitted for the question
     // }
     this.state = props.initialState;
 
@@ -59,6 +60,11 @@ export default class App extends BoundComponent {
                 this.setState({user: data.user});
               });
             }
+            // Is question changing?
+            if (msg.question && (!this.state.question || this.state.question.id != msg.question.id)) {
+              // Reset submitted questions
+              msg.answersSubmitted = [];
+            }
             this.setState(msg);
           });
         })
@@ -73,7 +79,7 @@ export default class App extends BoundComponent {
       user: null
     });
   }
-  render({server}, {user, question, questionClosed, correctAnswers}) {
+  render({server}, {user, question, questionClosed, correctAnswers, answersSubmitted}) {
     // Question: OPEN
     const shouldShowQuestion = (question && !server) ||
 
@@ -108,6 +114,7 @@ export default class App extends BoundComponent {
                 codeType={question.codeType}
                 closed={questionClosed}
                 correctAnswers={correctAnswers}
+                answersSubmitted={answersSubmitted}
               />
               :
               <QuestionWaiting
