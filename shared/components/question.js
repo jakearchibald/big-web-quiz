@@ -138,7 +138,7 @@ export default class Question extends BoundComponent {
                 </div>
               )}
 
-              { presentation ? '' :
+              { (presentation || closed) ? '' :
                 <div class="question__submit-container">
                   <div class={
                     (submittedAnswers && !closed) ?
