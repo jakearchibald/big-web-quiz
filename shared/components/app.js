@@ -89,7 +89,7 @@ export default class App extends BoundComponent {
           {user ?
             (question && !(questionClosed && !question.scored) && !server ?
               <Question
-                key="question"
+                key={`question-${question.id}`}
                 id={question.id}
                 title={question.title}
                 text={question.text}

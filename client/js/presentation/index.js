@@ -130,7 +130,7 @@ class App extends BoundComponent {
       <div>
         <Audio key="the-amaze-audio" closed={questionClosed} stepItUp={showLiveResults} />
         <Question
-          key="question"
+          key={`question-${question.id}`}
           id={question.id}
           title={question.title}
           text={question.text}
