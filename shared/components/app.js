@@ -74,6 +74,15 @@ export default class App extends BoundComponent {
     });
   }
   render({server}, {user, question, questionClosed, correctAnswers}) {
+    // Question: OPEN
+    const shouldShowQuestion = (question && !server) ||
+
+      // Question: CLOSED
+      (question && questionClosed) ||
+
+      // Question: REVEALED
+      (question && questionClosed && correctAnswers && correctAnswers.length);
+
     return (
       <div class="app">
         <header class="page-header">
@@ -87,7 +96,7 @@ export default class App extends BoundComponent {
         </header>
         <Transition>
           {user ?
-            (question && !(questionClosed && !question.scored) && !server ?
+            (shouldShowQuestion?
               <Question
                 key={`question-${question.id}`}
                 id={question.id}
