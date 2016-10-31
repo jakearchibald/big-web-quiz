@@ -215,7 +215,7 @@ export function requiresLoginJson(req, res, next) {
 }
 
 export function deleteUserAnswersJson(req, res) {
-  User.update({}, {answers: [], score: 0}).then(() => {
+  User.update({}, {answers: [], score: 0}, {multi: true}).then(() => {
     res.json({});
   }).catch(err => {
     res.status(500).json({err});
