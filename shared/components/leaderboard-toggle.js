@@ -65,12 +65,13 @@ export default class LeaderboardToggle extends BoundComponent {
         <label>
           <input
             type="checkbox"
+            class="leaderboard-toggle__input"
             name="appear-on-leaderboard"
             onChange={this.onLeaderboardChange}
             checked={checked}
             disabled={leaderboardPending}
           />
-          Appear on leaderboard
+          <span class="leaderboard-toggle__description">Appear on leaderboard</span>
         </label>
       </form>
     );

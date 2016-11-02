@@ -33,4 +33,10 @@
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
     border-radius: 50%;
   }
+
+  &__explainer {
+    font-size: 14px;
+    margin-top: 32px;
+    max-width: 400px;
+  }
 }

@@ -80,7 +80,10 @@ export default class LoginStatus extends BoundComponent {
                 <div class="user-email">{user.email}</div>
                 {leaderboardToggle}
               </div>
-              <Logout onLogout={onLogout}/>
+              <div class="login-bubble-options">
+                <button class="login-bubble-unregister">Unregister</button>
+                <Logout onLogout={onLogout}/>
+              </div>
             </div>
           </div>
         </div>

@@ -29,10 +29,27 @@ export default class QuestionWaiting extends BoundComponent {
 
         <p class="message">Waiting for a question</p>
         {!server &&
-          <LeaderboardToggle
-            onUserUpdate={onUserUpdate}
-            checked={user.optIntoLeaderboard}
-          />
+          (<div class="question-waiting__leaderboard">
+            <LeaderboardToggle
+              onUserUpdate={onUserUpdate}
+              checked={user.optIntoLeaderboard}
+            />
+            <div class="question-waiting__leaderboard-preview">
+              <div class="question-waiting__leaderboard-preview-items">
+                <p class="question-waiting__leaderboard-preview-description">
+                  Your details will show as:
+                </p>
+
+                <img
+                  class="question-waiting__leaderboard-preview-avatar"
+                  width="24" height="24"
+                  src={`${user.avatarUrl}?sz=24`}
+                  srcset={`${user.avatarUrl}?sz=48 2x, ${user.avatarUrl}?sz=72 3x`}
+                />
+                {user.name}
+              </div>
+            </div>
+          </div>)
         }
       </div>
     );

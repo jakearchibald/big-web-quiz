@@ -38,3 +38,31 @@
     -webkit-overflow-scrolling: touch;
   }
 }
+
+.leaderboard-toggle {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+
+  &__description {
+    line-height: 32px;
+    display: inline-block;
+    height: 32px;
+    padding-left: 32px;
+    background: url(/static/images/ic_check_circle_outline_white_24px.svg) left center no-repeat;
+  }
+
+  &__input {
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    &:checked ~ .leaderboard-toggle__description {
+      background-image: url(/static/images/ic_check_circle_white_24px.svg);
+    }
+  }
+}

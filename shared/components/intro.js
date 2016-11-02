@@ -25,6 +25,8 @@ export default class Intro extends BoundComponent {
         <img class="intro__icon" width="96" src="/static/images/icon@192.png" alt="The Big Web Quiz!" />
         <p>Welcome to the Big Web Quiz! First you need to log in:</p>
         <Login/>
+
+        <p class="intro__explainer">When you login we will store your Google information, such as name and email address. You can unregister at any time by clicking on your avatar and choosing "Unregister".</p>
       </div>
     );
   }

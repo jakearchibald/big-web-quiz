@@ -43,7 +43,7 @@
   transition: opacity 0.3s cubic-bezier(0, 0, 0.3, 1);
 
   & .login-bubble-frame {
-    width: 240px;
+    width: 268px;
     will-change: transform;
     transition: transform 0.3s cubic-bezier(0, 0, 0.3, 1);
     transform: translate(0, -99.9%); // 99.99 to fix iOS animation issue
@@ -55,6 +55,16 @@
 
     & .login-bubble-frame {
       transform: none;
+    }
+  }
+
+  .leaderboard-toggle {
+    &__description {
+      background-image: url(/static/images/ic_check_circle_outline_black_24px.svg);
+    }
+
+    &__input:checked ~ .leaderboard-toggle__description {
+      background-image: url(/static/images/ic_check_circle_black_24px.svg);
     }
   }
 
@@ -100,6 +110,19 @@
   }
 }
 
-.logout-form {
+.login-bubble-options {
   padding: 0 16px 16px 16px;
+  display: flex;
+
+  .login-bubble-unregister {
+    background: none;
+    margin-right: 16px;
+    padding: 0;
+    color: #888;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: underline;
+  }
 }
