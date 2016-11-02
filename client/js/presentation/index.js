@@ -54,7 +54,18 @@ class App extends BoundComponent {
       this.setState(data);
     };
   }
-  render(props, {question, questionClosed, correctAnswers, answerDisplayOrder, averages, leaderboard, showLiveResults}) {
+  render(props, {question, questionClosed, correctAnswers, answerDisplayOrder, averages, leaderboard, showLiveResults, openingVideo}) {
+
+    if (openingVideo) {
+      return (
+        <div class="opening-video">
+          <video
+              class="opening-video__src"
+              src="/static/video/intro.mp4"
+              width="1920" height="1080" autoplay="true" />
+        </div>
+      );
+    }
 
     if (leaderboard) {
       let type = 0;
@@ -123,8 +134,8 @@ class App extends BoundComponent {
     }
 
     if (!question) return (
-      <Waiting />
-    );
+        <Waiting />
+      );
 
     return (
       <div>
