@@ -32,7 +32,8 @@ class App extends BoundComponent {
       showingLeaderboard: props.showingLeaderboard,
       addingQuestion: false,
       editingQuestions: [], // ids
-      outputValue: ''
+      outputValue: '',
+      view: 'questions'
     };
   }
   onQuestionSaved(id, questions) {
@@ -91,15 +92,15 @@ class App extends BoundComponent {
         if (question.closed) {
           const questionHasACorrectAnswer = question.answers.some(a => a.correct);
           if (question.revealingAnswers || !questionHasACorrectAnswer) {
-            return <button onClick={event => this.setQuestionState(question, 'deactivate')}>Deactivate</button>;
+            return <button class="admin__question-state admin__question-state--deactivate" onClick={event => this.setQuestionState(question, 'deactivate')}>Deactivate</button>;
           }
-          return <button onClick={event => this.setQuestionState(question, 'reveal')}>Reveal Answers</button>;
+          return <button class="admin__question-state admin__question-state--reveal" onClick={event => this.setQuestionState(question, 'reveal')}>Reveal Answers</button>;
         }
-        return <button onClick={event => this.setQuestionState(question, 'close')}>Close</button>;
+        return <button class="admin__question-state admin__question-state--close" onClick={event => this.setQuestionState(question, 'close')}>Close</button>;
       }
-      return <button onClick={event => this.setQuestionState(question, 'show-live-results')}>Show live results</button>;
+      return <button class="admin__question-state admin__question-state--live" onClick={event => this.setQuestionState(question, 'show-live-results')}>Show live results</button>;
     }
-    return <button onClick={event => this.setQuestionState(question, 'activate')}>Activate</button>;
+    return <button class="admin__question-state admin__question-state--activate" onClick={event => this.setQuestionState(question, 'activate')}>Activate Question</button>;
   }
   onDropUserAnswersClick() {
     const sure = confirm("Delete all user answers - are you sure?");
@@ -186,98 +187,171 @@ class App extends BoundComponent {
       throw err;
     }
   }
-  render(props, {questions, addingQuestion, editingQuestions, showingLeaderboard, outputValue}) {
+
+  onQuestionsShowClicked() {
+    this.setState({view: 'questions'});
+  }
+
+  onLeaderboardShowClicked() {
+    this.setState({view: 'leaderboard'});
+  }
+
+  onDataShowClicked() {
+    this.setState({view: 'data'});
+  }
+
+  render(props, {questions, addingQuestion, editingQuestions, showingLeaderboard, outputValue, view}) {
     return <div>
-      <ol>
-        {questions.map((question, i) => {
-          if (editingQuestions.includes(question._id)) {
-            return (
-              <li key={question._id}>
-                <QuestionUpdate
-                  id={question._id}
-                  title={question.title}
-                  text={question.text}
-                  code={question.code}
-                  codeType={question.codeType}
-                  multiple={question.multiple}
-                  scored={question.scored}
-                  answers={question.answers}
-                  onQuestionSaved={this.onQuestionSaved}
-                  onQuestionRemoved={this.onQuestionRemoved}
-                />
-              </li>
-            );
+
+      <div class="admin__nav">
+        <button
+          class={
+            view === 'questions' ? 'admin__nav--active' : ''
           }
-          return (
-            <li class="admin__question" key={question._id}>
-              <p class="admin__buttons">
-                <button onClick={event => this.onEditQuestionClick(event, question)}>Edit</button>
-                {this.questionActionButton(question)}
-              </p>
-              <h1>Title: {question.title}</h1>
-              <table class="question-table">
-                <tr>
-                  <td>Text:</td>
-                  <td>{question.text}</td>
-                </tr>
-                {question.code &&
-                  <tr>
-                    <td>Code:</td>
-                    <td>
-                      {question.codeType}:
-                      <pre>{question.code}</pre>
-                    </td>
-                  </tr>
-                }
-                <tr>
-                  <td>Multiple:</td>
-                  <td>{String(question.multiple)}</td>
-                </tr>
-                <tr>
-                  <td>Scored:</td>
-                  <td>{String(question.scored)}</td>
-                </tr>
-                <tr>
-                  <td>Answers:</td>
-                  <td>
-                    <ol>
-                      {question.answers.map((answer, i) =>
-                        <li key={`${question.id}-answer-${i}`}>
-                          {answer.text}
-                          {answer.correct ? ' - correct' : ''}
-                        </li>
-                      )}
-                    </ol>
-                  </td>
-                </tr>
-              </table>
-            </li>
-          );
-        })}
-      </ol>
-      {addingQuestion ?
-        <QuestionUpdate onQuestionSaved={this.onQuestionSaved}/>
+          onClick={this.onQuestionsShowClicked}>Questions</button>
+        <button
+          class={
+            view === 'leaderboard' ? 'admin__nav--active' : ''
+          }
+          onClick={this.onLeaderboardShowClicked}>Leaderboard</button>
+        <button
+          class={
+            view === 'data' ? 'admin__nav--active' : ''
+          }
+          onClick={this.onDataShowClicked}>Data</button>
+      </div>
+
+      {
+        view === 'questions' ?
+
+        <section class="admin__questions">
+
+          {
+            addingQuestion ?
+            <QuestionUpdate onQuestionSaved={this.onQuestionSaved}/>
+            :
+            <div class="admin__questions-add">
+              <button onClick={this.onAddQuestionClick}>Add question</button>
+            </div>
+          }
+
+          <ol class="admin__questions-list">
+            {questions.map((question, i) => {
+              if (editingQuestions.includes(question._id)) {
+                return (
+                  <li key={question._id}>
+                    <QuestionUpdate
+                      id={question._id}
+                      title={question.title}
+                      text={question.text}
+                      code={question.code}
+                      codeType={question.codeType}
+                      multiple={question.multiple}
+                      scored={question.scored}
+                      answers={question.answers}
+                      onQuestionSaved={this.onQuestionSaved}
+                      onQuestionRemoved={this.onQuestionRemoved}
+                    />
+                  </li>
+                );
+              }
+              return (
+                <li class={
+                  question.active ?
+                  'admin__question admin__question--active':
+                  'admin__question'
+                } key={question._id}>
+                  <h1 class="admin__question-title">Title: {question.title}</h1>
+                  <table class="admin__question-table">
+                    <tr>
+                      <td>Text:</td>
+                      <td>{question.text}</td>
+                    </tr>
+                    {question.code &&
+                      <tr>
+                        <td>Code:</td>
+                        <td>
+                          {question.codeType}:
+                          <pre>{question.code}</pre>
+                        </td>
+                      </tr>
+                    }
+                    <tr>
+                      <td>Multiple:</td>
+                      <td>{String(question.multiple)}</td>
+                    </tr>
+                    <tr>
+                      <td>Scored:</td>
+                      <td>{String(question.scored)}</td>
+                    </tr>
+                    <tr>
+                      <td>Answers:</td>
+                      <td>
+                        <ol class="admin__answer-list">
+                          {question.answers.map((answer, i) =>
+                            <li class={
+                                answer.correct ?
+                                'admin__answer admin__answer--correct' :
+                                'admin__answer'
+                              }
+                              key={`${question.id}-answer-${i}`}>
+                              {answer.text}
+                            </li>
+                          )}
+                        </ol>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <p class="admin__buttons">
+                    <button class="admin__question-edit" onClick={event => this.onEditQuestionClick(event, question)}>Edit</button>
+                    {this.questionActionButton(question)}
+                  </p>
+                </li>
+              );
+            })}
+          </ol>
+
+        </section>
+
         :
-        <div><button onClick={this.onAddQuestionClick}>+</button></div>
-      }
-      <div><button onClick={this.onDropUserAnswersClick}>Drop user answers</button></div>
-      <div><button onClick={this.onDropUsersClick}>Drop users</button></div>
-      <div>
-        {showingLeaderboard ?
-          <button onClick={this.onHideLeaderboardClick}>Hide leaderboard in presentation view</button>
+
+        (view === 'leaderboard' ?
+
+          <section>
+            <div class="admin__questions-add">
+              {showingLeaderboard ?
+                <button class="admin__leaderboard-toggle" onClick={this.onHideLeaderboardClick}>Hide leaderboard in presentation view</button>
+                :
+                <button class="admin__leaderboard-toggle" onClick={this.onShowLeaderboardClick}>Show leaderboard in presentation view</button>
+              }
+            </div>
+            <Leaderboard/>
+          </section>
+
           :
-          <button onClick={this.onShowLeaderboardClick}>Show leaderboard in presentation view</button>
-        }
-      </div>
-      <div>
-        <button onClick={() => this.onOutputClick(['Question'])}>Output questions</button>
-        <button onClick={() => this.onOutputClick(['User'])}>Output users</button>
-        <button onClick={() => this.onOutputClick(['Question', 'User'])}>Output both</button>
-      </div>
-      <div><textarea value={outputValue} onChange={this.linkState('outputValue')}></textarea></div>
-      <div><button onClick={this.onRestoreClick}>Restore models from above</button> Only touches models that are mentioned in the above JSON. All existing data in that model is replaced.</div>
-      <hr/>
-      <Leaderboard/>
+
+          <section class="admin__data">
+            <div class="admin__data-user-controls">
+              <button class="admin__data-user-answers" onClick={this.onDropUserAnswersClick}>Drop user answers</button>
+              <button class="admin__data-users" onClick={this.onDropUsersClick}>Drop users</button>
+            </div>
+
+            <div class="admin__data-dump-controls">
+              <button onClick={() => this.onOutputClick(['Question'])}>Output questions</button>
+              <button onClick={() => this.onOutputClick(['User'])}>Output users</button>
+              <button onClick={() => this.onOutputClick(['Question', 'User'])}>Output both</button>
+            </div>
+            <div class="admin__data-dump">
+              <textarea value={outputValue} onChange={this.linkState('outputValue')}></textarea>
+            </div>
+            <div class="admin__data-restore">
+              <button onClick={this.onRestoreClick}>Restore models from above</button>
+              <p>Only touches models that are mentioned in the above JSON. All existing data in that model is replaced.</p>
+            </div>
+          </section>
+        )
+      }
     </div>;
   }
 }

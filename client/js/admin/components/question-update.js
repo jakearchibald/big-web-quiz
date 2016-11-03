@@ -96,44 +96,69 @@ export default class QuestionUpdate extends BoundComponent {
     this.setState({answers});
   }
   render({id}, {answers, multiple}) {
-    return <form action={UPDATE_ACTION} method="POST" onSubmit={this.onSubmit}>
+    return <form class="admin__question-edit-form" action={UPDATE_ACTION} method="POST" onSubmit={this.onSubmit}>
       {id ? <input type="hidden" name="id" value={id}/> : ''}
-      <div><label>Title: <input type="text" value={this.state.title} onChange={this.linkState('title')}/></label></div>
-      <div><label>Question: <input type="text" value={this.state.text} onChange={this.linkState('text')}/></label></div>
-      <div><label>Code: <textarea value={this.state.code} onChange={this.linkState('code')}/></label></div>
-      <div>
-        <label>
-          Code type:
-          <select value={this.state.codeType} onChange={this.linkState('codeType')}>
-            <option value="">None</option>
-            <option value="javascript">JavaScript</option>
-            <option value="markup">Markup</option>
-            <option value="css">CSS</option>
-          </select>
-        </label>
-      </div>
-      <div><label><input type="checkbox" checked={this.state.multiple} onChange={this.linkState('multiple')}/> Multiple answers</label></div>
-      <div><label><input type="checkbox" checked={this.state.scored} onChange={this.linkState('scored')}/> Scored</label></div>
-      <div>
+      <table class="admin__question-table">
+        <tr>
+          <th>Title:</th><td><input type="text" value={this.state.title} onChange={this.linkState('title')}/></td>
+        </tr>
+
+        <tr>
+          <th>Question:</th><td><input type="text" value={this.state.text} onChange={this.linkState('text')}/></td>
+        </tr>
+
+        <tr>
+          <th>Code:</th><td><textarea value={this.state.code} onChange={this.linkState('code')}/></td>
+        </tr>
+
+        <tr>
+          <th>Code type:</th>
+          <td>
+            <select value={this.state.codeType} onChange={this.linkState('codeType')}>
+              <option value="">None</option>
+              <option value="javascript">JavaScript</option>
+              <option value="markup">Markup</option>
+              <option value="css">CSS</option>
+            </select>
+          </td>
+        </tr>
+
+        <tr>
+          <th>Multiple answers:</th><td><input type="checkbox" checked={this.state.multiple} onChange={this.linkState('multiple')}/></td>
+        </tr>
+
+        <tr>
+          <th>Scored:</th><td><input type="checkbox" checked={this.state.scored} onChange={this.linkState('scored')}/></td>
+        </tr>
+
         {answers.map((answer, i) =>
-          <div key={'answer-' + i}>
-            <label>
-              Answer: <input type="text" value={answer.text} onChange={this.linkState(`answers.${i}.text`)} />
-            </label>
-            <label>
-              <input
-                type={multiple ? 'checkbox' : 'radio'}
-                name="correct-answer" 
-                checked={answer.correct}
-                onChange={this.linkState(`answers.${i}.correct`)}
-              />
-              Correct answer
-            </label>
-          </div>
+          <tr key={'answer-' + i}>
+            <th>
+              Answer:
+            </th>
+            <td>
+              <div>
+                <input type="text" value={answer.text} onChange={this.linkState(`answers.${i}.text`)} />
+              </div>
+
+              <label class="admin__question-correct-answer">
+                <input
+                  type={multiple ? 'checkbox' : 'radio'}
+                  name="correct-answer"
+                  checked={answer.correct}
+                  onChange={this.linkState(`answers.${i}.correct`)}
+                />
+                Correct answer
+              </label>
+            </td>
+          </tr>
         )}
-        <div><button type="button" onClick={this.onAddAnotherAnswer}>Add another answer</button></div>
+
+      </table>
+      <div class="admin__buttons">
+        <button class="admin__buttons-add-answer" type="button" onClick={this.onAddAnotherAnswer}>Add another answer</button>
       </div>
-      <div>
+      <div class="admin__update-question">
         <button>{id ? 'Update question' : 'Save question'}</button>
         {id ? <button type="button" onClick={this.onRemoveQuestion}>Remove question</button> : null}
       </div>

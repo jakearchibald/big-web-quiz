@@ -50,9 +50,6 @@ export default class QuestionUpdate extends BoundComponent {
       throw err;
     }
   }
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextState != this.state;
-  }
   onUpdateLeaderboard() {
     this.updateUsers();
   }
@@ -105,62 +102,78 @@ export default class QuestionUpdate extends BoundComponent {
 
     return (
       <div>
-        <p>Show:</p>
-        <div>
-          <label>
-            <input
-              type="radio"
-              name="leaderboard-filter-type"
-              value="all"
-              onChange={this.linkState('filteringType', 'target.value')}
-              checked={filteringType == 'all'}
-            />
-            All players
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              type="radio"
-              name="leaderboard-filter-type"
-              value="opted-in"
-              onChange={this.linkState('filteringType', 'target.value')}
-              checked={filteringType == 'opted-in'}
-            />
-            Opted-in
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              type="radio"
-              name="leaderboard-filter-type"
-              value="opted-in-not-banned"
-              onChange={this.linkState('filteringType', 'target.value')}
-              checked={filteringType == 'opted-in-not-banned'}
-            />
-            Opted-in &amp; not banned
-          </label>
-        </div>
-        <button onClick={this.onUpdateLeaderboard} disabled={updating}>Update leaderboard</button>
-        <table class="leaderboard-table">
+        <section class="admin__leaderboard-controls">
+          <p class="admin__leaderboard-controls-title">Filter by:</p>
+          <div class="admin__leaderboard-filter">
+            <div>
+              <label>
+                <input
+                  type="radio"
+                  name="leaderboard-filter-type"
+                  value="all"
+                  onChange={this.linkState('filteringType', 'target.value')}
+                  checked={filteringType == 'all'}
+                />
+                All players
+              </label>
+            </div>
+            <div>
+              <label>
+                <input
+                  type="radio"
+                  name="leaderboard-filter-type"
+                  value="opted-in"
+                  onChange={this.linkState('filteringType', 'target.value')}
+                  checked={filteringType == 'opted-in'}
+                />
+                Opted-in
+              </label>
+            </div>
+            <div>
+              <label>
+                <input
+                  type="radio"
+                  name="leaderboard-filter-type"
+                  value="opted-in-not-banned"
+                  onChange={this.linkState('filteringType', 'target.value')}
+                  checked={filteringType == 'opted-in-not-banned'}
+                />
+                Opted-in &amp; not banned
+              </label>
+            </div>
+
+          </div>
+
+          <button
+            class="admin__leaderboard-update"
+            onClick={this.onUpdateLeaderboard}
+            disabled={updating}>Update leaderboard</button>
+
+        </section>
+
+        <table class="admin__leaderboard-table" cellpadding="0" cellspacing="0">
           <thead>
             <tr>
-              <th>Pos</th> <th>Player</th> <th>Score</th> <th>Opted-in</th> <th>Banned from leaderboard</th>
+              <th></th>
+              <th colspan="2">Player</th>
+              <th>Score</th>
+              <th>Opted-in</th>
+              <th>Banned</th>
             </tr>
           </thead>
           <tbody>
-            {users.map((user, i) => 
+            {users.map((user, i) =>
               <tr key={user.googleId}>
                 <th>{i+1}</th>
                 <td>
                   <img
-                    width="48" height="48"
-                    src={`${user.avatarUrl}?sz=48`}
-                    srcset={`${user.avatarUrl}?sz=96 2x, ${user.avatarUrl}?sz=144 3x`}
+                    class="admin__leaderboard-avatar"
+                    width="24" height="24"
+                    src={`${user.avatarUrl}?sz=24`}
+                    srcset={`${user.avatarUrl}?sz=48 2x, ${user.avatarUrl}?sz=72 3x`}
                   />
-                  {user.name}
                 </td>
+                <td>{user.name}</td>
                 <td>{user.score}</td>
                 <td>{user.optIntoLeaderboard ? 'Yes' : 'No'}</td>
                 <td>
