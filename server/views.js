@@ -55,7 +55,7 @@ function getInitialState(req) {
     Object.assign(initialState, quiz.getState());
   }
 
-  if (quiz.activeQuestion) {
+  if (quiz.activeQuestion && req.user) {
     const userAnswers = req.user.answers
       .find(a => a.questionId.equals(quiz.activeQuestion._id));
     
