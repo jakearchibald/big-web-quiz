@@ -26,7 +26,7 @@
   font-size: 24px;
   text-align: center;
   line-height: 1.4;
-  padding: 0 32px 10vh 32px;
+  padding: 0 32px 4vh 32px;
 
   &__icon {
     border: 4px solid #FFF;
@@ -36,7 +36,16 @@
 
   &__explainer {
     font-size: 14px;
-    margin-top: 32px;
+    margin-top: 80px;
     max-width: 400px;
+  }
+
+  &__policies {
+    font-size: 14px;
+    max-width: 320px;
+
+    a {
+      color: #FFF;
+    }
   }
 }

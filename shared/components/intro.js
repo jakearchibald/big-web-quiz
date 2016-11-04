@@ -26,7 +26,11 @@ export default class Intro extends BoundComponent {
         <p>Welcome to the Big Web Quiz! First you need to log in:</p>
         <Login/>
 
-        <p class="intro__explainer">When you login we will store your Google information, such as name and email address. You can unregister at any time by clicking on your avatar and choosing "Unregister".</p>
+        <p class="intro__explainer">When you login we will store your Google information,
+        such as name and email address. You can unregister at any time by clicking on
+        your avatar and choosing "Unregister".</p>
+
+        <p class="intro__policies">Please refer to the <a href="https://www.google.com/policies">Google Privacy Policy and Terms of Service</a> for more details.</p>
       </div>
     );
   }
