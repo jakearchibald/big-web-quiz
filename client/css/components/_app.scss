@@ -24,6 +24,8 @@
   z-index: 0;
   overflow: hidden;
   backface-visibility: hidden;
+  box-sizing: border-box;
+  padding-bottom: 40px;
 
   .container {
     padding-top: 16px;

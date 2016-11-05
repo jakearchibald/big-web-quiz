@@ -82,3 +82,26 @@ input[type=button][disabled] {
     padding: 0;
   }
 }
+
+.privacy {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  color: #FFF;
+  font-size: 13px;
+  opacity: 0.75;
+  text-align: center;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.google-signin {
+  background: url(/static/images/btn_google_signin_light_normal_web@2x.png) center center no-repeat;
+  background-size: 191px 46px;
+  border-radius: 0;
+  font-size: 0;
+  width: 191px;
+  height: 46px;
+}

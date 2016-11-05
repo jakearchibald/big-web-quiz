@@ -48,7 +48,7 @@ export default class LoginStatus extends BoundComponent {
   }
   render({user, onLogout, server, onUserUpdate}, {leaderboardPending, bubbleOpen}) {
     if (!user) {
-      return (<div class="page-header__not-logged-in">Not logged in</div>);
+      return (<div class="page-header__not-logged-in">Not signed in</div>);
     }
 
     let leaderboardToggle;
@@ -81,7 +81,7 @@ export default class LoginStatus extends BoundComponent {
                 {leaderboardToggle}
               </div>
               <div class="login-bubble-options">
-                <button class="login-bubble-unregister">Unregister</button>
+                <a href="https://security.google.com/settings/security/permissions?pli=1" class="login-bubble-unregister">Disconnect</a>
                 <Logout onLogout={onLogout}/>
               </div>
             </div>

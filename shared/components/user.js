@@ -23,7 +23,7 @@ export class Login extends BoundComponent {
   }
   render() {
     return (
-      <form action="/login" method="POST"><button>Log in</button></form>
+      <form action="/login" method="POST"><button class="google-signin">Sign in</button></form>
     );
   }
 }
@@ -46,7 +46,7 @@ export class Logout extends BoundComponent {
   render(props, state) {
     return (
       <form class="logout-form" action={this.logoutUrl} method="POST" onSubmit={this.onSubmit}>
-        <button>Log out</button>
+        <button>Sign out</button>
       </form>
     );
   }

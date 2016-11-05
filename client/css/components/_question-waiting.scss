@@ -73,11 +73,17 @@
 
   &__value {
     font-weight: 700;
-    font-size: 220px;
+    font-size: 180px;
     color: #FFFFFF;
     margin: 0;
     padding: 0;
     text-align: center;
     line-height: 1;
+  }
+}
+
+@media (min-width: 600px) {
+  .your-score__value {
+    font-size: 220px;
   }
 }

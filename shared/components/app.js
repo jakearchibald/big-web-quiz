@@ -128,6 +128,9 @@ export default class App extends BoundComponent {
             <Intro key="intro"/>
           }
         </Transition>
+
+        <a class="privacy" href="https://www.google.com/policies">Google Privacy Policy and Terms of Service</a>
+
       </div>
     );
   }

@@ -43,7 +43,7 @@
   transition: opacity 0.3s cubic-bezier(0, 0, 0.3, 1);
 
   & .login-bubble-frame {
-    width: 268px;
+    width: 272px;
     will-change: transform;
     transition: transform 0.3s cubic-bezier(0, 0, 0.3, 1);
     transform: translate(0, -99.9%); // 99.99 to fix iOS animation issue
