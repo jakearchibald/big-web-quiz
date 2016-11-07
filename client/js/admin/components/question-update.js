@@ -95,6 +95,14 @@ export default class QuestionUpdate extends BoundComponent {
     answers.push(createAnswerObject());
     this.setState({answers});
   }
+  onAnswerChange(event, i) {
+    const answers = this.state.answers;
+
+    if (!this.state.multiple) {
+      answers.forEach(answer => answer.correct = false);
+    }
+    answers[i].correct = event.target.checked;
+  }
   render({id}, {answers, multiple}) {
     return <form class="admin__question-edit-form" action={UPDATE_ACTION} method="POST" onSubmit={this.onSubmit}>
       {id ? <input type="hidden" name="id" value={id}/> : ''}
@@ -146,7 +154,7 @@ export default class QuestionUpdate extends BoundComponent {
                   type={multiple ? 'checkbox' : 'radio'}
                   name="correct-answer"
                   checked={answer.correct}
-                  onChange={this.linkState(`answers.${i}.correct`)}
+                  onChange={event => this.onAnswerChange(event, i)}
                 />
                 Correct answer
               </label>
