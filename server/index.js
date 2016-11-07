@@ -37,8 +37,7 @@ import {
   setQuestionJson, closeQuestionJson, revealQuestionJson,
   deactivateQuestionJson, presentationListen,
   showLeaderboardJson, hideLeaderboardJson,
-  liveResultsQuestionJson, showIntroJson,
-  hideIntroJson
+  liveResultsQuestionJson, showVideoJson
 } from './quiz/views';
 import {longPoll} from './long-pollers/views';
 import mongoose from './mongoose-db';
@@ -121,8 +120,7 @@ router.post('/admin/delete-user-answers.json', requiresAdminJson, deleteUserAnsw
 router.post('/admin/delete-users.json', requiresAdminJson, deleteUsersJson);
 router.post('/admin/show-leaderboard.json', requiresAdminJson, showLeaderboardJson);
 router.post('/admin/hide-leaderboard.json', requiresAdminJson, hideLeaderboardJson);
-router.post('/admin/show-intro.json', requiresAdminJson, showIntroJson);
-router.post('/admin/hide-intro.json', requiresAdminJson, hideIntroJson);
+router.post('/admin/show-video.json', requiresAdminJson, showVideoJson);
 router.post('/admin/db.json', requiresAdminJson, dbSetJson);
 router.post('/admin/set-leaderboard-ban.json', requiresAdminJson, setLeaderboardBanJson);
 

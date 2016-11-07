@@ -69,7 +69,7 @@ export default class EventStream {
     }
 
     res.set('Content-Type', "text/event-stream");
-    res.write('retry: 100\n');
+    res.write('retry: 1000\n');
 
     if (lastEventId != this._lastEventId) {
       const message = JSON.stringify(this._rollingState);

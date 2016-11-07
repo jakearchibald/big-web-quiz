@@ -39,7 +39,7 @@ export function adminStateJson(req, res) {
     res.json({
       questions,
       showingLeaderboard: quiz.showingLeaderboard,
-      showingIntro: quiz.showingIntro
+      showingVideo: quiz.showingVideo
     });
   });
 }
@@ -228,18 +228,10 @@ export function hideLeaderboardJson(req, res) {
   adminStateJson(req, res);
 }
 
-export function showIntroJson(req, res) {
-  quiz.showIntro();
+export function showVideoJson(req, res) {
+  quiz.showingVideo = String(req.body.video);
   presentationListeners.broadcast(
-    Object.assign({showIntro: true}, quiz.getState())
-  );
-  adminStateJson(req, res);
-}
-
-export function hideIntroJson(req, res) {
-  quiz.hideIntro();
-  presentationListeners.broadcast(
-    Object.assign({showIntro: false}, quiz.getState())
+    Object.assign({showVideo: quiz.showingVideo}, quiz.getState())
   );
   adminStateJson(req, res);
 }

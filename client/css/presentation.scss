@@ -25,10 +25,6 @@
 @import 'components/live-results';
 @import 'components/leaderboard';
 
-.transition-container {
-  height: 100%;
-}
-
 .opening-video {
   position: absolute;
   top: 0;
@@ -36,10 +32,9 @@
   width: 100%;
   height: 100%;
   background: #000;
-  pointer-events: none;
   will-change: opacity;
-  transition: opacity 0.5s cubic-bezier(0, 0, 0.3, 1);
   opacity: 0;
+  transition: opacity 0.5s cubic-bezier(0, 0, 0.3, 1);
 
   &__src {
     width: 100%;
@@ -47,6 +42,16 @@
   }
 
   &--show {
+    display: block;
     opacity: 1;
   }
+}
+
+.blackout {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: black;
 }

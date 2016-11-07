@@ -22,15 +22,15 @@ self.regeneratorRuntime = regeneratorRuntime;
 import shuffle from 'shuffle-array';
 
 import Audio from './components/audio';
-import Waiting from './components/waiting';
 import Question from '../../../shared/components/question';
 import AverageValue from './components/average-value';
 import BoundComponent from '../../../shared/components/bound-component';
-import Transition from '../../../shared/components/transition';
 
 class App extends BoundComponent {
   constructor(props) {
     super(props);
+    this.introVideo = null;
+    this.prizeVideo = null;
     this.state = {
       colors: [
         '#47DDBE',
@@ -56,38 +56,28 @@ class App extends BoundComponent {
       this.setState(data);
     };
   }
-  async onTransition(exiting, exitingEl, current, currentEl) {
-    const videoContainer = [exitingEl, currentEl].find(el => el.classList && el.classList.contains('opening-video'));
-    const video = videoContainer.querySelector('video');
-    const entering = videoContainer == currentEl;
-
-    if (entering) {
-      // preact seems to reuse the video element if you toggle showing/hiding,
-      // this isn't what I expected to do, but I guess I'll roll with it
-      video.currentTime = 0;
+  update(prevProps={}, prevState={}) {
+    if (this.state.showVideo == 'intro' && prevState.showVideo != 'intro') {
+      this.introVideo.play();
+    }
+    else if (!this.state.showVideo == 'intro' && prevState.showVideo == 'intro') {
+      setTimeout(() => this.introVideo.currentTime = 0, 1000);
     }
 
-    await new Promise(resolve => {
-      videoContainer.offsetWidth;
-      videoContainer.classList.toggle('opening-video--show');
-      videoContainer.offsetWidth;
-
-
-      const anim = videoContainer.getAnimations()[0];
-      anim.onfinish = resolve;
-      anim.oncancel = resolve;
-    });
-
-    // ugh, seems like preact is moving the DOM around after the transition
-    // which causes video playback to stop. Queuing a task gets us past the
-    // transition.
-    setTimeout(() => {
-      if (entering) {
-        video.play();
-      }
-    }, 0);
+    if (this.state.showVideo == 'prize' && prevState.showVideo != 'prize') {
+      this.prizeVideo.play();
+    }
+    else if (!this.state.showVideo == 'prize' && prevState.showVideo == 'prize') {
+      setTimeout(() => this.prizeVideo.currentTime = 0, 1000);
+    }
   }
-  render(props, {question, questionClosed, correctAnswers, answerDisplayOrder, averages, leaderboard, showLiveResults, showIntro}) {
+  componentDidMount() {
+    this.update();
+  }
+  componentDidUpdate(prevProps, prevState) {
+    this.update(prevProps, prevState);
+  }
+  render(props, {question, questionClosed, correctAnswers, answerDisplayOrder, averages, leaderboard, showLiveResults, showVideo}) {
     if (leaderboard) {
       let type = 0;
       let position = 1;
@@ -153,20 +143,25 @@ class App extends BoundComponent {
       );
     }
 
-    if (!question) return (
-      <Transition onTransition={this.onTransition}>
-        {showIntro ?
-          <div class="opening-video" key="opening-video">
+    if (!question) {
+      return (
+        <div>
+          <div class="blackout"/>
+          <div class={`opening-video ${showVideo == 'intro' ? 'opening-video--show' : ''}`}>
             <video
-              class="opening-video__src"
-              src="/static/video/intro.mp4"
+              ref={el => this.introVideo = el}
+              class="opening-video__src" src="/static/video/intro.mp4"
             />
           </div>
-          :
-          <Waiting key="question-waiting"/>
-        } 
-      </Transition>
-    );
+          <div class={`opening-video ${showVideo == 'prize' ? 'opening-video--show' : ''}`}>
+            <video
+              ref={el => this.prizeVideo = el}
+              class="opening-video__src" src="/static/video/intro.mp4"
+            />
+          </div>
+        </div>
+      );
+    } 
 
     return (
       <div>

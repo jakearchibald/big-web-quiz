@@ -201,30 +201,13 @@ class App extends BoundComponent {
     this.setState({view: 'data'});
   }
 
-  async onShowIntroClick() {
+  async showVideo(type) {
     try {
-      const response = await fetch(`/admin/show-intro.json`, {
-      method: 'POST',
-      credentials: 'include'
-      });
-
-      const data = await response.json();
-
-      if (data.err) throw Error(data.err);
-
-      this.setState(data);
-    }
-    catch (err) {
-      // TODO
-      throw err;
-    }
-  }
-
-  async onHideIntroClick() {
-    try {
-      const response = await fetch(`/admin/hide-intro.json`, {
+      const response = await fetch(`/admin/show-video.json`, {
         method: 'POST',
-        credentials: 'include'
+        credentials: 'include',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({video: type})
       });
 
       const data = await response.json();
@@ -241,7 +224,7 @@ class App extends BoundComponent {
 
   render(props, {
     questions, addingQuestion, editingQuestions, showingLeaderboard,
-    outputValue, view, showingIntro
+    outputValue, view, showingVideo
   }) {
     return <div>
 
@@ -273,10 +256,15 @@ class App extends BoundComponent {
             <QuestionUpdate onQuestionSaved={this.onQuestionSaved}/>
             :
             <div class="admin__questions-add">
-              {showingIntro ?
-                <button onClick={this.onHideIntroClick}>Hide intro</button>
+              {showingVideo == 'intro' ?
+                <button onClick={() => this.showVideo('')}>Hide intro</button>
                 :
-                <button onClick={this.onShowIntroClick}>Show intro</button>
+                <button onClick={() => this.showVideo('intro')}>Show intro</button>
+              }
+              {showingVideo == 'prize' ?
+                <button onClick={() => this.showVideo('')}>Hide prize</button>
+                :
+                <button onClick={() => this.showVideo('prize')}>Show prize</button>
               }
               <button onClick={this.onAddQuestionClick}>Add question</button>
             </div>

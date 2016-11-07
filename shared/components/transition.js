@@ -69,12 +69,12 @@ export default class Transition extends Component {
       state.currentChild = child;
     }
 
-
-    const els = [];
-    if (state.exitingChild) els.push(state.exitingChild);
-    if (state.currentChild) els.push(state.currentChild);
-
-    return <div class="transition-container">{els}</div>;
+    return (
+      <div class="transition-container">
+        {state.exitingChild || <div/>}
+        {state.currentChild || <div/>}
+      </div>
+    );
   }
 }
 
