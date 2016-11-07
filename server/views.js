@@ -14,8 +14,6 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-import fs from 'fs';
-
 import {h} from 'preact';
 import render from 'preact-render-to-string';
 
@@ -27,19 +25,6 @@ import {simpleUserObject} from './user/views';
 import {quiz} from './quiz/views';
 import {escapeJSONString} from './utils';
 import {longPollers} from './long-pollers/views';
-
-const readFile = promisify(fs, 'readFile');
-const revManifest = readFile(`${__dirname}/static/rev-manifest.json`)
-  .then(str => JSON.parse(str)).catch(() => ({}));
-
-async function getStaticUrl(url) {
-  const slicedUrl = url.slice('/static/'.length);
-  const manifest = await revManifest;
-  if (manifest[slicedUrl]) {
-    return '/static/' + manifest[slicedUrl];
-  }
-  return url;
-}
 
 function getInitialState(req) {
   const initialState = {
@@ -75,58 +60,36 @@ export function initialStateJson(req, res) {
   res.json(getInitialState(req));
 }
 
-let cachedLoggedOutView;
-
-export async function home(req, res) {
+export function home(req, res) {
   const initialState = getInitialState(req);
-  let content;
-
-  if (!initialState.user) {
-    if (!cachedLoggedOutView) {
-      cachedLoggedOutView = render(<App initialState={initialState} server={true} />);
-    }
-    content = cachedLoggedOutView;
-  }
-  else {
-    content = render(<App initialState={initialState} server={true} />);
-  }
-
-  const scripts = Promise.all(['/static/js/main.js'].map(getStaticUrl));
-  const css = Promise.all(['/static/css/index.css'].map(getStaticUrl));
 
   res.send(
     indexTemplate({
-      content,
+      content: render(<App initialState={initialState} server={true} />),
       title: 'The Big Web Quiz!',
-      scripts: await scripts,
-      css: await css,
+      scripts: ['/static/js/main.js'],
+      css: ['/static/css/index.css'],
       initialState: escapeJSONString(JSON.stringify(initialState))
     })
   );
 }
 
-export async function admin(req, res) {
-  const scripts = Promise.all(['/static/js/admin.js'].map(getStaticUrl));
-  const css = Promise.all(['/static/css/admin.css'].map(getStaticUrl));
-
+export function admin(req, res) {
   res.send(
     indexTemplate({
       title: 'BWQ admin',
-      scripts: await scripts,
-      css: await css
+      scripts: ['/static/js/admin.js'],
+      css: ['/static/css/admin.css']
     })
   );
 }
 
-export async function presentation(req, res) {
-  const scripts = Promise.all(['/static/js/presentation.js'].map(getStaticUrl));
-  const css = Promise.all(['/static/css/presentation.css'].map(getStaticUrl));
-
+export function presentation(req, res) {
   res.send(
     indexTemplate({
       title: 'BWQ presentation',
-      scripts: await scripts,
-      css: await css
+      scripts: ['/static/js/presentation.js'],
+      css: ['/static/css/presentation.css']
     })
   );
 }

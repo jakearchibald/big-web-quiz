@@ -64,6 +64,10 @@ const paths = {
   postProcess: {
     src: 'build/static/**/*',
     dest: 'build/static'
+  },
+  postProcessServer: {
+    src: 'build/**/*.js',
+    dest: 'build/'
   }
 };
 
@@ -228,6 +232,18 @@ function revStatic() {
     .pipe(gulp.dest(paths.postProcess.dest));
 }
 
+function updateServerScriptsForRev() {
+  const manifest = gulp.src('build/static/rev-manifest.json');
+
+  return gulp.src(paths.postProcessServer.src)
+    .pipe(revReplace({
+      manifest,
+      modifyUnreved: replaceIfMap,
+      modifyReved: replaceIfMap
+    }))
+    .pipe(gulp.dest(paths.postProcessServer.dest));
+}
+
 function gzipStatic() {
   return gulp.src(paths.postProcess.src)
     .pipe(gzip({skipGrowingFiles: true}))
@@ -259,7 +275,11 @@ const mainBuild = gulp.series(
   gulp.parallel(serverScripts, serverTemplates, sharedScripts, copy, scss, 'browserScripts')
 );
 
-gulp.task('build', gulp.series(mainBuild, revStatic, gzipStatic));
+gulp.task('build', gulp.series(
+  mainBuild,
+  revStatic,
+  gulp.parallel(gzipStatic, updateServerScriptsForRev)
+));
 
 gulp.task('serve', gulp.series(
   mainBuild,
