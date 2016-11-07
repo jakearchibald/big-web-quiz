@@ -14,55 +14,67 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-import { h } from 'preact';
-import BoundComponent from './bound-component';
+import { h, Component } from 'preact';
 
-export default class Transition extends BoundComponent {
+export default class Transition extends Component {
   constructor(props) {
     super(props);
-    this.expectingTransitionOutCall = false;
+
+    this.exitingChildEl = null;
+    this.currentChildEl = null;
+    this.shouldTransition = false;
 
     this.state = {
       exitingChild: null,
       currentChild: null
     };
   }
-  async transitionOut(vEl, promise) {
-    if (!this.state.exitingChild || this.state.exitingChild.key != vEl.key) {
-      return;
+  async componentDidUpdate() {
+    if (!this.shouldTransition) return;
+    this.shouldTransition = false;
+
+    if (this.props.onTransition) {
+      await this.props.onTransition(
+        this.state.exitingChild,
+        this.exitingChildEl,
+        this.state.currentChild,
+        this.currentChildEl
+      );
     }
 
-    this.expectingTransitionOutCall = false;
-    await promise;
     this.setState({exitingChild: null});
-  }
-  componentDidUpdate() {
-    if (this.expectingTransitionOutCall) {
-      this.expectingTransitionOutCall = false;
-      this.setState({exitingChild: null});
-    }
   }
   render({children}, state) {
     if (children.length > 1) throw Error('Only one child allowed in Transition');
 
     const child = children[0];
-
+    
     if (!child.key) throw Error('Child must have key');
 
-    if (state.currentChild && child.key != state.currentChild.key) {
-      this.expectingTransitionOutCall = true;
+    const newChild = !state.currentChild || child.key != state.currentChild.key;
+    this.shouldTransition = state.currentChild && newChild; 
+
+    if (this.shouldTransition) {
+      this.exitingChildEl = this.currentChildEl; 
       state.exitingChild = state.currentChild;
-      state.currentChild = child;
-      state.exitingChild.attributes.transitionOut = p => { this.transitionOut(state.exitingChild, p); };
     }
 
-    state.currentChild = child;
+    if (newChild) {
+      const currentRef = child.attributes.ref;
+      child.attributes.ref = el => {
+        if (child.key != state.currentChild.key) return;
+        this.currentChildEl = el;
+        if (currentRef) currentRef(el);
+      }
+      state.currentChild = child;
+    }
+
 
     const els = [];
     if (state.exitingChild) els.push(state.exitingChild);
     if (state.currentChild) els.push(state.currentChild);
 
-    return <div class="container">{els}</div>;
+    return <div class="transition-container">{els}</div>;
   }
 }
 

@@ -30,6 +30,7 @@ class App extends BoundComponent {
     this.state = {
       questions: props.questions,
       showingLeaderboard: props.showingLeaderboard,
+      showingIntro: props.showingIntro,
       addingQuestion: false,
       editingQuestions: [], // ids
       outputValue: '',
@@ -200,7 +201,48 @@ class App extends BoundComponent {
     this.setState({view: 'data'});
   }
 
-  render(props, {questions, addingQuestion, editingQuestions, showingLeaderboard, outputValue, view}) {
+  async onShowIntroClick() {
+    try {
+      const response = await fetch(`/admin/show-intro.json`, {
+      method: 'POST',
+      credentials: 'include'
+      });
+
+      const data = await response.json();
+
+      if (data.err) throw Error(data.err);
+
+      this.setState(data);
+    }
+    catch (err) {
+      // TODO
+      throw err;
+    }
+  }
+
+  async onHideIntroClick() {
+    try {
+      const response = await fetch(`/admin/hide-intro.json`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+
+      if (data.err) throw Error(data.err);
+
+      this.setState(data);
+    }
+    catch (err) {
+      // TODO
+      throw err;
+    }
+  }
+
+  render(props, {
+    questions, addingQuestion, editingQuestions, showingLeaderboard,
+    outputValue, view, showingIntro
+  }) {
     return <div>
 
       <div class="admin__nav">
@@ -231,6 +273,11 @@ class App extends BoundComponent {
             <QuestionUpdate onQuestionSaved={this.onQuestionSaved}/>
             :
             <div class="admin__questions-add">
+              {showingIntro ?
+                <button onClick={this.onHideIntroClick}>Hide intro</button>
+                :
+                <button onClick={this.onShowIntroClick}>Show intro</button>
+              }
               <button onClick={this.onAddQuestionClick}>Add question</button>
             </div>
           }
@@ -359,5 +406,5 @@ class App extends BoundComponent {
 fetch('/admin/initial-state.json', {
   credentials: 'include'
 }).then(response => response.json()).then(data => {
-  render(<App questions={data.questions} showingLeaderboard={data.showingLeaderboard} />, document.body);
+  render(<App questions={data.questions} showingLeaderboard={data.showingLeaderboard} showingIntro={data.showingIntro} />, document.body);
 });

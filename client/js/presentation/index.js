@@ -26,6 +26,7 @@ import Waiting from './components/waiting';
 import Question from '../../../shared/components/question';
 import AverageValue from './components/average-value';
 import BoundComponent from '../../../shared/components/bound-component';
+import Transition from '../../../shared/components/transition';
 
 class App extends BoundComponent {
   constructor(props) {
@@ -37,7 +38,8 @@ class App extends BoundComponent {
         '#EEBB68',
         '#E576D4',
         '#F4ECB8'
-      ]
+      ],
+      showIntro: false
     };
 
     const eventSource = new EventSource('/presentation/listen');
@@ -54,19 +56,38 @@ class App extends BoundComponent {
       this.setState(data);
     };
   }
-  render(props, {question, questionClosed, correctAnswers, answerDisplayOrder, averages, leaderboard, showLiveResults, openingVideo}) {
+  async onTransition(exiting, exitingEl, current, currentEl) {
+    const videoContainer = [exitingEl, currentEl].find(el => el.classList && el.classList.contains('opening-video'));
+    const video = videoContainer.querySelector('video');
+    const entering = videoContainer == currentEl;
 
-    if (openingVideo) {
-      return (
-        <div class="opening-video">
-          <video
-              class="opening-video__src"
-              src="/static/video/intro.mp4"
-              width="1920" height="1080" autoplay="true" />
-        </div>
-      );
+    if (entering) {
+      // preact seems to reuse the video element if you toggle showing/hiding,
+      // this isn't what I expected to do, but I guess I'll roll with it
+      video.currentTime = 0;
     }
 
+    await new Promise(resolve => {
+      videoContainer.offsetWidth;
+      videoContainer.classList.toggle('opening-video--show');
+      videoContainer.offsetWidth;
+
+
+      const anim = videoContainer.getAnimations()[0];
+      anim.onfinish = resolve;
+      anim.oncancel = resolve;
+    });
+
+    // ugh, seems like preact is moving the DOM around after the transition
+    // which causes video playback to stop. Queuing a task gets us past the
+    // transition.
+    setTimeout(() => {
+      if (entering) {
+        video.play();
+      }
+    }, 0);
+  }
+  render(props, {question, questionClosed, correctAnswers, answerDisplayOrder, averages, leaderboard, showLiveResults, showIntro}) {
     if (leaderboard) {
       let type = 0;
       let position = 1;
@@ -80,7 +101,6 @@ class App extends BoundComponent {
           type++;
           position++;
         }
-        console.log(leaderboard[i]);
 
         leaderboard[i].type = type;
         leaderboard[i].position = position;
@@ -95,12 +115,12 @@ class App extends BoundComponent {
               <div class={`leaderboard__winner leaderboard__winner-${player.type}`}>
                 <div class="leaderboard__winner-block"></div>
                 <img
-                      class="leaderboard__winner-avatar"
-                      width="110"
-                      height="110"
-                      src={`${player.avatarUrl}?sz=110`}
-                      srcset={`${player.avatarUrl}?sz=220 2x, ${player.avatarUrl}?sz=330 3x`}
-                    />
+                  class="leaderboard__winner-avatar"
+                  width="110"
+                  height="110"
+                  src={`${player.avatarUrl}?sz=110`}
+                  srcset={`${player.avatarUrl}?sz=220 2x, ${player.avatarUrl}?sz=330 3x`}
+                />
 
                 <div class="leaderboard__winner-position">{player.position}</div>
                 <div class="leaderboard__winner-name">{player.name}</div>
@@ -134,8 +154,19 @@ class App extends BoundComponent {
     }
 
     if (!question) return (
-        <Waiting />
-      );
+      <Transition onTransition={this.onTransition}>
+        {showIntro ?
+          <div class="opening-video" key="opening-video">
+            <video
+              class="opening-video__src"
+              src="/static/video/intro.mp4"
+            />
+          </div>
+          :
+          <Waiting key="question-waiting"/>
+        } 
+      </Transition>
+    );
 
     return (
       <div>

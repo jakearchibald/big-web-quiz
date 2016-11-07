@@ -100,7 +100,7 @@ export default class App extends BoundComponent {
             onUserUpdate={this.onUserUpdate}
           />
         </header>
-        <Transition>
+        <div class="container">
           {user ?
             (shouldShowQuestion?
               <Question
@@ -127,10 +127,8 @@ export default class App extends BoundComponent {
             :
             <Intro key="intro"/>
           }
-        </Transition>
-
+        </div>
         <a class="privacy" href="https://www.google.com/policies">Google Privacy Policy and Terms of Service</a>
-
       </div>
     );
   }

@@ -44,6 +44,7 @@ export class Quiz {
     this._acceptingAnswers = false;
     this._revealingAnswers = false;
     this._showingLeaderboard = false;
+    this._showingIntro = false;
     this._showingLiveResults = false;
     this._cachedUserAnswers = {};
   }
@@ -58,6 +59,9 @@ export class Quiz {
   }
   get showingLeaderboard() {
     return this._showingLeaderboard;
+  }
+  get showingIntro() {
+    return this._showingIntro;
   }
   get showingLiveResults() {
     return this._showingLiveResults;
@@ -112,6 +116,12 @@ export class Quiz {
   }
   hideLeaderboard() {
     this._showingLeaderboard = false;
+  }
+  showIntro() {
+    this._showingIntro = true;
+  }
+  hideIntro() {
+    this._showingIntro = false;
   }
   getState() {
     return {
