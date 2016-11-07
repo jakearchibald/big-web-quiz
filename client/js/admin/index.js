@@ -406,5 +406,6 @@ class App extends BoundComponent {
 fetch('/admin/initial-state.json', {
   credentials: 'include'
 }).then(response => response.json()).then(data => {
-  render(<App questions={data.questions} showingLeaderboard={data.showingLeaderboard} showingIntro={data.showingIntro} />, document.body);
+  const main = document.querySelector('.main-content');
+  render(<App questions={data.questions} showingLeaderboard={data.showingLeaderboard} showingIntro={data.showingIntro} />, main);
 });

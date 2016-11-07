@@ -19,13 +19,20 @@ limitations under the License.
   {{#each css}}
     <link rel="stylesheet" href="{{.}}">
   {{/each}}
+  {{#each lazyCss}}
+    <link rel="preload" as="style" href="{{.}}">
+  {{/each}}
+  {{#if inlineCss}}
+    <style>{{inlineCss}}</style>
+  {{/if}}
   {{#each scripts}}
     <script src="{{.}}" defer></script>
   {{/each}}
 </head>
 <body>
-  {{{content}}}
-
+  <div class="main-content">
+    {{{content}}}
+  </div>
   {{#if initialState}}
     <script>
       var initialState = {{{initialState}}};

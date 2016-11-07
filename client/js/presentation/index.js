@@ -204,4 +204,5 @@ class App extends BoundComponent {
   }
 }
 
-render(<App />, document.body);
+const main = document.querySelector('.main-content');
+render(<App />, main);

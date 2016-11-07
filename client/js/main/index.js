@@ -32,7 +32,18 @@ function loadScript(url) {
     script.onload = () => resolve();
     script.onerror = () => reject();
     script.src = url;
-    document.head.insertBefore(script, document.head.firstChild);
+    document.head.appendChild(script);
+  });
+}
+
+function loadStyle(url) {
+  return new Promise((resolve, reject) => {
+    const link = document.createElement('link');
+    link.onload = () => resolve();
+    link.onerror = () => reject();
+    link.rel = 'stylesheet';
+    link.href = url;
+    document.head.appendChild(link);
   });
 }
 
@@ -46,11 +57,13 @@ async function getInitialState() {
   return response.json();
 }
 
-const scriptLoading = []; 
+const loadings = []; 
 
-if (!window.fetch) scriptLoading.push(loadScript('/static/js/polyfills.js'));
+if (!window.fetch) loadings.push(loadScript('/static/js/polyfills.js'));
+loadings.push(loadStyle('/static/css/index.css'));
 
-Promise.all(scriptLoading).then(() => getInitialState()).then(state => {
-  document.body.innerHTML = '';
-  render(<App initialState={state}/>, document.body);
+Promise.all(loadings).then(() => getInitialState()).then(state => {
+  const main = document.querySelector('.main-content');
+  main.innerHTML = '';
+  render(<App initialState={state}/>, main);
 });

@@ -14,6 +14,8 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+import fs from 'fs';
+
 import {h} from 'preact';
 import render from 'preact-render-to-string';
 
@@ -25,6 +27,8 @@ import {simpleUserObject} from './user/views';
 import {quiz} from './quiz/views';
 import {escapeJSONString} from './utils';
 import {longPollers} from './long-pollers/views';
+
+const readFile = promisify(fs, 'readFile');
 
 function getInitialState(req) {
   const initialState = {
@@ -60,15 +64,16 @@ export function initialStateJson(req, res) {
   res.json(getInitialState(req));
 }
 
-export function home(req, res) {
+export async function home(req, res) {
   const initialState = getInitialState(req);
 
   res.send(
     indexTemplate({
       content: render(<App initialState={initialState} server={true} />),
       title: 'The Big Web Quiz!',
+      inlineCss: await readFile(`${__dirname}/static/css/index-inline.css`), 
       scripts: ['/static/js/main.js'],
-      css: ['/static/css/index.css'],
+      lazyCss: ['/static/css/index.css'],
       initialState: escapeJSONString(JSON.stringify(initialState))
     })
   );
