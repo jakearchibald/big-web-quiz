@@ -129,6 +129,16 @@ export default class App extends BoundComponent {
           }
         </div>
         <a class="privacy" href="https://www.google.com/policies">Google Privacy Policy and Terms of Service</a>
+        {server &&
+          <div class="img-preloads">
+            <img src="/static/images/ic_check_circle_black_24px.svg" alt=""/>
+            <img src="/static/images/ic_check_circle_white_24px.svg" alt=""/>
+            <img src="/static/images/ic_check_circle_outline_black_24px.svg" alt=""/>
+            <img src="/static/images/ic_check_circle_outline_white_24px.svg" alt=""/>
+            <img src="/static/images/ic_close_white_24px.svg" alt=""/>
+            <img src="/static/images/spinner.png" alt=""/>
+          </div>
+        }
       </div>
     );
   }
