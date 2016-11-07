@@ -62,6 +62,15 @@ router.use(
   })
 );
 
+['presentation-sw.js'].forEach(jsUrl => {
+  router.use(
+    `/${jsUrl}`,
+    gzipStatic(__dirname + `/static/js/${jsUrl}`, {
+      maxAge: 0
+    })
+  );
+});
+
 router.use(session({
   secret: cookieSecret,
   resave: false,

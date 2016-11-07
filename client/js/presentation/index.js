@@ -206,3 +206,7 @@ class App extends BoundComponent {
 
 const main = document.querySelector('.main-content');
 render(<App />, main);
+
+navigator.serviceWorker.register('/presentation-sw.js', {
+  scope: '/presentation/'
+});

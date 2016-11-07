@@ -168,6 +168,13 @@ function copy() {
 
 function createScriptTask(src, dest) {
   const parsedPath = path.parse(src);
+  const isServiceWorker = src.endsWith('-sw/index.js');
+
+  const presets = isServiceWorker ?
+    ['stage-3']
+    :
+    ['stage-3', ['es2015', {modules: false}]];
+
   let cache;
   return function script() {
     return rollup({
@@ -186,7 +193,7 @@ function createScriptTask(src, dest) {
           ignoreGlobal: true
         }),
         rollupBabel({
-          presets: ['stage-3', ['es2015', {modules: false}]],
+          presets: presets,
           plugins: [["transform-react-jsx", {pragma:"h"}], "external-helpers"]
         })
       ]
@@ -206,7 +213,8 @@ const browserScripts = [
   {src: './client/js/main/index.js', dest: './build/static/js'},
   {src: './client/js/admin/index.js', dest: './build/static/js'},
   {src: './client/js/polyfills/index.js', dest: './build/static/js'},
-  {src: './client/js/presentation/index.js', dest: './build/static/js'}
+  {src: './client/js/presentation/index.js', dest: './build/static/js'},
+  {src: './client/js/presentation-sw/index.js', dest: './build/static/js'}
 ];
 
 for (const item of browserScripts) {
