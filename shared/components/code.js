@@ -29,6 +29,20 @@ export default class Code extends BoundComponent {
   }
   highlightCode() {
     Prism.highlightElement(this.pre);
+    
+    const span = document.createElement('span');
+    span.textContent = 'NO CHEATING';
+    span.style.position = 'absolute';
+    span.style.width = '1px';
+    span.style.height = '1px';
+    span.style.opacity = '0';
+    span.style.overflow = 'hidden';
+
+    const els = this.pre.querySelectorAll('*');
+
+    for (const el of els) {
+      el.appendChild(span.cloneNode(true));
+    }
   }
   componentDidMount() {
     this.highlightCode();
