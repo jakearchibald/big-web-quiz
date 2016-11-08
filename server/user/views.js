@@ -42,10 +42,6 @@ function authenticateUser(code) {
     let avatarUrl = '';
     const email = response.emails[0].value;
 
-    if (!email.includes('@google.com') && !ADMIN_IDS.includes(response.id)) {
-      throw Error('Google employees only right now');
-    }
-
     if (response.image) {
       avatarUrl = response.image.url.replace(/\?.*$/, '');
     }
