@@ -26,19 +26,20 @@ import Question from '../../../shared/components/question';
 import AverageValue from './components/average-value';
 import BoundComponent from '../../../shared/components/bound-component';
 
+const colours = [
+  '#47DDBE',
+  '#89DCEB',
+  '#EEBB68',
+  '#E576D4',
+  '#F4ECB8'
+];
+
 class App extends BoundComponent {
   constructor(props) {
     super(props);
     this.introVideo = null;
     this.prizeVideo = null;
     this.state = {
-      colors: [
-        '#47DDBE',
-        '#89DCEB',
-        '#EEBB68',
-        '#E576D4',
-        '#F4ECB8'
-      ],
       showIntro: false
     };
 
@@ -185,7 +186,7 @@ class App extends BoundComponent {
           <div class="live-results">
             {answerDisplayOrder.map((i, j) =>
               <AverageValue
-                color={this.state.colors[j % this.state.colors.length]}
+                color={colors[j % this.state.colors.length]}
                 questionClosed={questionClosed}
                 text={question.answers[i].text}
                 key={`avg-${question.id}-answer-${i}`}
