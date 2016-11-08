@@ -26,7 +26,7 @@ import Question from '../../../shared/components/question';
 import AverageValue from './components/average-value';
 import BoundComponent from '../../../shared/components/bound-component';
 
-const colours = [
+const colors = [
   '#47DDBE',
   '#89DCEB',
   '#EEBB68',
@@ -186,7 +186,7 @@ class App extends BoundComponent {
           <div class="live-results">
             {answerDisplayOrder.map((i, j) =>
               <AverageValue
-                color={colors[j % this.state.colors.length]}
+                color={colors[j % colors.length]}
                 questionClosed={questionClosed}
                 text={question.answers[i].text}
                 key={`avg-${question.id}-answer-${i}`}
