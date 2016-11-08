@@ -14,6 +14,10 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+import regeneratorRuntime from 'regenerator-runtime/runtime';
+// so we don't have to keep importing it
+self.regeneratorRuntime = regeneratorRuntime;
+
 const staticCache = 'presentation-static-v1';
 const allowedCaches = [staticCache];
 

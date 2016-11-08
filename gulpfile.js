@@ -168,7 +168,8 @@ function copy() {
 
 function createScriptTask(src, dest) {
   const parsedPath = path.parse(src);
-  const isServiceWorker = src.endsWith('-sw/index.js');
+  const isServiceWorker = false;
+  //const isServiceWorker = src.endsWith('-sw/index.js');
 
   const presets = isServiceWorker ?
     ['stage-3']
