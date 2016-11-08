@@ -231,13 +231,15 @@ export function deleteUsersJson(req, res) {
   });
 }
 
-export function questionAnswerJson(req, res) {
-  if (!quiz.activeQuestion) {
-    res.json({err: "No question being asked"});
-    return;
-  }
+export async function questionAnswerJson(req, res) {
+  try {
+    if (!quiz.activeQuestion) {
+      res.json({err: "No question being asked"});
+      return;
+    }
 
-  Question.findById(req.body.id).then(question => {
+    const question = await Question.findById(req.body.id);
+
     if (!question) {
       res.json({err: "Question not found"});
       return;
@@ -275,8 +277,8 @@ export function questionAnswerJson(req, res) {
     }
 
     const answerIndex = req.user.answers.findIndex(a => a.questionId.equals(question._id));
-    
     quiz.cacheAnswers(req.user._id, choices);
+
     presentationListeners.broadcastThrottled({
       averages: quiz.getAverages()
     });
@@ -287,13 +289,13 @@ export function questionAnswerJson(req, res) {
     else {
       req.user.answers.push({questionId: question._id, choices});
     }
-    return req.user.save();
-  }).then(() => {
+
+    await req.user.save();
     res.json({});
-  }).catch(err => {
+  }
+  catch (e) {
     res.status(500).json({err: "Unknown error"});
-    throw err;
-  });
+  }
 }
 
 function topUsers() {
