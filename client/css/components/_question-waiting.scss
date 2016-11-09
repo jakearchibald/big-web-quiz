@@ -27,11 +27,12 @@
     flex: 1;
     font-size: 18px;
     color: #00BFA3;
+    margin: 0;
   }
 }
 
 .your-score {
-  margin: 32px 0 0 0;
+  margin: 8px 0 0 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -40,13 +41,13 @@
   &__title {
     opacity: 0.69;
     font-weight: 300;
-    font-size: 32px;
+    font-size: 20px;
     color: #FFFFFF;
   }
 
   &__value {
     font-weight: 700;
-    font-size: 180px;
+    font-size: 130px;
     color: #FFFFFF;
     margin: 0;
     padding: 0;
@@ -56,7 +57,15 @@
 }
 
 @media (min-width: 600px) {
-  .your-score__value {
-    font-size: 220px;
+  .your-score {
+    margin: 32px 0 0 0;
+
+    &__title {
+      font-size: 32px;
+    }
+
+    &__value {
+      font-size: 220px;
+    }
   }
 }
