@@ -69,9 +69,11 @@ export class Quiz {
     this._revealingAnswers = false;
     this._showingLiveResults = false;
     this._cachedUserAnswers = {};
+    this.showingVideo = '';
   }
   showLiveResults() {
     this._showingLiveResults = true;
+    this.showingVideo = '';
   }
   cacheAnswers(userId, answers) {
     this._cachedUserAnswers[userId] = answers;
@@ -95,12 +97,14 @@ export class Quiz {
     this._acceptingAnswers = false;
     this._revealingAnswers = false;
     this._showingLiveResults = true;
+    this.showingVideo = '';
   }
   revealAnswers() {
     if (!this._activeQuestion) throw Error("No active question");
     this._acceptingAnswers = false;
     this._revealingAnswers = true;
     this._showingLiveResults = true;
+    this.showingVideo = '';
   }
   unsetQuestion() {
     this._activeQuestion = null;
@@ -110,6 +114,7 @@ export class Quiz {
   }
   showLeaderboard() {
     this._showingLeaderboard = true;
+    this.showingVideo = '';
   }
   hideLeaderboard() {
     this._showingLeaderboard = false;

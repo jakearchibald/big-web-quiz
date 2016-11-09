@@ -59,17 +59,21 @@ class App extends BoundComponent {
   }
   update(prevProps={}, prevState={}) {
     if (this.state.showVideo == 'intro' && prevState.showVideo != 'intro') {
-      this.introVideo.play();
+      if (this.introVideo) this.introVideo.play();
     }
     else if (!this.state.showVideo == 'intro' && prevState.showVideo == 'intro') {
-      setTimeout(() => this.introVideo.currentTime = 0, 1000);
+      setTimeout(() => {
+        if (this.introVideo) this.introVideo.currentTime = 0;
+      }, 1000);
     }
 
     if (this.state.showVideo == 'prize' && prevState.showVideo != 'prize') {
-      this.prizeVideo.play();
+      if (this.prizeVideo) this.prizeVideo.play();
     }
     else if (!this.state.showVideo == 'prize' && prevState.showVideo == 'prize') {
-      setTimeout(() => this.prizeVideo.currentTime = 0, 1000);
+      setTimeout(() => {
+        if (this.prizeVideo) this.prizeVideo.currentTime = 0;
+      }, 1000);
     }
   }
   componentDidMount() {
