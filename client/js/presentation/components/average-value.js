@@ -51,7 +51,7 @@ export default class AverageValue extends BoundComponent {
     const dPR = window.devicePixelRatio;
 
     this.width = containerSize.width;
-    this.height = Math.min(300, containerSize.height);
+    this.height = Math.min(360, containerSize.height);
 
     this.width = this.height = Math.min(this.width, this.height);
 
@@ -145,7 +145,7 @@ export default class AverageValue extends BoundComponent {
 
     // Write the actual value in the middle.
     this.ctx.fillStyle = this.props.color;
-    this.ctx.font = '700 32px Roboto';
+    this.ctx.font = '700 64px Roboto';
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'middle';
     this.ctx.fillText(VALUE_PERC + '%', midX, midY);

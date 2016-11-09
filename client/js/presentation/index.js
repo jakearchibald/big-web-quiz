@@ -166,10 +166,10 @@ class App extends BoundComponent {
           </div>
         </div>
       );
-    } 
+    }
 
     return (
-      <div>
+      <div class="presentation-wrapper">
         <Audio key="the-amaze-audio" closed={questionClosed} stepItUp={showLiveResults} />
         <Question
           key={`question-${question.id}`}
