@@ -103,7 +103,9 @@ export function setQuestionJson(req, res) {
     }
 
     quiz.setQuestion(question);
-    presentationListeners.broadcast(quiz.getState());
+    presentationListeners.broadcast(
+      Object.assign({averages: undefined}, quiz.getState())
+    );
     longPollers.broadcast(quiz.getState());
 
     adminStateJson(req, res);
