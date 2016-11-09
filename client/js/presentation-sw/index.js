@@ -99,6 +99,8 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+  if (!event.request.url.includes('/static/')) return;
+
   event.respondWith((async () => {
     const cachedResponse = await caches.match(event.request);
     if (cachedResponse) return createRangedResponse(event.request, cachedResponse);
