@@ -78,6 +78,13 @@ class App extends BoundComponent {
   }
   componentDidMount() {
     this.update();
+
+    document.addEventListener('keyup', event => {
+      if (event.key == 'f') {
+        event.preventDefault();
+        document.documentElement.webkitRequestFullscreen();
+      }
+    });
   }
   componentDidUpdate(prevProps, prevState) {
     this.update(prevProps, prevState);
