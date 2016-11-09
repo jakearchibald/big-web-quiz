@@ -84,7 +84,7 @@ export default class App extends BoundComponent {
     const shouldShowQuestion = (question && !server) ||
 
       // Question: CLOSED
-      (question && questionClosed && correctAnswers.length) ||
+      (question && questionClosed) ||
 
       // Question: REVEALED
       (question && questionClosed && correctAnswers && correctAnswers.length);
