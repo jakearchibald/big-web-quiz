@@ -25,7 +25,7 @@
 @import 'components/live-results';
 @import 'components/leaderboard';
 
-.opening-video {
+.opening-media {
   position: absolute;
   top: 0;
   left: 0;
@@ -54,8 +54,12 @@
   right: 0;
   bottom: 0;
   background: black;
-}
+  opacity: 0;
 
+  &--show {
+    opacity: 1;
+  }
+}
 @media (min-width: 1920px) {
 
   .presentation-wrapper {

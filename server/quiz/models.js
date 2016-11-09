@@ -47,6 +47,7 @@ export class Quiz {
     this._showingLiveResults = false;
     this._cachedUserAnswers = {};
     this.showingVideo = '';
+    this.showingBlackout = false;
   }
   get activeQuestion() {
     return this._activeQuestion;

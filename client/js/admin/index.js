@@ -30,7 +30,8 @@ class App extends BoundComponent {
     this.state = {
       questions: props.questions,
       showingLeaderboard: props.showingLeaderboard,
-      showingIntro: props.showingIntro,
+      showingVideo: props.showingVideo,
+      showingBlackout: props.showingBlackout,
       addingQuestion: false,
       editingQuestions: [], // ids
       outputValue: '',
@@ -157,6 +158,42 @@ class App extends BoundComponent {
       throw err;
     }
   }
+  async onShowBlackoutClick() {
+    try {
+      const response = await fetch(`/admin/show-blackout.json`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+
+      if (data.err) throw Error(data.err);
+
+      this.setState(data);
+    }
+    catch (err) {
+      // TODO
+      throw err;
+    }
+  }
+  async onHideBlackoutClick() {
+    try {
+      const response = await fetch(`/admin/hide-blackout.json`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+
+      if (data.err) throw Error(data.err);
+
+      this.setState(data);
+    }
+    catch (err) {
+      // TODO
+      throw err;
+    }
+  }
   async onOutputClick(types) {
     try {
       const response = await fetch('/admin/db.json?' + types.map(t => `types[]=${t}`).join('&'), {
@@ -224,7 +261,7 @@ class App extends BoundComponent {
 
   render(props, {
     questions, addingQuestion, editingQuestions, showingLeaderboard,
-    outputValue, view, showingVideo
+    outputValue, view, showingVideo, showingBlackout
   }) {
     return <div>
 
@@ -256,6 +293,11 @@ class App extends BoundComponent {
             <QuestionUpdate onQuestionSaved={this.onQuestionSaved}/>
             :
             <div class="admin__questions-add">
+              {showingBlackout ?
+                <button onClick={this.onHideBlackoutClick}>Hide blackout</button>
+                :
+                <button onClick={this.onShowBlackoutClick}>Show blackout</button>
+              }
               {showingVideo == 'intro' ?
                 <button onClick={() => this.showVideo('')}>Hide intro</button>
                 :
@@ -395,5 +437,5 @@ fetch('/admin/initial-state.json', {
   credentials: 'include'
 }).then(response => response.json()).then(data => {
   const main = document.querySelector('.main-content');
-  render(<App questions={data.questions} showingLeaderboard={data.showingLeaderboard} showingIntro={data.showingIntro} />, main);
+  render(<App questions={data.questions} showingLeaderboard={data.showingLeaderboard} showingVideo={data.showingVideo} showingBlackout={data.showingBlackout} />, main);
 });

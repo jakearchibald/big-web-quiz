@@ -82,7 +82,7 @@ class App extends BoundComponent {
   componentDidUpdate(prevProps, prevState) {
     this.update(prevProps, prevState);
   }
-  render(props, {question, questionClosed, correctAnswers, answerDisplayOrder, averages, leaderboard, showLiveResults, showVideo}) {
+  render(props, {question, questionClosed, correctAnswers, answerDisplayOrder, averages, leaderboard, showLiveResults, showVideo, showBlackout}) {
     if (leaderboard) {
       let type = 0;
       let position = 1;
@@ -151,17 +151,18 @@ class App extends BoundComponent {
     if (!question) {
       return (
         <div>
-          <div class="blackout"/>
-          <div class={`opening-video ${showVideo == 'intro' ? 'opening-video--show' : ''}`}>
+          <img src="/static/images/title.png" class="opening-media opening-media--show"/>
+          <div class={`blackout ${showBlackout ? 'blackout--show' : ''}`}/>
+          <div class={`opening-media ${showVideo == 'intro' ? 'opening-media--show' : ''}`}>
             <video
               ref={el => this.introVideo = el}
-              class="opening-video__src" src="/static/video/intro.mp4"
+              class="opening-media__src" src="/static/video/intro.mp4"
             />
           </div>
-          <div class={`opening-video ${showVideo == 'prize' ? 'opening-video--show' : ''}`}>
+          <div class={`opening-media ${showVideo == 'prize' ? 'opening-media--show' : ''}`}>
             <video
               ref={el => this.prizeVideo = el}
-              class="opening-video__src" src="/static/video/intro.mp4"
+              class="opening-media__src" src="/static/video/intro.mp4"
             />
           </div>
         </div>

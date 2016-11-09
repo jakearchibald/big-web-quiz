@@ -39,7 +39,8 @@ export function adminStateJson(req, res) {
     res.json({
       questions,
       showingLeaderboard: quiz.showingLeaderboard,
-      showingVideo: quiz.showingVideo
+      showingVideo: quiz.showingVideo,
+      showingBlackout: quiz.showingBlackout
     });
   });
 }
@@ -224,6 +225,22 @@ export function hideLeaderboardJson(req, res) {
   quiz.hideLeaderboard();
   presentationListeners.broadcast(
     Object.assign({leaderboard: null}, quiz.getState())
+  );
+  adminStateJson(req, res);
+}
+
+export function showBlackoutJson(req, res) {
+  quiz.showingBlackout = true;
+  presentationListeners.broadcast(
+    Object.assign({showBlackout: true}, quiz.getState())
+  );
+  adminStateJson(req, res);
+}
+
+export function hideBlackoutJson(req, res) {
+  quiz.showingBlackout = false;
+  presentationListeners.broadcast(
+    Object.assign({showBlackout: false}, quiz.getState())
   );
   adminStateJson(req, res);
 }
