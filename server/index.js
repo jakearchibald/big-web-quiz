@@ -101,8 +101,8 @@ router.get('/admin/', requiresAdminHtml, admin);
 router.get('/admin/initial-state.json', requiresAdminJson, adminStateJson);
 router.get('/admin/top-users.json', requiresAdminJson, getTopUsersJson);
 router.get('/admin/db.json', requiresAdminJson, dbJson);
-router.get('/presentation/', requiresLogin, presentation);
-router.get('/presentation/listen', requiresLoginJson, presentationListen);
+router.get('/presentation/', requiresAdminHtml, presentation);
+router.get('/presentation/listen', requiresAdminJson, presentationListen);
 
 router.post('/logout', logoutRedirect);
 router.post('/logout.json', logoutJson);
