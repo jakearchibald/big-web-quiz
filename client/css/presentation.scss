@@ -25,6 +25,10 @@
 @import 'components/live-results';
 @import 'components/leaderboard';
 
+html, body {
+  overflow: hidden;
+}
+
 .opening-media {
   position: absolute;
   top: 0;
