@@ -27,18 +27,26 @@
 
   &__leaderboard-preview-items {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
   }
 
   &__leaderboard-preview-description {
-    margin-right: 16px;
     opacity: 0.7;
+    font-size: 12px;
+    margin: 0 0 4px 0;
   }
 
   &__leaderboard-preview-avatar {
     border-radius: 50%;
     border: 2px solid #FFF;
     margin-right: 8px;
+  }
+
+  &__leaderboard-preview-user-details {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }

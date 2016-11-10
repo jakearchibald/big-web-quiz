@@ -25,9 +25,9 @@ export default class QuestionWaiting extends BoundComponent {
         <div class="your-score">
           <div class="your-score__title">Your score:</div>
           <div class="your-score__value">{user.score}</div>
+          <p class="message">Waiting for a question</p>
         </div>
 
-        <p class="message">Waiting for a question</p>
         {!server &&
           (<div class="question-waiting__leaderboard">
             <LeaderboardToggle
@@ -40,13 +40,15 @@ export default class QuestionWaiting extends BoundComponent {
                   Your details will show as:
                 </p>
 
-                <img
-                  class="question-waiting__leaderboard-preview-avatar"
-                  width="24" height="24"
-                  src={`${user.avatarUrl}?sz=24`}
-                  srcset={`${user.avatarUrl}?sz=48 2x, ${user.avatarUrl}?sz=72 3x`}
-                />
-                {user.name}
+                <div class="question-waiting__leaderboard-preview-user-details">
+                  <img
+                    class="question-waiting__leaderboard-preview-avatar"
+                    width="24" height="24"
+                    src={`${user.avatarUrl}?sz=24`}
+                    srcset={`${user.avatarUrl}?sz=48 2x, ${user.avatarUrl}?sz=72 3x`}
+                  />
+                  {user.name}
+                </div>
               </div>
             </div>
           </div>)

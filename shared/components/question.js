@@ -107,6 +107,12 @@ export default class Question extends BoundComponent {
           'question question--presentation' :
           'question'
         }>
+        {
+          presentation ? '' :
+          <div class="question__selection-instructions">
+            {multiple ? 'Select all that apply' : 'Select one'}
+          </div>
+        }
         <form
           class={(closed || showLiveResults) && (!correctAnswers) ? 'question__form question__form--closed' : 'question__form'}
           onSubmit={this.onSubmit}
@@ -147,16 +153,18 @@ export default class Question extends BoundComponent {
 
               { (presentation || closed) ? '' :
                 <div class="question__submit-container">
-                  <div class={
-                    (submittedAnswersThisSession && !closed) ?
-                      'question__submitted-answer question__submitted-answer--success' :
-                      'question__submitted-answer'
-                  }>Answer submitted</div>
-                  <button disabled={closed || spinnerState || answersChecked.length === 0} class={
-                    spinnerState ?
-                      'question__submit question__submit--pending' :
-                      'question__submit'
-                  }>Submit</button>
+                  <div class="question__submit-container-inner">
+                    <div class={
+                      (submittedAnswersThisSession && !closed) ?
+                        'question__submitted-answer question__submitted-answer--success' :
+                        'question__submitted-answer'
+                    }>Answer submitted</div>
+                    <button disabled={closed || spinnerState || (answersChecked.length === 0 && !multiple)} class={
+                      spinnerState ?
+                        'question__submit question__submit--pending' :
+                        'question__submit'
+                    }>Submit</button>
+                  </div>
                 </div>
               }
             </div>

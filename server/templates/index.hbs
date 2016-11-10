@@ -24,7 +24,7 @@ limitations under the License.
     <link rel="preload" as="style" href="{{.}}">
   {{/each}}
   {{#if inlineCss}}
-    <style>{{inlineCss}}</style>
+    <style>{{{inlineCss}}}</style>
   {{/if}}
   {{#each scripts}}
     <script src="{{.}}" defer></script>
