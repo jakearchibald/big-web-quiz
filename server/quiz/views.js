@@ -26,7 +26,7 @@ presentationListeners.broadcast(quiz.getState());
 
 
 export function adminStateJson(req, res) {
-  Question.find().then(questions => {
+  Question.find().sort({ priority: -1 }).then(questions => {
     questions = questions.map(q => q.toObject());
     for (const question of questions) {
       question.active = quiz.activeQuestion && quiz.activeQuestion._id.equals(question._id);
@@ -62,6 +62,7 @@ export function updateQuestionJson(req, res) {
     codeType: req.body.codeType,
     multiple: !!req.body.multiple,
     scored: !!req.body.scored,
+    priority: !!req.body.priority,
     answers: req.body.answers
   };
 

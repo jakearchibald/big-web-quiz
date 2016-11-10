@@ -35,10 +35,11 @@ export default class QuestionUpdate extends BoundComponent {
       codeType = '',
       answers = [createAnswerObject(), createAnswerObject()],
       multiple = false,
-      scored = true
+      scored = true,
+      priority = false
     } = props;
 
-    this.state = {title, text, code, codeType, answers, multiple, scored};
+    this.state = {title, text, code, codeType, answers, multiple, scored, priority};
   }
   async onRemoveQuestion(event) {
     event.preventDefault();
@@ -66,7 +67,7 @@ export default class QuestionUpdate extends BoundComponent {
   }
   async onSubmit(event) {
     event.preventDefault();
-    const {title, text, code, codeType, answers, multiple, scored} = this.state;
+    const {title, text, code, codeType, answers, multiple, scored, priority} = this.state;
     const id = this.props.id;
 
     try {
@@ -76,7 +77,7 @@ export default class QuestionUpdate extends BoundComponent {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
           title, text, code, codeType,
-          answers, multiple, scored, id
+          answers, multiple, scored, id, priority
         })
       });
 
@@ -137,6 +138,10 @@ export default class QuestionUpdate extends BoundComponent {
 
         <tr>
           <th>Scored:</th><td><input type="checkbox" checked={this.state.scored} onChange={this.linkState('scored')}/></td>
+        </tr>
+
+        <tr>
+          <th>Priority:</th><td><input type="checkbox" checked={this.state.priority} onChange={this.linkState('priority')}/></td>
         </tr>
 
         {answers.map((answer, i) =>

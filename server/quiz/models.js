@@ -29,6 +29,8 @@ const questionSchema = mongoose.Schema({
   multiple: Boolean,
   // Scored? Questions can be non-scored for simple polls
   scored: {type: Boolean, default: true},
+  // Shove it to the top of the list in admin view?
+  priority: {type: Boolean, default: false, index: true},
   // Array of answers
   answers: [{
     text: {type: String, required: true},
