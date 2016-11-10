@@ -16,6 +16,7 @@
     "node": ">=6.7.0"
   },
   "dependencies": {
+    "array-includes": "^3.0.2",
     "babel-plugin-external-helpers": "^6.8.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.16.0",
     "babel-plugin-transform-react-jsx": "^6.8.0",
