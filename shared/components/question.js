@@ -109,8 +109,14 @@ export default class Question extends BoundComponent {
         }>
         {
           presentation ? '' :
-          <div class="question__selection-instructions">
-            {multiple ? 'Select all that apply' : 'Select one'}
+          <div class={
+            closed ?
+              'question__selection-instructions question__selection-instructions--closed' :
+              'question__selection-instructions'
+          }>
+            {
+              multiple ? 'Select all that apply' : 'Select one'
+            }
           </div>
         }
         <form
