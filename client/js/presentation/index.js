@@ -63,7 +63,10 @@ class App extends BoundComponent {
     }
     else if (!this.state.showVideo == 'intro' && prevState.showVideo == 'intro') {
       setTimeout(() => {
-        if (this.introVideo) this.introVideo.currentTime = 0;
+        if (this.introVideo) {
+          this.introVideo.pause();
+          this.introVideo.currentTime = 0;
+        }
       }, 1000);
     }
 
@@ -72,7 +75,10 @@ class App extends BoundComponent {
     }
     else if (!this.state.showVideo == 'prize' && prevState.showVideo == 'prize') {
       setTimeout(() => {
-        if (this.prizeVideo) this.prizeVideo.currentTime = 0;
+        if (this.prizeVideo) {
+          this.prizeVideo.pause();
+          this.prizeVideo.currentTime = 0;
+        }
       }, 1000);
     }
   }
@@ -169,7 +175,8 @@ class App extends BoundComponent {
           <div class={`opening-media ${showVideo == 'prize' ? 'opening-media--show' : ''}`}>
             <video
               ref={el => this.prizeVideo = el}
-              class="opening-media__src" src="/static/video/intro.mp4"
+              class="opening-media__src" src="/static/video/prize.mp4"
+              loop
             />
           </div>
         </div>

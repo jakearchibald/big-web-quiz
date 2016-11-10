@@ -80,7 +80,8 @@ self.addEventListener('install', event => {
       '/static/audio/loop1.wav',
       '/static/audio/loop2.wav',
       '/static/audio/stab.wav',
-      '/static/video/intro.mp4'
+      '/static/video/intro.mp4',
+      '/static/video/prize.mp4'
     ]);
   })());
 });
