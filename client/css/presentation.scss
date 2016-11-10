@@ -86,6 +86,11 @@ html, body {
 
         &-label {
           border-radius: 8px;
+
+          &--correct,
+          &--incorrect {
+            background-size: 54px 54px;
+          }
         }
 
         &-container {

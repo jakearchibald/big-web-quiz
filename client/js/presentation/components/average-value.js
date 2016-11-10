@@ -145,7 +145,7 @@ export default class AverageValue extends BoundComponent {
 
     // Write the actual value in the middle.
     this.ctx.fillStyle = this.props.color;
-    this.ctx.font = '700 64px Roboto';
+    this.ctx.font = '700 48px Roboto';
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'middle';
     this.ctx.fillText(VALUE_PERC + '%', midX, midY);
