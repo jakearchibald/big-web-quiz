@@ -54,6 +54,11 @@
     &__text {
       opacity: 0;
       font-size: 32px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      width: 94%;
+      text-align: center;
     }
   }
 }
