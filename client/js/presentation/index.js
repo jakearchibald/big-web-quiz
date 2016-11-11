@@ -136,27 +136,6 @@ class App extends BoundComponent {
               </div>
             )}
           </div>
-
-          <table class="leaderboard__scores" cellSpacing="0">
-            <tbody>
-              {leaderboard.map((player, index) =>
-                index < 3 ? '' :
-                <tr>
-                  <td>
-                    {player.position}.
-                  </td>
-
-                  <td>
-                    {player.name}
-                  </td>
-
-                  <td>
-                    {player.score}
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
         </div>
       );
     }
