@@ -61,14 +61,14 @@ userSchema.statics.updateScores = function(questions) {
         if (question.multiple) {
           for (const [i, answer] of question.answers.entries()) {
             if (answer.correct === choices.includes(i)) {
-              score++;
+              score += 2;
             }
           }
         }
         else {
           const correctIndex = question.answers.findIndex(a => a.correct);
           if (choices[0] == correctIndex) {
-            score += 5;
+            score += 10;
           }
         }
       }
