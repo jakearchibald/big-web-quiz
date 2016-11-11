@@ -149,6 +149,7 @@ class App extends BoundComponent {
             <video
               ref={el => this.introVideo = el}
               class="opening-media__src" src="/static/video/intro.mp4"
+              preload
             />
           </div>
           <div class={`opening-media ${showVideo == 'prize' ? 'opening-media--show' : ''}`}>
@@ -156,6 +157,7 @@ class App extends BoundComponent {
               ref={el => this.prizeVideo = el}
               class="opening-media__src" src="/static/video/prize.mp4"
               loop
+              preload
             />
           </div>
         </div>
@@ -200,7 +202,3 @@ class App extends BoundComponent {
 
 const main = document.querySelector('.main-content');
 render(<App />, main);
-
-navigator.serviceWorker.register('/presentation-sw.js', {
-  scope: '/presentation/'
-});
