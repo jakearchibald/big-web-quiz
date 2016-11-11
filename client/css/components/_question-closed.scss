@@ -111,23 +111,6 @@
     pointer-events: auto;
     opacity: 1;
 
-    .question-closed__front {
-      animation-name: rotate;
-      animation-duration: 1s;
-      animation-iteration-count: infinite;
-      animation-timing-function: linear;
-      animation-delay: 1s;
-
-      &-inner {
-        animation-name: rotate;
-        animation-duration: 1s;
-        animation-iteration-count: infinite;
-        animation-timing-function: linear;
-        animation-direction: reverse;
-        animation-delay: 1s;
-      }
-    }
-
     .question-closed__container,
     .question-closed__shadow-container {
       opacity: 1;
@@ -149,14 +132,4 @@
     }
   }
 
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
 }
