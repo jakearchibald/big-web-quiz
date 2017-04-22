@@ -15,8 +15,9 @@
 * limitations under the License.
 */
 import google from 'googleapis';
+import uuidV4 from 'uuid/v4';
 
-import {User, ADMIN_IDS} from './models';
+import {User, ADMIN_IDS, setNaiveLogin, naiveLoginAllowed} from './models';
 import {Question} from '../quiz/models';
 import {quiz, presentationListeners} from '../quiz/views';
 import {longPollers} from '../long-pollers/views';
@@ -142,6 +143,31 @@ export function login(req, res) {
   res.redirect(generateAuthUrl({
     state: req.get('referrer')
   }));
+}
+
+export async function naiveLogin(req, res) {
+  if (!naiveLoginAllowed()) {
+    res.set('Content-Type', 'text/plain').send('Login failed: Naive login disabled.');
+    return;
+  }
+
+  const name = String(req.body.name || '').slice(0, 25).trim();
+  const id = 'naive-' + uuidV4();
+
+  if (!name) {
+    res.set('Content-Type', 'text/plain').send('Login failed: No name provided.');
+    return;
+  }
+
+  await User.create({
+    googleId: id,
+    name,
+    email: '',
+    avatarUrl: '/static/images/ic_tag_faces_white_18px.svg'
+  });
+
+  req.session.userId = id;
+  res.redirect('/');
 }
 
 export function updateUser(req, res) {
@@ -327,4 +353,14 @@ export function setLeaderboardBanJson(req, res) {
   }).catch(err => {
     res.status(500).json({err: err.message});
   });
+}
+
+export function allowNaiveLogin(req, res) {
+  setNaiveLogin(true);
+  res.json({naiveLoginAllowed: naiveLoginAllowed()})
+}
+
+export function disallowNaiveLogin(req, res) {
+  setNaiveLogin(false);
+  res.json({naiveLoginAllowed: naiveLoginAllowed()})
 }

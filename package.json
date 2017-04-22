@@ -59,6 +59,7 @@
     "rollup-stream": "^1.14.0",
     "shuffle-array": "^1.0.0",
     "source-map-support": "^0.4.3",
+    "uuid": "^3.0.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "whatwg-fetch": "^1.0.0"

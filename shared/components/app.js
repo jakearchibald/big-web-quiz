@@ -40,6 +40,7 @@ export default class App extends BoundComponent {
     //     answers: [{text: String}]
     //   },
     //   questionClosed: Boolean,
+    //   naiveLoginAllowed: Boolean,
     //   correctAnswers: [Number],
     //   answersSubmitted: [Number], answers the user submitted for the question
     // }
@@ -79,7 +80,7 @@ export default class App extends BoundComponent {
       user: null
     });
   }
-  render({server}, {user, question, questionClosed, correctAnswers, answersSubmitted}) {
+  render({server}, {user, question, questionClosed, correctAnswers, answersSubmitted, naiveLoginAllowed}) {
     // Question: OPEN
     const shouldShowQuestion = (question && !server) ||
 
@@ -125,7 +126,7 @@ export default class App extends BoundComponent {
               />
             )
             :
-            <Intro key="intro"/>
+            <Intro key="intro" naiveLoginAllowed={naiveLoginAllowed}/>
           }
         </div>
         <a class="privacy" href="https://www.google.com/policies">Google Privacy Policy and Terms of Service</a>

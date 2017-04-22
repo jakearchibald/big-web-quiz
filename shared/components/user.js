@@ -21,9 +21,19 @@ export class Login extends BoundComponent {
   constructor(props) {
     super(props);
   }
-  render() {
+  render({naiveLoginAllowed}) {
     return (
-      <form action="/login" method="POST"><button class="google-signin">Sign in</button></form>
+      <div class="login-forms">
+        <form action="/login" method="POST"><button class="google-signin">Sign in</button></form>
+        {naiveLoginAllowed &&
+          <div class="naive-login">
+            <p>Or just type a name:</p>
+            <form action="/naive-login" method="POST">
+              <input type="text" name="name" maxlength="25"/><button>Go</button>
+            </form>
+          </div>
+        }
+      </div>
     );
   }
 }

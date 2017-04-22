@@ -15,7 +15,7 @@
 * limitations under the License.
 */
 import {Question, Quiz} from './models';
-import {User} from '../user/models';
+import {User, naiveLoginAllowed} from '../user/models';
 import {longPollers} from '../long-pollers/views';
 import EventStream from '../event-stream';
 
@@ -40,7 +40,8 @@ export function adminStateJson(req, res) {
       questions,
       showingLeaderboard: quiz.showingLeaderboard,
       showingVideo: quiz.showingVideo,
-      showingBlackout: quiz.showingBlackout
+      showingBlackout: quiz.showingBlackout,
+      naiveLoginAllowed: naiveLoginAllowed()
     });
   });
 }

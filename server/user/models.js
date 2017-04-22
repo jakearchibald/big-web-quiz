@@ -23,10 +23,20 @@ export const ADMIN_IDS = [
   '104714371990859295637'  // thebigwebquiz
 ];
 
+let allowNaiveLogin = false;
+
+export function naiveLoginAllowed() {
+  return allowNaiveLogin;
+}
+
+export function setNaiveLogin(val) {
+  allowNaiveLogin = !!val;
+}
+
 const userSchema = mongoose.Schema({
   googleId: {type: String, unique: true, required: true, index: true},
   name: {type: String, required: true},
-  email: {type: String, required: true},
+  email: String,
   avatarUrl: String,
   optIntoLeaderboard: {type: Boolean, required: true, default: false},
   bannedFromLeaderboard: {type: Boolean, required: true, default: false},

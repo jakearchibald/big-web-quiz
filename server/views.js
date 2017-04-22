@@ -23,6 +23,7 @@ import promisify from './promisify';
 import indexTemplate from './templates/index';
 import mongoose from './mongoose-db';
 import App from './shared/components/app';
+import {naiveLoginAllowed} from './user/models';
 import {simpleUserObject} from './user/views';
 import {quiz} from './quiz/views';
 import {escapeJSONString} from './utils';
@@ -32,7 +33,8 @@ const readFile = promisify(fs, 'readFile');
 
 function getInitialState(req) {
   const initialState = {
-    user: null
+    user: null,
+    naiveLoginAllowed: naiveLoginAllowed()
   };
 
   if (req.user) {

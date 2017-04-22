@@ -49,3 +49,27 @@
     }
   }
 }
+
+.login-forms {
+  width: 100%;
+}
+
+.naive-login {
+  & form {
+    display: flex;
+  }
+  & button {
+    padding: 8px 10px;
+    border-radius: 0 3px 3px 0;
+  }
+  & input {
+    flex: 1;
+    width: 0;
+    border: 0;
+    background: #fff;
+    border-radius: 3px 0 0 3px;
+    font: inherit;
+    font-size: 20px;
+    padding-left: 10px;
+  }
+}

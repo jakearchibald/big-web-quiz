@@ -19,12 +19,12 @@ import BoundComponent from './bound-component';
 import {Login} from './user';
 
 export default class Intro extends BoundComponent {
-  render() {
+  render({naiveLoginAllowed}) {
     return (
       <div class="intro">
         <img class="intro__icon" width="104" height="104" src="/static/images/icon@192.png" alt="The Big Web Quiz!" />
         <p>Welcome to the Big Web Quiz!</p>
-        <Login/>
+        <Login naiveLoginAllowed={naiveLoginAllowed}/>
       </div>
     );
   }

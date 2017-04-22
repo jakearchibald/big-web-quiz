@@ -30,7 +30,8 @@ import {
   login, logoutRedirect, logoutJson, userJson, 
   updateUser, requiresLogin, requiresLoginJson, requiresAdminHtml,
   requiresAdminJson, questionAnswerJson, deleteUserAnswersJson,
-  deleteUsersJson, getTopUsersJson, setLeaderboardBanJson
+  deleteUsersJson, getTopUsersJson, setLeaderboardBanJson,
+  allowNaiveLogin, disallowNaiveLogin, naiveLogin
 } from './user/views';
 import {
   adminStateJson, updateQuestionJson, deleteQuestionJson,
@@ -108,6 +109,7 @@ router.get('/presentation/listen', requiresAdminJson, presentationListen);
 router.post('/logout', logoutRedirect);
 router.post('/logout.json', logoutJson);
 router.post('/login', login);
+router.post('/naive-login', naiveLogin);
 router.post('/update-me.json', requiresLoginJson, updateUser);
 router.post('/question-answer.json', requiresLoginJson, questionAnswerJson);
 router.post('/admin/question-update.json', requiresAdminJson, updateQuestionJson);
@@ -123,6 +125,8 @@ router.post('/admin/show-leaderboard.json', requiresAdminJson, showLeaderboardJs
 router.post('/admin/hide-leaderboard.json', requiresAdminJson, hideLeaderboardJson);
 router.post('/admin/show-blackout.json', requiresAdminJson, showBlackoutJson);
 router.post('/admin/hide-blackout.json', requiresAdminJson, hideBlackoutJson);
+router.post('/admin/allow-naive-login.json', requiresAdminJson, allowNaiveLogin);
+router.post('/admin/disallow-naive-login.json', requiresAdminJson, disallowNaiveLogin);
 router.post('/admin/show-video.json', requiresAdminJson, showVideoJson);
 router.post('/admin/db.json', requiresAdminJson, dbSetJson);
 router.post('/admin/set-leaderboard-ban.json', requiresAdminJson, setLeaderboardBanJson);
