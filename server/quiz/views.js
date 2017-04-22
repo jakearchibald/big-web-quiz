@@ -154,8 +154,8 @@ export function revealQuestionJson(req, res) {
 
     return Question.find();
   }).then(qs => User.updateScores(qs)).then(() => {
-    longPollers.broadcast(quiz.getState());
     presentationListeners.broadcast(quiz.getState());
+    longPollers.broadcast(quiz.getState());
     adminStateJson(req, res);
   }).catch(err => {
     res.status(500).json({err: err.message});
@@ -175,8 +175,8 @@ export function deactivateQuestionJson(req, res) {
     }
 
     quiz.unsetQuestion();
-    longPollers.broadcast(quiz.getState());
     presentationListeners.broadcast(quiz.getState());
+    longPollers.broadcast(quiz.getState());
 
     adminStateJson(req, res);
   }).catch(err => {
