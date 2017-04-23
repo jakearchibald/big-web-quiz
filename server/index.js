@@ -16,11 +16,15 @@
 */
 import 'source-map-support/register';
 
+import url from 'url';
+
 import express from 'express';
 import session from 'express-session';
 import gzipStatic from 'connect-gzip-static';
 import bodyParser from 'body-parser';
 import multer from 'multer';
+import cors from 'cors';
+
 import {
   home, admin, dbJson, initialStateJson, presentation,
   dbSetJson
@@ -112,26 +116,44 @@ router.post('/login', login);
 router.post('/naive-login', naiveLogin);
 router.post('/update-me.json', requiresLoginJson, updateUser);
 router.post('/question-answer.json', requiresLoginJson, questionAnswerJson);
-router.post('/admin/question-update.json', requiresAdminJson, updateQuestionJson);
-router.post('/admin/question-delete.json', requiresAdminJson, deleteQuestionJson);
-router.post('/admin/question-activate.json', requiresAdminJson, setQuestionJson);
-router.post('/admin/question-show-live-results.json', requiresAdminJson, liveResultsQuestionJson);
-router.post('/admin/question-close.json', requiresAdminJson, closeQuestionJson);
-router.post('/admin/question-reveal.json', requiresAdminJson, revealQuestionJson);
-router.post('/admin/question-deactivate.json', requiresAdminJson, deactivateQuestionJson);
-router.post('/admin/delete-user-answers.json', requiresAdminJson, deleteUserAnswersJson);
-router.post('/admin/delete-users.json', requiresAdminJson, deleteUsersJson);
-router.post('/admin/show-leaderboard.json', requiresAdminJson, showLeaderboardJson);
-router.post('/admin/hide-leaderboard.json', requiresAdminJson, hideLeaderboardJson);
-router.post('/admin/show-blackout.json', requiresAdminJson, showBlackoutJson);
-router.post('/admin/hide-blackout.json', requiresAdminJson, hideBlackoutJson);
-router.post('/admin/allow-naive-login.json', requiresAdminJson, allowNaiveLogin);
-router.post('/admin/disallow-naive-login.json', requiresAdminJson, disallowNaiveLogin);
-router.post('/admin/show-video.json', requiresAdminJson, showVideoJson);
-router.post('/admin/db.json', requiresAdminJson, dbSetJson);
-router.post('/admin/set-leaderboard-ban.json', requiresAdminJson, setLeaderboardBanJson);
-router.post('/admin/set-end-screen.json', requiresAdminJson, setEndScreen);
 
+const adminRouter = express.Router({
+  caseSensitive: true,
+  strict: true
+});
+const adminCors = cors({
+  origin: (origin, cb) => {
+    const u = url.parse(origin);
+    cb(null, u.hostname == 'localhost' || u.hostname == '127.0.0.1');
+  },
+  maxAge: 60 * 60 * 24,
+  allowedHeaders: ['Content-Type'],
+  credentials: true
+});
+
+adminRouter.use(adminCors, requiresAdminJson);
+
+adminRouter.post('/admin/question-update.json', updateQuestionJson);
+adminRouter.post('/admin/question-delete.json', deleteQuestionJson);
+adminRouter.post('/admin/question-activate.json', setQuestionJson);
+adminRouter.post('/admin/question-show-live-results.json', liveResultsQuestionJson);
+adminRouter.post('/admin/question-close.json', closeQuestionJson);
+adminRouter.post('/admin/question-reveal.json', revealQuestionJson);
+adminRouter.post('/admin/question-deactivate.json', deactivateQuestionJson);
+adminRouter.post('/admin/delete-user-answers.json', deleteUserAnswersJson);
+adminRouter.post('/admin/delete-users.json', deleteUsersJson);
+adminRouter.post('/admin/show-leaderboard.json', showLeaderboardJson);
+adminRouter.post('/admin/hide-leaderboard.json', hideLeaderboardJson);
+adminRouter.post('/admin/show-blackout.json', showBlackoutJson);
+adminRouter.post('/admin/hide-blackout.json', hideBlackoutJson);
+adminRouter.post('/admin/allow-naive-login.json', allowNaiveLogin);
+adminRouter.post('/admin/disallow-naive-login.json', disallowNaiveLogin);
+adminRouter.post('/admin/show-video.json', showVideoJson);
+adminRouter.post('/admin/db.json', dbSetJson);
+adminRouter.post('/admin/set-leaderboard-ban.json', setLeaderboardBanJson);
+adminRouter.post('/admin/set-end-screen.json', setEndScreen);
+
+router.use(adminRouter);
 app.use(router);
 
 const port = process.env.PORT || 3000;
