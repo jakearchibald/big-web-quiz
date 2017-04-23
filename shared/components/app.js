@@ -41,6 +41,7 @@ export default class App extends BoundComponent {
     //   },
     //   questionClosed: Boolean,
     //   naiveLoginAllowed: Boolean,
+    //   showEndScreen: Boolean,
     //   correctAnswers: [Number],
     //   answersSubmitted: [Number], answers the user submitted for the question
     // }
@@ -80,7 +81,7 @@ export default class App extends BoundComponent {
       user: null
     });
   }
-  render({server}, {user, question, questionClosed, correctAnswers, answersSubmitted, naiveLoginAllowed}) {
+  render({server}, {user, question, questionClosed, correctAnswers, answersSubmitted, naiveLoginAllowed, showEndScreen}) {
     // Question: OPEN
     const shouldShowQuestion = (question && !server) ||
 
@@ -102,31 +103,42 @@ export default class App extends BoundComponent {
           />
         </header>
         <div class="container">
-          {user ?
-            (shouldShowQuestion?
-              <Question
-                key={`question-${question.id}`}
-                id={question.id}
-                title={question.title}
-                text={question.text}
-                multiple={question.multiple}
-                answers={question.answers}
-                code={question.code}
-                codeType={question.codeType}
-                closed={questionClosed}
-                correctAnswers={correctAnswers}
-                answersSubmitted={answersSubmitted}
-              />
-              :
-              <QuestionWaiting
-                key="question-waiting"
-                user={user}
-                server={server}
-                onUserUpdate={this.onUserUpdate}
-              />
-            )
+          {showEndScreen ?
+            <div class="end-screen">
+              Thanks for playing! Here are some links:
+              <ul>
+                <li>
+                  <a href="https://jakearchibald.com/2016/sounds-fun/">How we did the sound</a>
+                </li>
+              </ul>
+            </div>
             :
-            <Intro key="intro" naiveLoginAllowed={naiveLoginAllowed}/>
+            (user ?
+              (shouldShowQuestion?
+                <Question
+                  key={`question-${question.id}`}
+                  id={question.id}
+                  title={question.title}
+                  text={question.text}
+                  multiple={question.multiple}
+                  answers={question.answers}
+                  code={question.code}
+                  codeType={question.codeType}
+                  closed={questionClosed}
+                  correctAnswers={correctAnswers}
+                  answersSubmitted={answersSubmitted}
+                />
+                :
+                <QuestionWaiting
+                  key="question-waiting"
+                  user={user}
+                  server={server}
+                  onUserUpdate={this.onUserUpdate}
+                />
+              )
+              :
+              <Intro key="intro" naiveLoginAllowed={naiveLoginAllowed}/>
+            )
           }
         </div>
         <a class="privacy" href="https://www.google.com/policies">Google Privacy Policy and Terms of Service</a>

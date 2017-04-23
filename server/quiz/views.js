@@ -41,6 +41,7 @@ export function adminStateJson(req, res) {
       showingLeaderboard: quiz.showingLeaderboard,
       showingVideo: quiz.showingVideo,
       showingBlackout: quiz.showingBlackout,
+      showingEndScreen: quiz.showingEndScreen,
       naiveLoginAllowed: naiveLoginAllowed()
     });
   });
@@ -254,6 +255,12 @@ export function showVideoJson(req, res) {
   presentationListeners.broadcast(
     Object.assign({showVideo: quiz.showingVideo}, quiz.getState())
   );
+  adminStateJson(req, res);
+}
+
+export function setEndScreen(req, res) {
+  quiz.showingEndScreen = !!req.body.show;
+  longPollers.broadcast(quiz.getState());
   adminStateJson(req, res);
 }
 

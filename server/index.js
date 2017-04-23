@@ -39,7 +39,7 @@ import {
   deactivateQuestionJson, presentationListen,
   showLeaderboardJson, hideLeaderboardJson,
   liveResultsQuestionJson, showVideoJson,
-  showBlackoutJson, hideBlackoutJson
+  showBlackoutJson, hideBlackoutJson, setEndScreen
 } from './quiz/views';
 import {longPoll} from './long-pollers/views';
 import mongoose from './mongoose-db';
@@ -130,6 +130,7 @@ router.post('/admin/disallow-naive-login.json', requiresAdminJson, disallowNaive
 router.post('/admin/show-video.json', requiresAdminJson, showVideoJson);
 router.post('/admin/db.json', requiresAdminJson, dbSetJson);
 router.post('/admin/set-leaderboard-ban.json', requiresAdminJson, setLeaderboardBanJson);
+router.post('/admin/set-end-screen.json', requiresAdminJson, setEndScreen);
 
 app.use(router);
 

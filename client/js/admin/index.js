@@ -33,6 +33,7 @@ class App extends BoundComponent {
       showingVideo: props.showingVideo,
       showingBlackout: props.showingBlackout,
       naiveLoginAllowed: props.naiveLoginAllowed,
+      showingEndScreen: props.showingEndScreen,
       addingQuestion: false,
       editingQuestions: [], // ids
       outputValue: '',
@@ -284,9 +285,33 @@ class App extends BoundComponent {
     }
   }
 
+  async setEndScreen(show) {
+    const response = await fetch(`/admin/set-end-screen.json`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({show})
+    });
+
+    const data = await response.json();
+
+    if (data.err) throw Error(data.err);
+
+    this.setState(data);
+  }
+
+  onShowEndScreenClick() {
+    return this.setEndScreen(true);
+  }
+
+  onHideEndScreenClick() {
+    return this.setEndScreen(false);
+  }
+
   render(props, {
     questions, addingQuestion, editingQuestions, showingLeaderboard,
-    outputValue, view, showingVideo, showingBlackout, naiveLoginAllowed
+    outputValue, view, showingVideo, showingBlackout, naiveLoginAllowed,
+    showingEndScreen
   }) {
     return <div>
 
@@ -318,6 +343,12 @@ class App extends BoundComponent {
             <QuestionUpdate onQuestionSaved={this.onQuestionSaved}/>
             :
             <div class="admin__questions-add">
+              {showingEndScreen ?
+                <button onClick={this.onHideEndScreenClick}>Hide End Screen</button>
+                :
+                <button onClick={this.onShowEndScreenClick}>Show End Screen</button>
+              }
+
               {naiveLoginAllowed ?
                 <button onClick={this.onDisallowNaiveLoginClick}>Disable naive login</button>
                 :

@@ -50,6 +50,7 @@ export class Quiz {
     this._cachedUserAnswers = {};
     this.showingVideo = '';
     this.showingBlackout = false;
+    this.showingEndScreen = false;
   }
   get activeQuestion() {
     return this._activeQuestion;
@@ -136,6 +137,7 @@ export class Quiz {
         // see `correctAnswers` below
         answers: this._activeQuestion.answers.map(answer => ({text: answer.text}))
       },
+      showEndScreen: this.showingEndScreen,
       showLiveResults: this._showingLiveResults,
       questionClosed: !this._acceptingAnswers,
       // array of indexes for the correct answers
