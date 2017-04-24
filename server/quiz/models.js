@@ -17,6 +17,8 @@
 import mongoose from '../mongoose-db';
 
 const questionSchema = mongoose.Schema({
+  // Human readable ID
+  key: {type: String, index: true, unique: true, required: true},
   // Short title of the question, eg "Question 1"
   title: {type: String, required: true, default: "Question!"},
   // The actual question
