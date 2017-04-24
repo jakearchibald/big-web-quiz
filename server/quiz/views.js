@@ -131,8 +131,13 @@ export async function setQuestionJson(req, res) {
   }
 }
 
+function findQuestion(body) {
+  if (body.key) return Question.findOne({key: body.key});
+  return Question.findById(body.id);
+}
+
 export function closeQuestionJson(req, res) {
-  Question.findById(req.body.id).then(question => {
+  findQuestion(req.body).then(question => {
     if (!question) {
       res.status(404).json({err: "Question not found"});
       return;
@@ -154,7 +159,7 @@ export function closeQuestionJson(req, res) {
 }
 
 export function revealQuestionJson(req, res) {
-  Question.findById(req.body.id).then(question => {
+  findQuestion(req.body).then(question => {
     if (!question) {
       res.status(404).json({err: "Question not found"});
       return;
@@ -178,7 +183,7 @@ export function revealQuestionJson(req, res) {
 }
 
 export function deactivateQuestionJson(req, res) {
-  Question.findById(req.body.id).then(question => {
+  findQuestion(req.body).then(question => {
     if (!question) {
       res.status(404).json({err: "Question not found"});
       return;
@@ -200,7 +205,7 @@ export function deactivateQuestionJson(req, res) {
 }
 
 export function liveResultsQuestionJson(req, res) {
-  Question.findById(req.body.id).then(question => {
+  findQuestion(req.body).then(question => {
     if (!question) {
       res.status(404).json({err: "Question not found"});
       return;
