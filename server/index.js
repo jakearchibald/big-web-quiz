@@ -123,6 +123,10 @@ const adminRouter = express.Router({
 });
 const adminCors = cors({
   origin: (origin, cb) => {
+    if (!origin) {
+      cb(null, false);
+      return;
+    }
     const u = url.parse(origin);
     cb(null, u.hostname == 'localhost' || u.hostname == '127.0.0.1');
   },
