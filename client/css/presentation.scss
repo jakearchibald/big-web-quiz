@@ -95,6 +95,12 @@ html, body {
 
         &-container {
           max-width: 1600px;
+
+          &.presentation-answer-grid {
+            display: grid;
+            grid-template-columns: calc(50% - 16px) calc(50% - 16px);
+            grid-column-gap: 32px;
+          }
         }
       }
 
