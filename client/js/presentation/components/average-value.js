@@ -50,10 +50,7 @@ export default class AverageValue extends BoundComponent {
     const containerSize = this.container.getBoundingClientRect();
     const dPR = window.devicePixelRatio;
 
-    this.width = containerSize.width;
-    this.height = Math.min(360, containerSize.height);
-
-    this.width = this.height = Math.min(this.width, this.height);
+    this.height = this.width = containerSize.width;
 
     this.canvas.width = this.width * dPR;
     this.canvas.height = this.height * dPR;

@@ -17,15 +17,13 @@
 
 .live-results {
   position: fixed;
-  top: 0;
+  top: 50%;
   left: 50%;
   width: 100%;
-  height: 100%;
   display: flex;
-  align-items: center;
   justify-content: center;
   max-width: 1620px;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
 
   .average-value {
     margin: 0 16px;
@@ -54,11 +52,10 @@
     &__text {
       opacity: 0;
       font-size: 32px;
-      white-space: nowrap;
-      text-overflow: ellipsis;
       overflow: hidden;
       width: 94%;
       text-align: center;
+      line-height: 1.3;
     }
   }
 }
