@@ -14,7 +14,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-import google from 'googleapis';
+import GoogleAuth from 'google-auth-library';
 import uuidV4 from 'uuid/v4';
 
 import {User, ADMIN_IDS, setNaiveLogin, naiveLoginAllowed} from './models';
@@ -24,35 +24,39 @@ import {longPollers} from '../long-pollers/views';
 import promisify from '../promisify';
 import {clientId, clientSecret, redirectOrigin} from '../settings';
 
+const auth = new GoogleAuth();
+auth.OAuth2.GOOGLE_OAUTH2_AUTH_BASE_URL_ = 'https://accounts.google.com/o/oauth2/v2/auth';
+auth.OAuth2.GOOGLE_OAUTH2_TOKEN_URL_ = 'https://www.googleapis.com/oauth2/v4/token';
+
 function getAuthClient() {
-  return new google.auth.OAuth2(
+  return new auth.OAuth2(
     clientId,
     clientSecret,
     redirectOrigin + '/oauth2callback'
   );
 }
 
-function authenticateUser(code) {
+async function authenticateUser(code) {
   const oauth2Client = getAuthClient();
+  const tokens = await promisify(oauth2Client, 'getToken')(code);
+  oauth2Client.setCredentials(tokens);
+  const login = await promisify(oauth2Client, 'verifyIdToken')(tokens.id_token, clientId);
+  const loginPayload = login.getPayload();
 
-  return promisify(oauth2Client, 'getToken')(code).then(tokens => {
-    oauth2Client.setCredentials(tokens);
-    const plus = google.plus('v1');
-    return promisify(plus.people, 'get')({ userId: 'me', auth: oauth2Client });
-  }).then(response => {
-    let avatarUrl = '';
-    const email = response.emails[0].value;
+  const update = {
+    googleId: loginPayload.sub,
+    email: loginPayload.email
+  };
 
-    if (response.image) {
-      avatarUrl = response.image.url.replace(/\?.*$/, '');
-    }
+  if (loginPayload.name) update.name = loginPayload.name;
+  if (loginPayload.picture) {
+    update.avatarUrl = loginPayload.picture.replace(/\/s96-c\/.*$/, '/');
+  }
 
-    return User.findOneAndUpdate({googleId: response.id}, {
-      googleId: response.id,
-      name: response.displayName,
-      email,
-      avatarUrl
-    }, {upsert: true, new: true, setDefaultsOnInsert: true});
+  return User.findOneAndUpdate({ googleId: update.googleId }, update, {
+    upsert: true,
+    new: true,
+    setDefaultsOnInsert: true
   });
 }
 
@@ -77,7 +81,7 @@ export function generateAuthUrl({
 }={}) {
   const oauth2Client = getAuthClient();
   return oauth2Client.generateAuthUrl({
-    scope: ['profile', 'email'],
+    scope: ['openid', 'email', 'profile'],
     state
   });
 }
@@ -162,8 +166,7 @@ export async function naiveLogin(req, res) {
   await User.create({
     googleId: id,
     name,
-    email: '',
-    avatarUrl: '/static/images/ic_tag_faces_white_18px.svg'
+    email: ''
   });
 
   req.session.userId = id;

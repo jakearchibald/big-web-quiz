@@ -35,9 +35,9 @@ export function setNaiveLogin(val) {
 
 const userSchema = mongoose.Schema({
   googleId: {type: String, unique: true, required: true, index: true},
-  name: {type: String, required: true},
+  name: {type: String, required: true, default: "Unknown name"},
   email: String,
-  avatarUrl: String,
+  avatarUrl: {type: String, required: true, default: "/static/images/ic_tag_faces_white_18px.svg"},
   optIntoLeaderboard: {type: Boolean, required: true, default: false},
   bannedFromLeaderboard: {type: Boolean, required: true, default: false},
   // Optimisation. See `updateScore`.
