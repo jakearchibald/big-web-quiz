@@ -48,6 +48,10 @@ async function authenticateUser(code) {
     email: loginPayload.email
   };
 
+  if (!(update.email.endsWith('@google.com') || ADMIN_IDS.includes(update.googleId))) {
+    throw Error('Google employees only right now');
+  }
+
   if (loginPayload.name) update.name = loginPayload.name;
   if (loginPayload.picture) {
     update.avatarUrl = loginPayload.picture.replace(/\/s96-c\/.*$/, '/');
