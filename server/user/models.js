@@ -78,7 +78,7 @@ userSchema.statics.updateScores = function(questions) {
         else {
           const correctIndex = question.answers.findIndex(a => a.correct);
           if (choices[0] == correctIndex) {
-            score += 5;
+            score += 4;
           }
         }
       }
