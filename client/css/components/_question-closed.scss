@@ -1,0 +1,135 @@
+/**
+ *
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.question-closed {
+  z-index: 1000;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  opacity: 0.1;
+  overflow: hidden;
+  transition: opacity 0.1s cubic-bezier(0.3, 0, 0.1, 1);
+
+  &__container,
+  &__shadow-container {
+    perspective: 500px;
+    width: 100%;
+    height: 100%;
+    transform-origin: 50% 50%;
+    transform-style: preserve-3d;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0.1;
+    transition: opacity 0.4s cubic-bezier(0.3, 0, 0.1, 1);
+  }
+
+  &__sides {
+    will-change: transform;
+    transition: transform 1.4s cubic-bezier(0.3, 0, 0.1, 1),
+        opacity 0.1s cubic-bezier(0, 0, 0.3, 1);
+    transform-style: preserve-3d;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    opacity: 0.1;
+  }
+
+  &__front, &__back {
+    width: 450px;
+    height: 450px;
+    background: radial-gradient(circle at 80% 80%, #F71C98 40%, #00BFA3 100%);;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    position: absolute;
+    backface-visibility: hidden;
+    left: calc(50% - 225px);
+    top: calc(50% - 225px);
+    color: darken(#00BFA3, 10%);
+    font-size: 52px;
+  }
+
+  &__front-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    width: 96%;
+    height: 96%;
+    text-align: center;
+    line-height: 1.2;
+    background: #FFF;
+    box-shadow: 0px 2px 8px 0px rgba(112,0,0,0.24);
+  }
+
+  &__back {
+    transform: rotateY(180deg);
+    background: radial-gradient(circle at 80% 80%, #F71C98 40%, #00BFA3 100%);
+  }
+
+  &__shadow2px,
+  &__shadow12px {
+    background: #000;
+    width: 450px;
+    height: 450px;
+    border-radius: 50%;
+    box-shadow: 0 0 8px 6px #000;
+    position: absolute;
+    left: calc(50% - 225px);
+    top: calc(50% - 225px);
+    opacity: 0;
+    transition: transform 1.4s cubic-bezier(0.3, 0, 0.1, 1),
+        opacity 1.4s cubic-bezier(0, 0, 0.3, 1);
+    transform: translateY(620px) translateZ(-350px) rotateY(0deg);
+  }
+
+  &__shadow12px {
+    box-shadow: 0 0 28px 20px #000;
+    opacity: 0.1;
+  }
+
+  &--active {
+    pointer-events: auto;
+    opacity: 1;
+
+    .question-closed__container,
+    .question-closed__shadow-container {
+      opacity: 1;
+    }
+
+    .question-closed__sides {
+      transform: translateZ(-500px) rotateY(360deg);
+      opacity: 1;
+    }
+
+    .question-closed__shadow2px,
+    .question-closed__shadow12px {
+      transform: translateY(2px) translateZ(-500px) rotateY(360deg);
+      opacity: 0.15;
+    }
+
+    .question-closed__shadow12px {
+      opacity: 0;
+    }
+  }
+
+}

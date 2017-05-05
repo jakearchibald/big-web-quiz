@@ -1,0 +1,12 @@
+{
+  "name": "Big Web Quiz",
+  "scope": "/",
+  "icons": [{
+    "src": "/static/images/icon@512.png",
+    "sizes": "512x512"
+  }],
+  "background_color": "#220065",
+  "display": "standalone",
+  "start_url": "/",
+  "theme_color": "#22135E"
+}

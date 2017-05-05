@@ -1,0 +1,195 @@
+/**
+*
+* Copyright 2016 Google Inc. All rights reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+@import 'utils';
+@import 'global';
+@import 'components/app';
+@import 'components/waiting';
+@import 'components/question-waiting';
+@import 'components/question-closed';
+@import '../../node_modules/prismjs/themes/prism-okaidia';
+@import 'components/question';
+@import 'components/live-results';
+@import 'components/leaderboard';
+
+html, body {
+  overflow: hidden;
+}
+
+.opening-media {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  will-change: opacity;
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(0, 0, 0.3, 1);
+
+  &__src {
+    width: 100%;
+    height: 100%;
+  }
+
+  &--show {
+    display: block;
+    opacity: 1;
+  }
+}
+
+.blackout {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: black;
+  opacity: 0;
+
+  &--show {
+    opacity: 1;
+  }
+}
+@media (min-width: 1920px) {
+
+  .presentation-wrapper {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+
+    .question {
+      width: 100%;
+      padding-bottom: 0;
+
+      &__code-container {
+        font-size: 32px;
+      }
+
+      &__answer {
+        font-size: 38px;
+        margin-bottom: 32px;
+        height: 100px;
+
+        &-label {
+          border-radius: 8px;
+
+          &--correct,
+          &--incorrect {
+            background-size: 54px 54px;
+          }
+        }
+
+        &-container {
+          max-width: 1600px;
+
+          &.presentation-answer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-column-gap: 32px;
+          }
+        }
+      }
+
+      &__title {
+        font-size: 56px;
+        max-width: 1600px;
+      }
+
+      &__text {
+        max-width: 1600px;
+        font-size: 40px;
+        line-height: 1.8;
+      }
+    }
+  }
+
+  .leaderboard {
+
+    &__winners {
+      min-height: 60vh;
+      padding-top: 180px;
+      margin-bottom: 60px;
+    }
+
+    &__winner {
+      max-width: 280px;
+
+      &-0 {
+        .leaderboard__winner-block {
+          height: calc(100% - 90px);
+        }
+
+        .leaderboard__winner-position {
+          top: 180px;
+          font-size: 120px;
+        }
+      }
+
+      &-1 {
+        .leaderboard__winner-block {
+          height: calc(85% - 90px);
+        }
+
+        .leaderboard__winner-position {
+          top: calc(15% + 180px);
+          font-size: 120px;
+        }
+      }
+
+      &-2 {
+        .leaderboard__winner-block {
+          height: calc(70% - 90px);
+        }
+
+        .leaderboard__winner-position {
+          top: calc(30% + 180px);
+          font-size: 120px;
+        }
+      }
+
+      &-name {
+        font-size: 40px;
+      }
+
+      &-avatar {
+        width: 180px;
+        height: 180px;
+      }
+
+      &-block {
+        width: 180px;
+      }
+
+      &-score {
+        font-size: 60px;
+      }
+
+      &:after,
+      &:before {
+        width: 200px;
+      }
+    }
+  }
+
+  .live-results {
+    max-width: 1760px;
+
+    .average-value {
+      max-width: 380px;
+    }
+  }
+}

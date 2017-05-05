@@ -1,0 +1,110 @@
+/**
+ *
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Roboto Light'), local('Roboto-Light'), url(https://fonts.gstatic.com/s/roboto/v15/Hgo13k-tfSpn0qi1SFdUfbO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Roboto'), local('Roboto-Regular'), url(https://fonts.gstatic.com/s/roboto/v15/CrYjSnGjrRCn0pd9VQsnFOvvDin1pK8aKteLpeZ5c0A.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Roboto Bold'), local('Roboto-Bold'), url(https://fonts.gstatic.com/s/roboto/v15/d-6IYplOFocCacKzxwXSOLO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+}
+
+html {
+  font-family: Roboto, sans-serif;
+  color: #fff;
+  font-size: 15px;
+  line-height: 1.9;
+  @media screen and (min-width: $mobile-boundry) {
+    font-size: 16px;
+  }
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  -webkit-text-size-adjust: 100%;
+}
+
+button,
+input[type=button] {
+  cursor: pointer;
+  background: $button-color;
+  border-radius: 3px;
+  border: none;
+  font-size: 18px;
+  color: #FFFFFF;
+  line-height: 32px;
+  padding: 8px 32px;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+button[disabled],
+input[type=button][disabled] {
+  opacity: 0.7;
+}
+
+%button-unstyle {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+
+  &::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+  }
+}
+
+.privacy {
+  color: #FFF;
+  font-size: 13px;
+  opacity: 0.75;
+  text-align: center;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+.google-signin {
+  background: url(/static/images/btn_google_signin_light_normal_web@2x.png) center center no-repeat;
+  background-size: 191px 46px;
+  border-radius: 0;
+  font-size: 0;
+  width: 191px;
+  height: 46px;
+}
+
+.main-content {
+  min-height: 100vh;
+  background-image: linear-gradient(-200deg, #220065 0%, #2b546d 100%);
+}

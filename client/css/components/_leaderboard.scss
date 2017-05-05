@@ -1,0 +1,499 @@
+/**
+*
+* Copyright 2016 Google Inc. All rights reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+$silver-medal-delay: 1.5s;
+$gold-medal-delay: $silver-medal-delay * 2;
+$table-delay: $gold-medal-delay + 1s;
+
+.leaderboard {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  will-change: transform;
+
+  &:before {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    content: '';
+    background: radial-gradient(circle at 50% 40%, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 40%);
+    animation-name: leaderboardFade;
+    animation-duration: 2s;
+    animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-delay: $gold-medal-delay;
+    opacity: 0;
+  }
+
+  &__scores {
+    margin-top: 64px;
+    flex: 1;
+    font-size: 32px;
+    max-width: 900px;
+
+    opacity: 0;
+    animation-name: leaderboardFade;
+    animation-duration: 1s;
+    animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-delay: $table-delay;
+
+    td {
+      text-align: center;
+      vertical-align: middle;
+      line-height: 1;
+      margin: 0;
+      padding: 24px 32px;
+      opacity: 0.9;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      color: #FFF;
+      position: relative;
+    }
+
+    td:nth-of-type(1) {
+      color: #00BFA3;
+      font-weight: 700;
+      width: 0%;
+    }
+
+    td:nth-of-type(2) {
+      width: 100%;
+      text-align: left;
+    }
+
+    tr:nth-child(2n+1) {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  &__avatar {
+    border-radius: 50%;
+    border: 2px solid #FFF;
+  }
+
+  &__winners {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    justify-content: center;
+    min-height: 50vh;
+    padding-top: 100px;
+    margin-bottom: 230px;
+  }
+
+  &__winner {
+    width: 33%;
+    max-width: 160px;
+    margin: 0 20px;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    position: relative;
+
+    &:nth-of-type(1) {
+      order: 2;
+    }
+
+    &:nth-of-type(2) {
+      order: 1;
+    }
+
+    &:nth-of-type(3) {
+      order: 3;
+    }
+
+    &-block {
+      transform-origin: 50% 100%;
+      animation-name: winnerRise;
+      animation-duration: 0.7s;
+      animation-timing-function: cubic-bezier(0.6, 0, 0.3, 1);
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      opacity: 0;
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 100px;
+      z-index: 1;
+
+      &:after {
+        position: absolute;
+        right: 2px;
+        bottom: 2px;
+        width: 90%;
+        height: 90%;
+        content: '';
+        background: linear-gradient(-45deg, rgba(255,255,255,0.3), rgba(255,255,255,0) 20%)
+      }
+    }
+
+    &-avatar {
+      animation-name: winnerAvatarRise;
+      animation-duration: 0.7s;
+      animation-timing-function: cubic-bezier(0.6, 0, 0.3, 1);
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      opacity: 0;
+      border-radius: 50%;
+      position: absolute;
+      left: 50%;
+      top: 0;
+      z-index: 2;
+      transform: translateX(-50%);
+    }
+
+    &-name {
+      font-size: 20px;
+      color: #E7E7E6;
+      position: absolute;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      bottom: 0;
+      transform: translateY(100%) translateY(16px);
+    }
+
+    &-position {
+      font-size: 90px;
+      font-weight: 700;
+      text-shadow: 0px 1px 1px #FFFFFF;
+      position: absolute;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      z-index: 3;
+    }
+
+    &-score {
+      font-weight: 700;
+      font-size: 27px;
+      color: #FCE6B2;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      left: 0;
+      text-align: center;
+    }
+
+    &:before,
+    &:after {
+      content: '';
+      position: absolute;
+      background: #000;
+      border-radius: 50%;
+      z-index: 0;
+      height: 4px;
+      bottom: -2px;
+      left: 50%;
+      width: 103px;
+      transform: translate(-50%);
+    }
+
+    &:before {
+      opacity: 0;
+      box-shadow: 0 0 3px 3px #000;
+    }
+
+    &:after {
+      opacity: 0;
+      width: 120px;
+      box-shadow: 0 0 8px 6px #000;
+    }
+  }
+
+  &__winner-0 {
+
+    .leaderboard__winner-block {
+      animation-delay: $gold-medal-delay;
+      background: linear-gradient(150deg, #FFEDC1 0%, #EEC668 51%, #A06D19 100%);
+      height: calc(100% - 55px);
+      transform: translateX(-50%);
+    }
+
+    .leaderboard__winner-avatar {
+      animation-delay: $gold-medal-delay;
+      border: 3px solid #FFFFFF;
+      box-shadow: 0px 0px 28px 0px #FDEECE;
+    }
+
+    .leaderboard__winner-position {
+      color: #A06D19;
+      top: 80px;
+      opacity: 0;
+      animation-name: leaderboardFade;
+      animation-duration: 1s;
+      animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      animation-delay: $gold-medal-delay + 0.5s;
+    }
+
+    &:before,
+    &:after {
+      opacity: 0;
+      animation-name: shadowSmallFade;
+      animation-duration: 1s;
+      animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      animation-delay: $gold-medal-delay;
+    }
+
+    &:after {
+      animation-name: shadowLargeFade;
+    }
+
+    .leaderboard__winner-name {
+      color: #EEC668;
+      opacity: 0;
+      animation-name: leaderboardFade;
+      animation-duration: 1s;
+      animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      animation-delay: $gold-medal-delay;
+    }
+
+    .leaderboard__winner-score {
+      color: #EEC668;
+      opacity: 0;
+      animation-name: scoreFadeAndZoom;
+      animation-duration: 0.75s;
+      animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      animation-delay: $gold-medal-delay + 0.25s;
+    }
+  }
+
+  &__winner-1 {
+
+    .leaderboard__winner-block {
+      animation-delay: $silver-medal-delay;
+      background: linear-gradient(150deg, #EDEDED 0%, #E0DFDD 45%, #8E8C89 100%);
+      height: calc(85% - 55px);
+      transform: translateX(-50%);
+    }
+
+    .leaderboard__winner-avatar {
+      animation-delay: $silver-medal-delay;
+      border: 3px solid #FFFFFF;
+      box-shadow: 0px 0px 8px 0px rgba(255,255,255,0.50);
+      top: calc(15%);
+    }
+
+    .leaderboard__winner-position {
+      color: #8E8C89;
+      top: calc(15% + 80px);
+      opacity: 0;
+      animation-name: leaderboardFade;
+      animation-duration: 1s;
+      animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      animation-delay: $silver-medal-delay + 0.5s;
+    }
+
+    &:before,
+    &:after {
+      opacity: 0;
+      animation-name: shadowSmallFade;
+      animation-duration: 1s;
+      animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      animation-delay: $silver-medal-delay;
+    }
+
+    &:after {
+      animation-name: shadowLargeFade;
+    }
+
+    .leaderboard__winner-name {
+      color: #E0DFDD;
+      opacity: 0;
+      animation-name: leaderboardFade;
+      animation-duration: 1s;
+      animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      animation-delay: $silver-medal-delay;
+    }
+
+    .leaderboard__winner-score {
+      color: #E0DFDD;
+      top: 15%;
+      opacity: 0;
+      animation-name: scoreFadeAndZoom;
+      animation-duration: 0.75s;
+      animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      animation-delay: $silver-medal-delay + 0.25s;
+    }
+  }
+
+  &__winner-2 {
+    order: 3;
+
+    .leaderboard__winner-block {
+      animation-delay: 0s;
+      background: linear-gradient(150deg, #F5CB93 0%, #AA753A 56%, #A57034 60%, #683A0A 100%);
+      height: calc(70% - 55px);
+      transform: translateX(-50%);
+    }
+
+    .leaderboard__winner-avatar {
+      animation-delay: 0s;
+      border: 3px solid #FFFFFF;
+      box-shadow: 0px 0px 8px 0px rgba(255,255,255,0.30);
+      top: calc(30%);
+    }
+
+    .leaderboard__winner-position {
+      color: #683A0A;
+      top: calc(30% + 80px);
+      opacity: 0;
+      animation-name: leaderboardFade;
+      animation-duration: 1s;
+      animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      animation-delay: 0.5s;
+    }
+
+    &:before,
+    &:after {
+      opacity: 0;
+      animation-name: shadowSmallFade;
+      animation-duration: 1s;
+      animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+    }
+
+    &:after {
+      animation-name: shadowLargeFade;
+    }
+
+    .leaderboard__winner-name {
+      color: #F5CB93;
+      opacity: 0;
+      animation-name: leaderboardFade;
+      animation-duration: 1s;
+      animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+    }
+
+    .leaderboard__winner-score {
+      color: #F5CB93;
+      top: 30%;
+      opacity: 0;
+      animation-name: scoreFadeAndZoom;
+      animation-duration: 0.75s;
+      animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      animation-delay: 0.25s;
+    }
+  }
+}
+
+@keyframes winnerRise {
+  0% {
+    transform: scale(1, 0) translateX(-50%);
+    opacity: 0;
+  }
+
+  40% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1, 1) translateX(-50%);
+    opacity: 1;
+  }
+}
+
+@keyframes winnerAvatarRise {
+  0% {
+    transform: translateY(200%) translateY(-55px) translateX(-50%);
+    opacity: 0;
+  }
+
+  25% {
+    opacity: 0;
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(0) translateX(-50%);
+    opacity: 1;
+  }
+}
+
+@keyframes leaderboardFade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shadowSmallFade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0.5;
+  }
+}
+
+@keyframes shadowLargeFade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0.2;
+  }
+}
+
+@keyframes scoreFadeAndZoom {
+  from {
+    transform: translateY(-100%) translateY(-10px) scale(1.4);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(-100%) translateY(-10px);
+    opacity: 1;
+  }
+}
