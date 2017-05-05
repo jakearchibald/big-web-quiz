@@ -160,18 +160,28 @@ export default class Audio extends BoundComponent {
   }
 
   async playStab() {
+    const loop1SourcePromise = this.loop1Source;
     const loop2SourcePromise = this.loop2Source;
     this.loop2Source = Promise.resolve();
 
     const stabSource = audioSourceFromBuffer(await stabBuffer);
+    const loop1Source = await loop1SourcePromise;
     const loop2Source = await loop2SourcePromise;
 
     stabSource.connect(context.destination);
 
-    const switchTime = onBarSwitchTime(context.currentTime, this.loop2Start, loop2BarLength);
+    let switchTime = context.currentTime;
+
+    if (loop2Source) {
+      switchTime = onBarSwitchTime(context.currentTime, this.loop2Start, loop2BarLength);
+      loop2Source.stop(switchTime);
+    }
+    else if (loop1Source) {
+      switchTime = onBarSwitchTime(context.currentTime, this.loop1Start, loop1BarLength);
+      loop1Source.stop(switchTime);
+    }
 
     stabSource.start(switchTime);
-    if (loop2Source) loop2Source.stop(switchTime);
 
     return wait((switchTime - context.currentTime) * 1000);
   }
