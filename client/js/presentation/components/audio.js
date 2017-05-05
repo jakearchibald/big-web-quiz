@@ -19,6 +19,10 @@ import BoundComponent from '../../../../shared/components/bound-component';
 
 const context = new AudioContext();
 
+function wait(ms) {
+  return new Promise(r => setTimeout(r, ms));
+}
+
 function loadSoundAsAudioBuffer(url) {
   return fetch(url).then(r => r.arrayBuffer())
     .then(data => context.decodeAudioData(data));
@@ -54,37 +58,62 @@ export default class Audio extends BoundComponent {
     this.loop2Start = 0;
     this.loop1Source = Promise.resolve();
     this.loop2Source = Promise.resolve();
+    this.childrenChangeQueue = Promise.resolve();
+    this.state = {
+      children: null
+    };
   }
 
-  update({
+  update({closed, stepItUp, children}, {
     closed: previouslyClosed = false,
     stepItUp: alreadySteppingItUp = false
   }={}) {
-    if (this.props.closed) {
-      if (previouslyClosed) return;
-      
+
+    if (closed) {
+      if (previouslyClosed) {
+        this.childrenChangeQueue = this.childrenChangeQueue.then(() => {
+          this.setState({ children });
+        });
+        return;
+      }
+
       this.initialLoopPlaying = false;
-      this.playStab();
+      const p = this.playStab();
+      this.childrenChangeQueue = this.childrenChangeQueue.then(() => p).then(() => {
+        this.setState({children});
+      });
       return;
     }
 
-    
-    if (!this.initialLoopPlaying && !this.props.stepItUp) {
+    if (!this.initialLoopPlaying && !stepItUp) {
       this.initialLoopPlaying = true;
       this.playLoop();
+      this.childrenChangeQueue = this.childrenChangeQueue.then(() => {
+        this.setState({children});
+      });
+      return;
     }
-    if (this.props.stepItUp && !alreadySteppingItUp) {
+
+    if (stepItUp && !alreadySteppingItUp) {
       this.initialLoopPlaying = false;
-      this.upgradeLoop();
+      const p = this.upgradeLoop();
+      this.childrenChangeQueue = this.childrenChangeQueue.then(() => p).then(() => {
+        this.setState({children});
+      });
+      return;
     }
+
+    this.childrenChangeQueue = this.childrenChangeQueue.then(() => {
+      this.setState({children});
+    });
   }
 
-  componentDidMount() {
-    this.update();
+  componentWillMount() {
+    this.update(this.props);
   }
 
-  componentDidUpdate(prevProps) {
-    this.update(prevProps);
+  componentWillReceiveProps(nextProps) {
+    this.update(nextProps, this.props);
   }
 
   playLoop() {
@@ -111,19 +140,22 @@ export default class Audio extends BoundComponent {
     const loop1SourcePromise = this.loop1Source;
     this.loop1Source = Promise.resolve();
 
-    this.loop2Source = new Promise(async resolve => {
-      const loop2Source = audioSourceFromBuffer(await loop2Buffer);
-      const loop1Source = await loop1SourcePromise;
+    return new Promise(outerResolve => {
+      this.loop2Source = new Promise(async resolve => {
+        const loop2Source = audioSourceFromBuffer(await loop2Buffer);
+        const loop1Source = await loop1SourcePromise;
 
-      loop2Source.connect(context.destination);
-      loop2Source.loop = true;
+        loop2Source.connect(context.destination);
+        loop2Source.loop = true;
 
-      const switchTime = onBarSwitchTime(context.currentTime, this.loop1Start, loop1BarLength);
+        const switchTime = onBarSwitchTime(context.currentTime, this.loop1Start, loop1BarLength);
+        outerResolve(wait((switchTime - context.currentTime) * 1000));
 
-      this.loop2Start = switchTime;
-      if (loop1Source) loop1Source.stop(switchTime);
-      loop2Source.start(switchTime);
-      resolve(loop2Source);
+        this.loop2Start = switchTime;
+        if (loop1Source) loop1Source.stop(switchTime);
+        loop2Source.start(switchTime);
+        resolve(loop2Source);
+      });
     });
   }
 
@@ -140,5 +172,11 @@ export default class Audio extends BoundComponent {
 
     stabSource.start(switchTime);
     if (loop2Source) loop2Source.stop(switchTime);
+
+    return wait((switchTime - context.currentTime) * 1000);
+  }
+
+  render(props, {children}) {
+    return <div class="presentation-wrapper">{children}</div>;
   }
 }

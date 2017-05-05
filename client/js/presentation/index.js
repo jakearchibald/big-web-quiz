@@ -165,8 +165,7 @@ class App extends BoundComponent {
     }
 
     return (
-      <div class="presentation-wrapper">
-        <Audio key="the-amaze-audio" closed={questionClosed} stepItUp={showLiveResults} />
+      <Audio key="the-amaze-audio" closed={questionClosed} stepItUp={showLiveResults}>
         <Question
           key={`question-${question.id}`}
           id={question.id}
@@ -195,7 +194,7 @@ class App extends BoundComponent {
           </div>
           : ''
         }
-      </div>
+      </Audio>
     );
   }
 }
