@@ -75,7 +75,7 @@
       border: 1px solid rgba(255,255,255,0.36);
       border-radius: 4px;
       cursor: pointer;
-      padding: 10px;
+      padding: 15px 10px;
       width: 100%;
       position: relative;
       display: flex;
@@ -87,6 +87,7 @@
       backface-visibility: hidden;
       text-align: center;
       box-sizing: border-box;
+      line-height: 1.5;
 
       &-text {
         position: relative;
