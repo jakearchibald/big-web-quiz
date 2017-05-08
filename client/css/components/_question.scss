@@ -88,6 +88,7 @@
       text-align: center;
       box-sizing: border-box;
       line-height: 1.5;
+      will-change: transform;
 
       &-text {
         position: relative;
