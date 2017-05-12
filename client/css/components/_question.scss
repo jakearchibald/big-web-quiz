@@ -87,7 +87,7 @@
       backface-visibility: hidden;
       text-align: center;
       box-sizing: border-box;
-      line-height: 1.5;
+      line-height: 1.2;
       will-change: transform;
 
       &-text {
@@ -195,7 +195,8 @@
     width: 85%;
     min-width: 260px;
     max-width: 680px;
-    margin: 0 auto;
+    margin: 0 auto 0.4em;
+    line-height: 1.1;
   }
 
   &__text {
