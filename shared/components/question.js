@@ -43,6 +43,10 @@ export default class Question extends BoundComponent {
       });
     }
   }
+  componentDidMount() {
+    // Scroll to top for new question
+    document.documentElement.scrollTop = 0;
+  }
   async onSubmit(event) {
     event.preventDefault();
 

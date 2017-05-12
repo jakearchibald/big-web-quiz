@@ -75,7 +75,7 @@
       border: 1px solid rgba(255,255,255,0.36);
       border-radius: 4px;
       cursor: pointer;
-      padding: 15px 10px;
+      padding: 15px 43px;
       width: 100%;
       position: relative;
       display: flex;
@@ -87,7 +87,7 @@
       backface-visibility: hidden;
       text-align: center;
       box-sizing: border-box;
-      line-height: 1.5;
+      line-height: 1.2;
       will-change: transform;
 
       &-text {
@@ -123,7 +123,7 @@
       }
 
       &--correct {
-        background: $correct-color url(/static/images/ic_check_white_24px.svg) 24px 18px no-repeat;
+        background: $correct-color url(/static/images/ic_check_white_24px.svg) 11px 50% no-repeat;
         opacity: 0.6;
         transform: scale(1.1);
       }
@@ -178,7 +178,7 @@
     }
 
     input:checked ~ &-label--incorrect {
-      background: $incorrect-color url(/static/images/ic_close_white_24px.svg) 24px 18px no-repeat;
+      background: $incorrect-color url(/static/images/ic_close_white_24px.svg) 11px 50% no-repeat;
     }
   }
 
@@ -195,7 +195,8 @@
     width: 85%;
     min-width: 260px;
     max-width: 680px;
-    margin: 0 auto;
+    margin: 0 auto 0.4em;
+    line-height: 1.1;
   }
 
   &__text {

@@ -82,7 +82,7 @@ html, body {
       &__answer {
         font-size: 38px;
         margin-bottom: 32px;
-        height: 100px;
+        min-height: 100px;
 
         &-label {
           border-radius: 8px;

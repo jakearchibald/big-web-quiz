@@ -182,26 +182,33 @@ export function revealQuestionJson(req, res) {
   });
 }
 
-export function deactivateQuestionJson(req, res) {
-  findQuestion(req.body).then(question => {
-    if (!question) {
-      res.status(404).json({err: "Question not found"});
-      return;
+export async function deactivateQuestionJson(req, res) {
+  try {
+    if (!req.body.any) {
+      const question = await findQuestion(req.body);
+
+      if (!question) {
+        res.status(404).json({ err: "Question not found" });
+        return;
+      }
+
+      if (!quiz.activeQuestion || !question.equals(quiz.activeQuestion)) {
+        res.status(404).json({ err: "This isn't the active question" });
+        return;
+      }
     }
 
-    if (!quiz.activeQuestion || !question.equals(quiz.activeQuestion)) {
-      res.status(404).json({err: "This isn't the active question"});
-      return;
+    if (quiz.activeQuestion) {
+      quiz.unsetQuestion();
+      presentationListeners.broadcast(quiz.getState());
+      longPollers.broadcast(quiz.getState());
     }
-
-    quiz.unsetQuestion();
-    presentationListeners.broadcast(quiz.getState());
-    longPollers.broadcast(quiz.getState());
 
     adminStateJson(req, res);
-  }).catch(err => {
+  }
+  catch(err) {
     res.status(500).json({err: err.message});
-  });
+  }
 }
 
 export function liveResultsQuestionJson(req, res) {
