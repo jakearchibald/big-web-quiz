@@ -508,5 +508,6 @@ fetch('/admin/initial-state.json', {
     showingLeaderboard={data.showingLeaderboard}
     showingVideo={data.showingVideo}
     showingBlackout={data.showingBlackout}
-    naiveLoginAllowed={data.naiveLoginAllowed} />, main);
+    naiveLoginAllowed={data.naiveLoginAllowed}
+    showingEndScreen={data.showingEndScreen} />, main);
 });

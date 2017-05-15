@@ -36,7 +36,7 @@ const links = [
   [
     `visibility: visible undoes visibility: hidden`,
     'https://jakearchibald.com/2014/visible-undoes-hidden/'
-  ]
+  ],
   [
     'The code behind Big Web Quiz',
     'https://github.com/jakearchibald/big-web-quiz'
@@ -44,7 +44,7 @@ const links = [
   [
     'How the Big Web Quiz music was scheduled',
     'https://jakearchibald.com/2016/sounds-fun/'
-  ],
+  ]
 ];
 
 export default () => (
