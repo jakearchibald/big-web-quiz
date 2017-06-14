@@ -18,8 +18,12 @@ const links = [
     'https://www.smashingmagazine.com/2016/02/preload-what-is-it-good-for/'
   ],
   [
-    'The order of caches',
-    'https://calendar.perfplanet.com/2016/a-tale-of-four-caches/'
+    'Deep dive into HTTP/2 push and preloads',
+    'https://jakearchibald.com/2017/h2-push-tougher-than-i-thought/'
+  ],
+  [
+    'Streaming HTML/JSON using iframes and document.write',
+    'https://jakearchibald.com/2016/fun-hacks-faster-content/'
   ],
   [
     'Chrome bug: Compositing within SVG',
