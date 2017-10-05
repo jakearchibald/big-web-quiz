@@ -39,7 +39,7 @@ const userSchema = mongoose.Schema({
   name: {type: String, required: true, default: "Unknown name"},
   email: String,
   avatarUrl: {type: String, required: true, default: "/static/images/ic_tag_faces_white_18px.svg"},
-  optIntoLeaderboard: {type: Boolean, required: true, default: false},
+  optIntoLeaderboard: {type: Boolean, required: true, default: true},
   bannedFromLeaderboard: {type: Boolean, required: true, default: false},
   // Optimisation. See `updateScore`.
   score: {type: Number, default: 0, index: true},
