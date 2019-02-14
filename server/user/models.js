@@ -21,7 +21,8 @@ export const ADMIN_IDS = [
   '116237864387312784020', // Jake
   '102813120987797040209', // Paul Lewis
   '104714371990859295637', // thebigwebquiz
-  '111820256548303113275'  // surma
+  '111820256548303113275',  // surma
+  '110684868935696470475'  // arunyokesh
 ];
 
 let allowNaiveLogin = false;
