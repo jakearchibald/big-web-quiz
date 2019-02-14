@@ -316,7 +316,7 @@ export async function questionAnswerJson(req, res) {
       req.user.answers[answerIndex].choices = choices;
     }
     else {
-      req.user.answers.push({questionId: question._id, choices});
+      req.user.answers =  req.user.answers.concat({questionId: question._id, choices});
     }
 
     await req.user.save();
