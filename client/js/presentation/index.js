@@ -154,7 +154,6 @@ class App extends BoundComponent {
     }
 
     return (
-{/* <Audio key="the-amaze-audio" closed={questionClosed} stepItUp={showLiveResults}> */}
       
         <Question
           key={`question-${question.id}`}
@@ -184,7 +183,6 @@ class App extends BoundComponent {
           </div>
           : ''
         }
-      {/* <Audio/> */}
     );
   }
 }
