@@ -21,7 +21,7 @@ self.regeneratorRuntime = regeneratorRuntime;
 
 import shuffle from 'shuffle-array';
 
-// import Audio from './components/audio';
+import Audio from './components/audio';
 import Question from '../../../shared/components/question';
 import AverageValue from './components/average-value';
 import BoundComponent from '../../../shared/components/bound-component';
@@ -154,7 +154,7 @@ class App extends BoundComponent {
     }
 
     return (
-      <div>
+      <Audio key="the-amaze-audio" closed={questionClosed} stepItUp={showLiveResults}>
         <Question
           key={`question-${question.id}`}
           id={question.id}
@@ -183,7 +183,7 @@ class App extends BoundComponent {
           </div>
           : ''
         }
-    </div>
+    <Audio/>
     );
   }
 }
