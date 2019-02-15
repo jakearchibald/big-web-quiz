@@ -59,6 +59,8 @@ const router = express.Router({
   strict: true
 });
 
+app.use("/static", express.static(__dirname + '/static'));
+
 // Middleware:
 router.use(
   '/static',
