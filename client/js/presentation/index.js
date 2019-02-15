@@ -183,7 +183,7 @@ class App extends BoundComponent {
           </div>
           : ''
         }
-    <div/>
+    </div>
     );
   }
 }
