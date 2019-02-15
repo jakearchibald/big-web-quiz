@@ -154,7 +154,7 @@ class App extends BoundComponent {
     }
 
     return (
-      
+      <div>
         <Question
           key={`question-${question.id}`}
           id={question.id}
@@ -183,6 +183,7 @@ class App extends BoundComponent {
           </div>
           : ''
         }
+    <div/>
     );
   }
 }
