@@ -21,7 +21,7 @@ self.regeneratorRuntime = regeneratorRuntime;
 
 import shuffle from 'shuffle-array';
 
-import Audio from './components/audio';
+// import Audio from './components/audio';
 import Question from '../../../shared/components/question';
 import AverageValue from './components/average-value';
 import BoundComponent from '../../../shared/components/bound-component';
