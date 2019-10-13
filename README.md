@@ -29,24 +29,6 @@ npm run install-mongo
 npm run serve
 ```
 
-# Dokku setup
-
-1. Install Dokku
-1. Use vhosts, then:
-
-```sh
-sudo dokku plugin:install https://github.com/dokku/dokku-mongo.git mongo
-sudo dokku plugin:install https://github.com/dokku/dokku-letsencrypt.git
-sudo dokku apps:create big-web-quiz
-sudo dokku mongo:create big-web-quiz
-sudo dokku mongo:link big-web-quiz big-web-quiz
-sudo dokku domains:add big-web-quiz bigwebquiz.com
-sudo dokku domains:remove big-web-quiz big-web-quiz.bigwebquiz.com
-sudo dokku config:set --no-restart big-web-quiz DOKKU_LETSENCRYPT_EMAIL=jaffathecake@gmail.com
-# then push the app (yarn run deploy), then:
-sudo dokku letsencrypt big-web-quiz
-sudo dokku letsencrypt:cron-job --add
-```
 
 Then up the connection limits in `/etc/nginx/nginx.conf`.
 
@@ -60,3 +42,20 @@ events {
 ```
 
 …then restart nginx.
+
+Your Nginx config is correct, you just miss few lines.
+
+Here is a "magic trio" making EventSource working through Nginx:
+```
+proxy_set_header Connection '';
+proxy_http_version 1.1;
+chunked_transfer_encoding off;
+```
+Place them into location section and it should work.
+
+You may also need to add
+```
+proxy_buffering off;
+proxy_cache off;
+```
+That's not an official way of doing it.

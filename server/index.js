@@ -59,6 +59,7 @@ const router = express.Router({
   strict: true
 });
 
+
 // Middleware:
 router.use(
   '/static',
