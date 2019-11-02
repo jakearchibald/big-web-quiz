@@ -47,7 +47,7 @@
     "gulp-sourcemaps": "^1.7.3",
     "gulp-uglify": "^2.0.0",
     "gulp-util": "^3.0.7",
-    "mongoose": "^4.6.3",
+    "mongoose": "^5.7.5",
     "multer": "^1.2.0",
     "preact": "^6.3.0",
     "preact-render-to-string": "^3.2.1",
