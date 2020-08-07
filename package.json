@@ -51,7 +51,7 @@
     "multer": "^1.2.0",
     "preact": "^6.3.0",
     "preact-render-to-string": "^3.2.1",
-    "prismjs": "^1.5.1",
+    "prismjs": "^1.21.0",
     "regenerator-runtime": "^0.9.5",
     "respawn": "^2.4.1",
     "rollup-plugin-babel": "^2.6.1",
