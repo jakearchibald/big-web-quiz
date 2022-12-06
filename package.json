@@ -29,7 +29,7 @@
     "del": "^2.2.2",
     "element-closest": "^2.0.1",
     "events": "^1.1.1",
-    "express": "^4.14.0",
+    "express": "^4.17.3",
     "express-session": "^1.14.1",
     "fastclick": "^1.0.6",
     "google-auth-library": "^0.10.0",
